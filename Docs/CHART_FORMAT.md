@@ -1,0 +1,343 @@
+# Idiot_Tape — Chart Format
+
+## Document Purpose
+
+This document defines the conceptual contract for Idiot_Tape chart data.
+
+The final serialization format is not yet fixed.
+
+This document intentionally separates:
+
+1. what chart data must represent
+2. how authoring tools edit it
+3. how runtime code consumes it
+4. how the data is eventually serialized
+
+
+## Core Principle
+
+A chart is structured gameplay data.
+
+It is not a collection of manually placed runtime note GameObjects in a Unity scene.
+
+Chart data must remain usable independently from runtime note GameObject lifetime.
+
+
+## Chart Responsibilities
+
+A chart may need to describe:
+
+- note timing
+- note type
+- musical part / layer
+- spatial position
+- note duration
+- presentation information
+- movement behavior
+- repeated musical structures
+- future chart-specific metadata
+
+Not all of these fields need to exist in the first prototype.
+
+
+## Timing Representation
+
+Chart timing must use a deterministic musical timeline.
+
+Do not store authoritative note timing as:
+
+- frame numbers tied to rendering frame rate
+- runtime spawn time
+- world-space position
+- manually accumulated gameplay time
+
+Runtime note timing must be compatible with the authoritative timeline described in
+`RHYTHM_SYSTEM.md`.
+
+
+## Absolute Runtime Timing
+
+Runtime judgement should ultimately operate on resolved absolute chart timing.
+
+Tempo / BPM data may later be useful for:
+
+- editor grids
+- beat snapping
+- musical navigation
+- authoring tools
+
+However, runtime judgement must not require reconstructing timing from rendering frames.
+
+
+## Stable Note Identity
+
+Each note should have a stable identity within the chart when practical.
+
+Stable IDs are useful for:
+
+- editor selection
+- debugging
+- validation
+- future migration
+- referencing chart events
+
+Do not use a runtime GameObject instance ID as persistent chart identity.
+
+
+## Musical Part Identity
+
+Notes may belong to musical parts or layers.
+
+Examples:
+
+```text
+drums
+bass
+synth_main
+synth_secondary
+vocal
+fx
+```
+
+These are examples only.
+
+Do not hard-code this example list as the universal instrument model.
+
+Charts should be able to define or reference song-specific musical-part identities.
+
+
+## Spatial Representation
+
+The final chart coordinate system has not yet been decided.
+
+Do not persist core chart positions only as:
+
+- physical screen pixels
+- current device resolution coordinates
+- scene-specific world coordinates
+
+unless an intentional coordinate-system design requires it.
+
+Chart spatial data should be capable of being interpreted consistently across different
+mobile screen conditions.
+
+
+## Note Types
+
+The final note type set is unresolved.
+
+The chart model should support identifying note behavior without requiring the whole chart
+format to be rewritten whenever a new supported note type is added.
+
+Do not add generic extensibility frameworks purely for hypothetical note types.
+
+Keep the prototype representation simple.
+
+
+## Duration
+
+Notes that require duration should represent it explicitly.
+
+A duration must not be inferred solely from a visual object's scale.
+
+Duration semantics must be defined by the note type that uses them.
+
+
+## Movement and Presentation
+
+A note may eventually require presentation information beyond a single static position.
+
+Possible requirements include:
+
+- start position
+- target position
+- path information
+- musical-part-specific presentation
+- layout transitions
+
+Do not assume all of these are required immediately.
+
+Keep musical timing independent from visual movement representation.
+
+
+## Suggested Conceptual Runtime Model
+
+The following is conceptual, not a mandatory exact C# API:
+
+```text
+Chart
+ ├─ metadata
+ ├─ musical parts
+ └─ notes
+      ├─ id
+      ├─ time
+      ├─ type
+      ├─ part
+      ├─ position
+      ├─ duration (when relevant)
+      └─ optional presentation data
+```
+
+Do not create fields merely because they appear in this diagram.
+
+Only implement fields required by actual gameplay.
+
+
+## Example Conceptual Data
+
+The following illustrates intended separation of information.
+
+It is not yet the required serialization schema.
+
+```json
+{
+  "schemaVersion": 1,
+  "chartId": "example_chart",
+  "songId": "example_song",
+  "parts": [
+    {
+      "id": "drums"
+    },
+    {
+      "id": "synth_main"
+    }
+  ],
+  "notes": [
+    {
+      "id": "n0001",
+      "time": 12.500,
+      "type": "tap",
+      "part": "drums",
+      "position": {
+        "x": 0.25,
+        "y": 0.0
+      }
+    }
+  ]
+}
+```
+
+The example does NOT finalize:
+
+- JSON as the permanent storage format
+- the coordinate range
+- the note type list
+- exact field names
+- whether `y` is needed
+- whether chart metadata is stored in the same file
+
+
+## Serialization
+
+The final authoring representation may eventually use:
+
+- JSON
+- ScriptableObject data
+- another structured format
+- an authoring representation that is converted into a different runtime format
+
+Do not lock the architecture to one serialization mechanism before the authoring workflow
+has been tested.
+
+
+## Authoring Data vs Runtime Data
+
+The format most convenient for editing does not have to be identical to the runtime representation.
+
+For example, authoring data may contain:
+
+- labels
+- comments
+- editor-only grouping
+- beat-grid information
+- descriptive musical-part names
+
+while runtime data may contain a compact preprocessed representation.
+
+Do not add a build-time conversion pipeline until it provides actual value.
+
+
+## Ordering
+
+Runtime systems may benefit from notes being sorted by timing.
+
+Do not repeatedly sort the entire chart during gameplay.
+
+Sorting or validation should happen:
+
+- during import
+- during loading
+- during editing
+- during preprocessing
+
+rather than in per-frame gameplay code.
+
+
+## Validation
+
+A chart validator should eventually be able to identify issues such as:
+
+- duplicate note IDs
+- invalid timing
+- negative duration
+- unsupported note type
+- invalid musical-part reference
+- malformed position data
+- unsorted data when ordering is required
+- unsupported schema version
+
+Validation errors should identify the affected chart item clearly enough for the chart author
+to fix the problem.
+
+
+## Schema Versioning
+
+Once serialized chart files become persistent project content, include an explicit schema version.
+
+Do not silently reinterpret older chart data after a breaking format change.
+
+When format changes become necessary, use an intentional migration or conversion strategy.
+
+
+## Runtime Performance
+
+Keeping lightweight chart data for an entire song in memory is acceptable.
+
+Do not translate every chart entry into an active GameObject at load time solely because
+the data exists.
+
+Runtime representation should scale primarily with currently relevant gameplay objects,
+not total chart object count.
+
+
+## Chart Tooling Goal
+
+The chart workflow should eventually make the following operations fast:
+
+- adjust timing
+- move notes
+- assign musical parts
+- duplicate repeated patterns
+- inspect dense sections
+- jump to a song position
+- replay a short section
+- validate chart data
+
+Do not build the complete editor before the core chart representation has been proven.
+
+
+## Unresolved Chart Decisions
+
+The following remain open:
+
+- permanent serialization format
+- exact coordinate system
+- final note type model
+- tempo-map representation
+- chart difficulty metadata
+- pattern / group representation
+- movement-path representation
+- editor UI
+- runtime preprocessing format
+
+Treat these as design questions, not missing fields that Codex should invent automatically.
