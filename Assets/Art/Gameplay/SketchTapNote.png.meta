@@ -1,0 +1,3185 @@
+fileFormatVersion: 2
+guid: 9d6ab314716152c40a6322aa263552cf
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7876948553673200172
+    second: SketchTapNote_0
+  - first:
+      213: -2728058210199071714
+    second: SketchTapNote_1
+  - first:
+      213: -7576497295046222886
+    second: SketchTapNote_2
+  - first:
+      213: -1828152306590828625
+    second: SketchTapNote_3
+  - first:
+      213: -8774433444457794275
+    second: SketchTapNote_4
+  - first:
+      213: -3129586855217699287
+    second: SketchTapNote_5
+  - first:
+      213: -6226255011362447088
+    second: SketchTapNote_6
+  - first:
+      213: 7424701879553312556
+    second: SketchTapNote_7
+  - first:
+      213: 8337980976176666592
+    second: SketchTapNote_8
+  - first:
+      213: -1162822397109327738
+    second: SketchTapNote_9
+  - first:
+      213: -2694708963051602874
+    second: SketchTapNote_10
+  - first:
+      213: 2633301414267904571
+    second: SketchTapNote_11
+  - first:
+      213: 1478225150206255085
+    second: SketchTapNote_12
+  - first:
+      213: 4921954828931201327
+    second: SketchTapNote_13
+  - first:
+      213: -3626776319423201944
+    second: SketchTapNote_14
+  - first:
+      213: 8173362685519917520
+    second: SketchTapNote_15
+  - first:
+      213: -1238374463740819514
+    second: SketchTapNote_16
+  - first:
+      213: -3607917852340217974
+    second: SketchTapNote_17
+  - first:
+      213: -7280845445339514195
+    second: SketchTapNote_18
+  - first:
+      213: 2704684061675030877
+    second: SketchTapNote_19
+  - first:
+      213: -7652497947395589498
+    second: SketchTapNote_20
+  - first:
+      213: 9055957588735493448
+    second: SketchTapNote_21
+  - first:
+      213: -908454733937713033
+    second: SketchTapNote_22
+  - first:
+      213: 1036349548080964469
+    second: SketchTapNote_23
+  - first:
+      213: 4132398037075684658
+    second: SketchTapNote_24
+  - first:
+      213: 4095679832305375343
+    second: SketchTapNote_25
+  - first:
+      213: 3388536811007083614
+    second: SketchTapNote_26
+  - first:
+      213: -6196715636944492005
+    second: SketchTapNote_27
+  - first:
+      213: -285035538812577723
+    second: SketchTapNote_28
+  - first:
+      213: -7080438787193788565
+    second: SketchTapNote_29
+  - first:
+      213: 9030473547721621926
+    second: SketchTapNote_30
+  - first:
+      213: -3148831121056558971
+    second: SketchTapNote_31
+  - first:
+      213: -3925083856297812592
+    second: SketchTapNote_32
+  - first:
+      213: -1888131984184671613
+    second: SketchTapNote_33
+  - first:
+      213: 9135436862784607980
+    second: SketchTapNote_34
+  - first:
+      213: -8694479973880596222
+    second: SketchTapNote_35
+  - first:
+      213: 5811157303921902668
+    second: SketchTapNote_36
+  - first:
+      213: -8683744528864527288
+    second: SketchTapNote_37
+  - first:
+      213: -2746906794848034930
+    second: SketchTapNote_38
+  - first:
+      213: 8976563814128080714
+    second: SketchTapNote_39
+  - first:
+      213: -7331910075803260050
+    second: SketchTapNote_40
+  - first:
+      213: -4540338065705528912
+    second: SketchTapNote_41
+  - first:
+      213: -3911501219928353395
+    second: SketchTapNote_42
+  - first:
+      213: 3516294472481784573
+    second: SketchTapNote_43
+  - first:
+      213: -7257846229302405929
+    second: SketchTapNote_44
+  - first:
+      213: 1825333584025311605
+    second: SketchTapNote_45
+  - first:
+      213: 8648682936171202830
+    second: SketchTapNote_46
+  - first:
+      213: -401649029681228165
+    second: SketchTapNote_47
+  - first:
+      213: -5368916026109034220
+    second: SketchTapNote_48
+  - first:
+      213: -3168819008379788981
+    second: SketchTapNote_49
+  - first:
+      213: -7264986625734824679
+    second: SketchTapNote_50
+  - first:
+      213: 879567763620162310
+    second: SketchTapNote_51
+  - first:
+      213: 6033434598764619321
+    second: SketchTapNote_52
+  - first:
+      213: 4423528700328021120
+    second: SketchTapNote_53
+  - first:
+      213: 7463340308908833073
+    second: SketchTapNote_54
+  - first:
+      213: -8026936215229317016
+    second: SketchTapNote_55
+  - first:
+      213: -9089381823937678062
+    second: SketchTapNote_56
+  - first:
+      213: -2336161546753844745
+    second: SketchTapNote_57
+  - first:
+      213: -6953144588905740316
+    second: SketchTapNote_58
+  - first:
+      213: 7151275381390632061
+    second: SketchTapNote_59
+  - first:
+      213: 8282989989587748568
+    second: SketchTapNote_60
+  - first:
+      213: -7577108315956458636
+    second: SketchTapNote_61
+  - first:
+      213: 3449252758653791801
+    second: SketchTapNote_62
+  - first:
+      213: 4509449658255784642
+    second: SketchTapNote_63
+  - first:
+      213: -7260225381445709910
+    second: SketchTapNote_64
+  - first:
+      213: -3715104885656566259
+    second: SketchTapNote_65
+  - first:
+      213: -5791998627511172585
+    second: SketchTapNote_66
+  - first:
+      213: 7238316153099048167
+    second: SketchTapNote_67
+  - first:
+      213: 1774467438772037481
+    second: SketchTapNote_68
+  - first:
+      213: -244791390111993882
+    second: SketchTapNote_69
+  - first:
+      213: 3233388565168348451
+    second: SketchTapNote_70
+  - first:
+      213: 3997622744757084360
+    second: SketchTapNote_71
+  - first:
+      213: -6971954669849057997
+    second: SketchTapNote_72
+  - first:
+      213: -6532939182570599851
+    second: SketchTapNote_73
+  - first:
+      213: 8791664180818229488
+    second: SketchTapNote_74
+  - first:
+      213: -2573330529186612890
+    second: SketchTapNote_75
+  - first:
+      213: 8868559325291291802
+    second: SketchTapNote_76
+  - first:
+      213: -3201044965876837706
+    second: SketchTapNote_77
+  - first:
+      213: 6832635278709620295
+    second: SketchTapNote_78
+  - first:
+      213: -5066435565501534318
+    second: SketchTapNote_79
+  - first:
+      213: 207563916960248958
+    second: SketchTapNote_80
+  - first:
+      213: -7063798771120865211
+    second: SketchTapNote_81
+  - first:
+      213: -8310421762513643305
+    second: SketchTapNote_82
+  - first:
+      213: 4535328656936836480
+    second: SketchTapNote_83
+  - first:
+      213: 8435934100578256888
+    second: SketchTapNote_84
+  - first:
+      213: -1082523101924649386
+    second: SketchTapNote_85
+  - first:
+      213: 6015205289450038276
+    second: SketchTapNote_86
+  - first:
+      213: -6154716500770886829
+    second: SketchTapNote_87
+  - first:
+      213: -4557423679752082160
+    second: SketchTapNote_88
+  - first:
+      213: -8197002341104114874
+    second: SketchTapNote_89
+  - first:
+      213: -186840803736240122
+    second: SketchTapNote_90
+  - first:
+      213: -8528907743377198205
+    second: SketchTapNote_91
+  - first:
+      213: -496901003170003219
+    second: SketchTapNote_92
+  - first:
+      213: 3201099142101048468
+    second: SketchTapNote_93
+  - first:
+      213: 3875945186415272546
+    second: SketchTapNote_94
+  - first:
+      213: -8256563434146199641
+    second: SketchTapNote_95
+  - first:
+      213: -8131918377501561816
+    second: SketchTapNote_96
+  - first:
+      213: 5035061092393332497
+    second: SketchTapNote_97
+  - first:
+      213: -940416615762986965
+    second: SketchTapNote_98
+  - first:
+      213: -3283094021494544602
+    second: SketchTapNote_99
+  - first:
+      213: 4412052543400147434
+    second: SketchTapNote_100
+  - first:
+      213: 7705299296126470295
+    second: SketchTapNote_101
+  - first:
+      213: -3596987785523715890
+    second: SketchTapNote_102
+  - first:
+      213: 3586799819268090313
+    second: SketchTapNote_103
+  - first:
+      213: -6077467823999504831
+    second: SketchTapNote_104
+  - first:
+      213: 4228461652453333208
+    second: SketchTapNote_105
+  - first:
+      213: 2001183438917883991
+    second: SketchTapNote_106
+  - first:
+      213: 1886516306865599898
+    second: SketchTapNote_107
+  - first:
+      213: -1513007538431072499
+    second: SketchTapNote_108
+  - first:
+      213: -6025414547438737358
+    second: SketchTapNote_109
+  - first:
+      213: 7129891638080810166
+    second: SketchTapNote_110
+  - first:
+      213: -6049485121721376909
+    second: SketchTapNote_111
+  - first:
+      213: 290915412260989865
+    second: SketchTapNote_112
+  - first:
+      213: -1936579969945796809
+    second: SketchTapNote_113
+  - first:
+      213: 6506624015112928158
+    second: SketchTapNote_114
+  - first:
+      213: -1224916870661709574
+    second: SketchTapNote_115
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1024
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SketchTapNote_0
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 844
+        width: 117
+        height: 206
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c22d7b7c9fa805d60800000000000000
+      internalID: 7876948553673200172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_1
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 1039
+        width: 12
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e141f7ef28df32ad0800000000000000
+      internalID: -2728058210199071714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_2
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 879
+        width: 45
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: adbdf072adfdad690800000000000000
+      internalID: -7576497295046222886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_3
+      rect:
+        serializedVersion: 2
+        x: 650
+        y: 918
+        width: 18
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa7b752c92911a6e0800000000000000
+      internalID: -1828152306590828625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_4
+      rect:
+        serializedVersion: 2
+        x: 659
+        y: 810
+        width: 183
+        height: 143
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1539cd6543fa3680800000000000000
+      internalID: -8774433444457794275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_5
+      rect:
+        serializedVersion: 2
+        x: 660
+        y: 936
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 926640126597194d0800000000000000
+      internalID: -3129586855217699287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_6
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 942
+        width: 6
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 011eeb62e06e799a0800000000000000
+      internalID: -6226255011362447088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_7
+      rect:
+        serializedVersion: 2
+        x: 660
+        y: 928
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2743fd8507d90760800000000000000
+      internalID: 7424701879553312556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_8
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 931
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e799f4758576b370800000000000000
+      internalID: 8337980976176666592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_9
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 662
+        width: 237
+        height: 246
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6882e63d033dcdfe0800000000000000
+      internalID: -1162822397109327738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_10
+      rect:
+        serializedVersion: 2
+        x: 296
+        y: 903
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64c7f3ca9787a9ad0800000000000000
+      internalID: -2694708963051602874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_11
+      rect:
+        serializedVersion: 2
+        x: 531
+        y: 907
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b32e8f73fad5b8420800000000000000
+      internalID: 2633301414267904571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_12
+      rect:
+        serializedVersion: 2
+        x: 498
+        y: 871
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: def971031f5b38410800000000000000
+      internalID: 1478225150206255085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_13
+      rect:
+        serializedVersion: 2
+        x: 534
+        y: 870
+        width: 17
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2976fad6db4e4440800000000000000
+      internalID: 4921954828931201327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_14
+      rect:
+        serializedVersion: 2
+        x: 653
+        y: 867
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86d3bf8272a1badc0800000000000000
+      internalID: -3626776319423201944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_15
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 855
+        width: 8
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d1f8d2ee0e9d6170800000000000000
+      internalID: 8173362685519917520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_16
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 833
+        width: 10
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c740d58cf860dee0800000000000000
+      internalID: -1238374463740819514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_17
+      rect:
+        serializedVersion: 2
+        x: 510
+        y: 831
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a87987034d91eedc0800000000000000
+      internalID: -3607917852340217974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_18
+      rect:
+        serializedVersion: 2
+        x: 909
+        y: 836
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daa740e94ad35fa90800000000000000
+      internalID: -7280845445339514195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_19
+      rect:
+        serializedVersion: 2
+        x: 942
+        y: 830
+        width: 14
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d590dc5f2d7f88520800000000000000
+      internalID: 2704684061675030877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_20
+      rect:
+        serializedVersion: 2
+        x: 955
+        y: 840
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68a741959addcc590800000000000000
+      internalID: -7652497947395589498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_21
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 787
+        width: 25
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 845059942793dad70800000000000000
+      internalID: 9055957588735493448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_22
+      rect:
+        serializedVersion: 2
+        x: 799
+        y: 735
+        width: 102
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 770ee119b358463f0800000000000000
+      internalID: -908454733937713033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_23
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 826
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 573a0845c6ad16e00800000000000000
+      internalID: 1036349548080964469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_24
+      rect:
+        serializedVersion: 2
+        x: 916
+        y: 809
+        width: 29
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23dea6ece1a395930800000000000000
+      internalID: 4132398037075684658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_25
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 796
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f681b4e8b17c6d830800000000000000
+      internalID: 4095679832305375343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_26
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 766
+        width: 11
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e548960c640860f20800000000000000
+      internalID: 3388536811007083614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_27
+      rect:
+        serializedVersion: 2
+        x: 699
+        y: 738
+        width: 45
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1aa0d5b5f7d00aa0800000000000000
+      internalID: -6196715636944492005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_28
+      rect:
+        serializedVersion: 2
+        x: 897
+        y: 794
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 548d6b800b95b0cf0800000000000000
+      internalID: -285035538812577723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_29
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 797
+        width: 19
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b67aa63df6a3dbd90800000000000000
+      internalID: -7080438787193788565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_30
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 763
+        width: 18
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a1428d98dfa25d70800000000000000
+      internalID: 9030473547721621926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_31
+      rect:
+        serializedVersion: 2
+        x: 595
+        y: 740
+        width: 13
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5809ab357ca1d44d0800000000000000
+      internalID: -3148831121056558971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_32
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 746
+        width: 9
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09d9fb7570d4789c0800000000000000
+      internalID: -3925083856297812592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_33
+      rect:
+        serializedVersion: 2
+        x: 674
+        y: 743
+        width: 11
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3828e91d6f10cc5e0800000000000000
+      internalID: -1888131984184671613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_34
+      rect:
+        serializedVersion: 2
+        x: 681
+        y: 764
+        width: 10
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce61942dc6797ce70800000000000000
+      internalID: 9135436862784607980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_35
+      rect:
+        serializedVersion: 2
+        x: 545
+        y: 755
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20979127780075780800000000000000
+      internalID: -8694479973880596222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_36
+      rect:
+        serializedVersion: 2
+        x: 549
+        y: 747
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c448e2277c065a050800000000000000
+      internalID: 5811157303921902668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_37
+      rect:
+        serializedVersion: 2
+        x: 532
+        y: 513
+        width: 264
+        height: 234
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84cb9c40c542d7780800000000000000
+      internalID: -8683744528864527288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_38
+      rect:
+        serializedVersion: 2
+        x: 858
+        y: 522
+        width: 101
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8fd9f5e2d601e9d0800000000000000
+      internalID: -2746906794848034930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_39
+      rect:
+        serializedVersion: 2
+        x: 916
+        y: 740
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a47dab4aa39239c70800000000000000
+      internalID: 8976563814128080714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_40
+      rect:
+        serializedVersion: 2
+        x: 494
+        y: 694
+        width: 53
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6ba3a6d1a2df3a90800000000000000
+      internalID: -7331910075803260050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_41
+      rect:
+        serializedVersion: 2
+        x: 793
+        y: 731
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b11071c59a7df0c0800000000000000
+      internalID: -4540338065705528912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_42
+      rect:
+        serializedVersion: 2
+        x: 956
+        y: 690
+        width: 86
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d85d9af4d5e87b9c0800000000000000
+      internalID: -3911501219928353395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_43
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 654
+        width: 34
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df242fd41336cc030800000000000000
+      internalID: 3516294472481784573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_44
+      rect:
+        serializedVersion: 2
+        x: 847
+        y: 659
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d49504ee43f64b90800000000000000
+      internalID: -7257846229302405929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_45
+      rect:
+        serializedVersion: 2
+        x: 851
+        y: 664
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5795b604933e45910800000000000000
+      internalID: 1825333584025311605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_46
+      rect:
+        serializedVersion: 2
+        x: 961
+        y: 656
+        width: 31
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e098779ce4b460870800000000000000
+      internalID: 8648682936171202830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_47
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 653
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b765875e55e0d6af0800000000000000
+      internalID: -401649029681228165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_48
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 634
+        width: 32
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4118edae157cd75b0800000000000000
+      internalID: -5368916026109034220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_49
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 630
+        width: 38
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b416408a6e71604d0800000000000000
+      internalID: -3168819008379788981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_50
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 608
+        width: 64
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91dac1bc7259d2b90800000000000000
+      internalID: -7264986625734824679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_51
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 626
+        width: 23
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60be67a883ad43c00800000000000000
+      internalID: 879567763620162310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_52
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 626
+        width: 28
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 936aae21dc01bb350800000000000000
+      internalID: 6033434598764619321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_53
+      rect:
+        serializedVersion: 2
+        x: 741
+        y: 612
+        width: 66
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08c0cc48ae7836d30800000000000000
+      internalID: 4423528700328021120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_54
+      rect:
+        serializedVersion: 2
+        x: 806
+        y: 634
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1397d5ee77c139760800000000000000
+      internalID: 7463340308908833073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_55
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 636
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 860c9807a089a9090800000000000000
+      internalID: -8026936215229317016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_56
+      rect:
+        serializedVersion: 2
+        x: 966
+        y: 629
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2157d4483670cd180800000000000000
+      internalID: -9089381823937678062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_57
+      rect:
+        serializedVersion: 2
+        x: 346
+        y: 571
+        width: 83
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f95fc36379449fd0800000000000000
+      internalID: -2336161546753844745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_58
+      rect:
+        serializedVersion: 2
+        x: 467
+        y: 624
+        width: 20
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e70852f5d7718f90800000000000000
+      internalID: -6953144588905740316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_59
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 622
+        width: 30
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d74e8cef11f6e3360800000000000000
+      internalID: 7151275381390632061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_60
+      rect:
+        serializedVersion: 2
+        x: 524
+        y: 621
+        width: 12
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d68e77a28713f270800000000000000
+      internalID: 8282989989587748568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_61
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 623
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47bc1c2c124b8d690800000000000000
+      internalID: -7577108315956458636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_62
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 608
+        width: 26
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93e681ceb153edf20800000000000000
+      internalID: 3449252758653791801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_63
+      rect:
+        serializedVersion: 2
+        x: 333
+        y: 581
+        width: 15
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2cab7d47298c49e30800000000000000
+      internalID: 4509449658255784642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_64
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 574
+        width: 21
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaf47ad5b7f7e3b90800000000000000
+      internalID: -7260225381445709910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_65
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 576
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d064f1b3acb417cc0800000000000000
+      internalID: -3715104885656566259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_66
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 579
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71285a38fefae9fa0800000000000000
+      internalID: -5791998627511172585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_67
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 319
+        width: 264
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e4d075e03aa37460800000000000000
+      internalID: 7238316153099048167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_68
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 563
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9672189ebbc20a810800000000000000
+      internalID: 1774467438772037481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_69
+      rect:
+        serializedVersion: 2
+        x: 846
+        y: 556
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6efec4417835a9cf0800000000000000
+      internalID: -244791390111993882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_70
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 514
+        width: 19
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32d5bafc4cd4fdc20800000000000000
+      internalID: 3233388565168348451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_71
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 531
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c0a44fb4b86a7730800000000000000
+      internalID: 3997622744757084360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_72
+      rect:
+        serializedVersion: 2
+        x: 861
+        y: 514
+        width: 22
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3356581ba24ae3f90800000000000000
+      internalID: -6971954669849057997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_73
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 503
+        width: 124
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55a06ab2d665655a0800000000000000
+      internalID: -6532939182570599851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_74
+      rect:
+        serializedVersion: 2
+        x: 507
+        y: 504
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f832320ef3420a70800000000000000
+      internalID: 8791664180818229488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_75
+      rect:
+        serializedVersion: 2
+        x: 598
+        y: 501
+        width: 8
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 669f92e8481b94cd0800000000000000
+      internalID: -2573330529186612890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_76
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 480
+        width: 13
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a94277df7b3731b70800000000000000
+      internalID: 8868559325291291802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_77
+      rect:
+        serializedVersion: 2
+        x: 722
+        y: 355
+        width: 153
+        height: 173
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b2dbda309a9393d0800000000000000
+      internalID: -3201044965876837706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_78
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 483
+        width: 95
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74ef94bc59562de50800000000000000
+      internalID: 6832635278709620295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_79
+      rect:
+        serializedVersion: 2
+        x: 554
+        y: 483
+        width: 8
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29f20e042b760b9b0800000000000000
+      internalID: -5066435565501534318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_80
+      rect:
+        serializedVersion: 2
+        x: 594
+        y: 486
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e74ba92684a61e200800000000000000
+      internalID: 207563916960248958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_81
+      rect:
+        serializedVersion: 2
+        x: 677
+        y: 493
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 540008a717858fd90800000000000000
+      internalID: -7063798771120865211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_82
+      rect:
+        serializedVersion: 2
+        x: 679
+        y: 466
+        width: 10
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d8d2bfff637bac80800000000000000
+      internalID: -8310421762513643305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_83
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 453
+        width: 63
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08d9e506269b0fe30800000000000000
+      internalID: 4535328656936836480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_84
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 319
+        width: 107
+        height: 156
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f742957e55721570800000000000000
+      internalID: 8435934100578256888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_85
+      rect:
+        serializedVersion: 2
+        x: 545
+        y: 473
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65690a869fa1af0f0800000000000000
+      internalID: -1082523101924649386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_86
+      rect:
+        serializedVersion: 2
+        x: 622
+        y: 459
+        width: 6
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40468b0475d4a7350800000000000000
+      internalID: 6015205289450038276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_87
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 471
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35be05e93fd069aa0800000000000000
+      internalID: -6154716500770886829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_88
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 470
+        width: 21
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01d6c6d3f47c0c0c0800000000000000
+      internalID: -4557423679752082160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_89
+      rect:
+        serializedVersion: 2
+        x: 892
+        y: 443
+        width: 45
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 643a173ecc56e3e80800000000000000
+      internalID: -8197002341104114874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_90
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 452
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 600c0c76745386df0800000000000000
+      internalID: -186840803736240122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_91
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 444
+        width: 10
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3837ce1789b33a980800000000000000
+      internalID: -8528907743377198205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_92
+      rect:
+        serializedVersion: 2
+        x: 249
+        y: 436
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de644899b27aa19f0800000000000000
+      internalID: -496901003170003219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_93
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 432
+        width: 6
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49c9db7a5b69c6c20800000000000000
+      internalID: 3201099142101048468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_94
+      rect:
+        serializedVersion: 2
+        x: 714
+        y: 429
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 262ea258c9f1ac530800000000000000
+      internalID: 3875945186415272546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_95
+      rect:
+        serializedVersion: 2
+        x: 932
+        y: 434
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a78c324d4bca6d80800000000000000
+      internalID: -8256563434146199641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_96
+      rect:
+        serializedVersion: 2
+        x: 946
+        y: 435
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82c6c86025f952f80800000000000000
+      internalID: -8131918377501561816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_97
+      rect:
+        serializedVersion: 2
+        x: 948
+        y: 428
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11fae7af26120e540800000000000000
+      internalID: 5035061092393332497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_98
+      rect:
+        serializedVersion: 2
+        x: 692
+        y: 421
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b28729c0218f2f2f0800000000000000
+      internalID: -940416615762986965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_99
+      rect:
+        serializedVersion: 2
+        x: 958
+        y: 425
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 627eb9cc16b1072d0800000000000000
+      internalID: -3283094021494544602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_100
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 420
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae979b38962ca3d30800000000000000
+      internalID: 4412052543400147434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_101
+      rect:
+        serializedVersion: 2
+        x: 556
+        y: 192
+        width: 172
+        height: 225
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7988fa9a2e8beea60800000000000000
+      internalID: 7705299296126470295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_102
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 413
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec0a07eaaaee41ec0800000000000000
+      internalID: -3596987785523715890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_103
+      rect:
+        serializedVersion: 2
+        x: 695
+        y: 397
+        width: 9
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c9e8e39e6fd6c130800000000000000
+      internalID: 3586799819268090313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_104
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 286
+        width: 43
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14ea4a0c63f78aba0800000000000000
+      internalID: -6077467823999504831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_105
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 336
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d897d438738eaa30800000000000000
+      internalID: 4228461652453333208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_106
+      rect:
+        serializedVersion: 2
+        x: 751
+        y: 351
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75858172cb1a5cb10800000000000000
+      internalID: 2001183438917883991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_107
+      rect:
+        serializedVersion: 2
+        x: 772
+        y: 343
+        width: 26
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a95b4bdf5904e2a10800000000000000
+      internalID: 1886516306865599898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_108
+      rect:
+        serializedVersion: 2
+        x: 820
+        y: 290
+        width: 62
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d07e359f8a7b00be0800000000000000
+      internalID: -1513007538431072499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_109
+      rect:
+        serializedVersion: 2
+        x: 755
+        y: 323
+        width: 11
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2386173a46d616ca0800000000000000
+      internalID: -6025414547438737358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_110
+      rect:
+        serializedVersion: 2
+        x: 794
+        y: 337
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bca5d64ba672f260800000000000000
+      internalID: 7129891638080810166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_111
+      rect:
+        serializedVersion: 2
+        x: 314
+        y: 285
+        width: 34
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37f59c55559eb0ca0800000000000000
+      internalID: -6049485121721376909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_112
+      rect:
+        serializedVersion: 2
+        x: 555
+        y: 297
+        width: 14
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9aba08fa60a890400800000000000000
+      internalID: 290915412260989865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_113
+      rect:
+        serializedVersion: 2
+        x: 722
+        y: 313
+        width: 10
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73f7e3c17c2ef15e0800000000000000
+      internalID: -1936579969945796809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_114
+      rect:
+        serializedVersion: 2
+        x: 760
+        y: 249
+        width: 35
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9bf4d3711c2c4a50800000000000000
+      internalID: 6506624015112928158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SketchTapNote_115
+      rect:
+        serializedVersion: 2
+        x: 728
+        y: 302
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af063d49898300fe0800000000000000
+      internalID: -1224916870661709574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      SketchTapNote_0: 7876948553673200172
+      SketchTapNote_1: -2728058210199071714
+      SketchTapNote_10: -2694708963051602874
+      SketchTapNote_100: 4412052543400147434
+      SketchTapNote_101: 7705299296126470295
+      SketchTapNote_102: -3596987785523715890
+      SketchTapNote_103: 3586799819268090313
+      SketchTapNote_104: -6077467823999504831
+      SketchTapNote_105: 4228461652453333208
+      SketchTapNote_106: 2001183438917883991
+      SketchTapNote_107: 1886516306865599898
+      SketchTapNote_108: -1513007538431072499
+      SketchTapNote_109: -6025414547438737358
+      SketchTapNote_11: 2633301414267904571
+      SketchTapNote_110: 7129891638080810166
+      SketchTapNote_111: -6049485121721376909
+      SketchTapNote_112: 290915412260989865
+      SketchTapNote_113: -1936579969945796809
+      SketchTapNote_114: 6506624015112928158
+      SketchTapNote_115: -1224916870661709574
+      SketchTapNote_12: 1478225150206255085
+      SketchTapNote_13: 4921954828931201327
+      SketchTapNote_14: -3626776319423201944
+      SketchTapNote_15: 8173362685519917520
+      SketchTapNote_16: -1238374463740819514
+      SketchTapNote_17: -3607917852340217974
+      SketchTapNote_18: -7280845445339514195
+      SketchTapNote_19: 2704684061675030877
+      SketchTapNote_2: -7576497295046222886
+      SketchTapNote_20: -7652497947395589498
+      SketchTapNote_21: 9055957588735493448
+      SketchTapNote_22: -908454733937713033
+      SketchTapNote_23: 1036349548080964469
+      SketchTapNote_24: 4132398037075684658
+      SketchTapNote_25: 4095679832305375343
+      SketchTapNote_26: 3388536811007083614
+      SketchTapNote_27: -6196715636944492005
+      SketchTapNote_28: -285035538812577723
+      SketchTapNote_29: -7080438787193788565
+      SketchTapNote_3: -1828152306590828625
+      SketchTapNote_30: 9030473547721621926
+      SketchTapNote_31: -3148831121056558971
+      SketchTapNote_32: -3925083856297812592
+      SketchTapNote_33: -1888131984184671613
+      SketchTapNote_34: 9135436862784607980
+      SketchTapNote_35: -8694479973880596222
+      SketchTapNote_36: 5811157303921902668
+      SketchTapNote_37: -8683744528864527288
+      SketchTapNote_38: -2746906794848034930
+      SketchTapNote_39: 8976563814128080714
+      SketchTapNote_4: -8774433444457794275
+      SketchTapNote_40: -7331910075803260050
+      SketchTapNote_41: -4540338065705528912
+      SketchTapNote_42: -3911501219928353395
+      SketchTapNote_43: 3516294472481784573
+      SketchTapNote_44: -7257846229302405929
+      SketchTapNote_45: 1825333584025311605
+      SketchTapNote_46: 8648682936171202830
+      SketchTapNote_47: -401649029681228165
+      SketchTapNote_48: -5368916026109034220
+      SketchTapNote_49: -3168819008379788981
+      SketchTapNote_5: -3129586855217699287
+      SketchTapNote_50: -7264986625734824679
+      SketchTapNote_51: 879567763620162310
+      SketchTapNote_52: 6033434598764619321
+      SketchTapNote_53: 4423528700328021120
+      SketchTapNote_54: 7463340308908833073
+      SketchTapNote_55: -8026936215229317016
+      SketchTapNote_56: -9089381823937678062
+      SketchTapNote_57: -2336161546753844745
+      SketchTapNote_58: -6953144588905740316
+      SketchTapNote_59: 7151275381390632061
+      SketchTapNote_6: -6226255011362447088
+      SketchTapNote_60: 8282989989587748568
+      SketchTapNote_61: -7577108315956458636
+      SketchTapNote_62: 3449252758653791801
+      SketchTapNote_63: 4509449658255784642
+      SketchTapNote_64: -7260225381445709910
+      SketchTapNote_65: -3715104885656566259
+      SketchTapNote_66: -5791998627511172585
+      SketchTapNote_67: 7238316153099048167
+      SketchTapNote_68: 1774467438772037481
+      SketchTapNote_69: -244791390111993882
+      SketchTapNote_7: 7424701879553312556
+      SketchTapNote_70: 3233388565168348451
+      SketchTapNote_71: 3997622744757084360
+      SketchTapNote_72: -6971954669849057997
+      SketchTapNote_73: -6532939182570599851
+      SketchTapNote_74: 8791664180818229488
+      SketchTapNote_75: -2573330529186612890
+      SketchTapNote_76: 8868559325291291802
+      SketchTapNote_77: -3201044965876837706
+      SketchTapNote_78: 6832635278709620295
+      SketchTapNote_79: -5066435565501534318
+      SketchTapNote_8: 8337980976176666592
+      SketchTapNote_80: 207563916960248958
+      SketchTapNote_81: -7063798771120865211
+      SketchTapNote_82: -8310421762513643305
+      SketchTapNote_83: 4535328656936836480
+      SketchTapNote_84: 8435934100578256888
+      SketchTapNote_85: -1082523101924649386
+      SketchTapNote_86: 6015205289450038276
+      SketchTapNote_87: -6154716500770886829
+      SketchTapNote_88: -4557423679752082160
+      SketchTapNote_89: -8197002341104114874
+      SketchTapNote_9: -1162822397109327738
+      SketchTapNote_90: -186840803736240122
+      SketchTapNote_91: -8528907743377198205
+      SketchTapNote_92: -496901003170003219
+      SketchTapNote_93: 3201099142101048468
+      SketchTapNote_94: 3875945186415272546
+      SketchTapNote_95: -8256563434146199641
+      SketchTapNote_96: -8131918377501561816
+      SketchTapNote_97: 5035061092393332497
+      SketchTapNote_98: -940416615762986965
+      SketchTapNote_99: -3283094021494544602
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

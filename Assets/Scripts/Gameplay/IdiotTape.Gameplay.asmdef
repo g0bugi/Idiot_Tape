@@ -1,0 +1,9 @@
+{
+  "name": "IdiotTape.Gameplay",
+  "rootNamespace": "IdiotTape.Gameplay",
+  "references": [
+    "Unity.InputSystem",
+    "Unity.ugui"
+  ],
+  "autoReferenced": true
+}

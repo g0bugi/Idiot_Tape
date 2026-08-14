@@ -1,0 +1,13 @@
+{
+  "name": "IdiotTape.Gameplay.PlayModeTests",
+  "rootNamespace": "IdiotTape.Gameplay.Tests",
+  "references": [
+    "IdiotTape.Gameplay",
+    "Unity.InputSystem",
+    "Unity.ugui"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false
+}
