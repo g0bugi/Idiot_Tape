@@ -1,0 +1,13 @@
+{
+  "name": "IdiotTape.Gameplay.Editor",
+  "rootNamespace": "IdiotTape.EditorTools",
+  "references": [
+    "IdiotTape.Gameplay",
+    "Unity.ugui",
+    "Unity.RenderPipelines.Universal.Runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "autoReferenced": true
+}

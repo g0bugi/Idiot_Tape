@@ -1,0 +1,153 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30c79ae61a0853047a022f5c1103936c, type: 3}
+  m_Name: PrototypeChart
+  m_EditorClassIdentifier: IdiotTape.Gameplay::IdiotTape.Gameplay.PrototypeChart
+  audioClip: {fileID: 0}
+  laneCount: 8
+  visualLeadTime: 2.4
+  musicalParts:
+  - id: pulse
+    color: {r: 0.94, g: 0.92, b: 0.86, a: 1}
+  - id: blue
+    color: {r: 0.28, g: 0.5, b: 0.95, a: 1}
+  - id: pink
+    color: {r: 0.95, g: 0.31, b: 0.58, a: 1}
+  notes:
+  - id: prototype_001
+    hitTime: 1.5
+    laneIndex: 0
+    musicalPartId: pulse
+  - id: prototype_002
+    hitTime: 1.84
+    laneIndex: 2
+    musicalPartId: blue
+  - id: prototype_003
+    hitTime: 2.18
+    laneIndex: 4
+    musicalPartId: pink
+  - id: prototype_004
+    hitTime: 2.52
+    laneIndex: 6
+    musicalPartId: blue
+  - id: prototype_005
+    hitTime: 2.8600000000000003
+    laneIndex: 7
+    musicalPartId: pulse
+  - id: prototype_006
+    hitTime: 3.2
+    laneIndex: 5
+    musicalPartId: blue
+  - id: prototype_007
+    hitTime: 3.54
+    laneIndex: 3
+    musicalPartId: pink
+  - id: prototype_008
+    hitTime: 3.8800000000000003
+    laneIndex: 1
+    musicalPartId: blue
+  - id: prototype_009
+    hitTime: 4.220000000000001
+    laneIndex: 1
+    musicalPartId: pulse
+  - id: prototype_010
+    hitTime: 4.5600000000000005
+    laneIndex: 4
+    musicalPartId: blue
+  - id: prototype_011
+    hitTime: 4.9
+    laneIndex: 6
+    musicalPartId: pink
+  - id: prototype_012
+    hitTime: 5.24
+    laneIndex: 3
+    musicalPartId: blue
+  - id: prototype_013
+    hitTime: 5.58
+    laneIndex: 0
+    musicalPartId: pulse
+  - id: prototype_014
+    hitTime: 5.92
+    laneIndex: 3
+    musicalPartId: blue
+  - id: prototype_015
+    hitTime: 6.260000000000001
+    laneIndex: 6
+    musicalPartId: pink
+  - id: prototype_016
+    hitTime: 6.6000000000000005
+    laneIndex: 4
+    musicalPartId: blue
+  - id: prototype_017
+    hitTime: 6.94
+    laneIndex: 7
+    musicalPartId: pulse
+  - id: prototype_018
+    hitTime: 7.28
+    laneIndex: 5
+    musicalPartId: blue
+  - id: prototype_019
+    hitTime: 7.62
+    laneIndex: 2
+    musicalPartId: pink
+  - id: prototype_020
+    hitTime: 7.960000000000001
+    laneIndex: 0
+    musicalPartId: blue
+  - id: prototype_021
+    hitTime: 8.3
+    laneIndex: 2
+    musicalPartId: pulse
+  - id: prototype_022
+    hitTime: 8.64
+    laneIndex: 5
+    musicalPartId: blue
+  - id: prototype_023
+    hitTime: 8.98
+    laneIndex: 7
+    musicalPartId: pink
+  - id: prototype_024
+    hitTime: 9.32
+    laneIndex: 4
+    musicalPartId: blue
+  - id: prototype_025
+    hitTime: 9.66
+    laneIndex: 3
+    musicalPartId: pulse
+  - id: prototype_026
+    hitTime: 10
+    laneIndex: 1
+    musicalPartId: blue
+  - id: prototype_027
+    hitTime: 10.34
+    laneIndex: 4
+    musicalPartId: pink
+  - id: prototype_028
+    hitTime: 10.680000000000001
+    laneIndex: 6
+    musicalPartId: blue
+  - id: prototype_029
+    hitTime: 11.020000000000001
+    laneIndex: 5
+    musicalPartId: pulse
+  - id: prototype_030
+    hitTime: 11.360000000000001
+    laneIndex: 2
+    musicalPartId: blue
+  - id: prototype_031
+    hitTime: 11.700000000000001
+    laneIndex: 0
+    musicalPartId: pink
+  - id: prototype_032
+    hitTime: 12.040000000000001
+    laneIndex: 7
+    musicalPartId: blue

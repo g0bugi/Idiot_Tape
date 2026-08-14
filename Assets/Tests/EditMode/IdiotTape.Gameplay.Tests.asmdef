@@ -1,0 +1,14 @@
+{
+  "name": "IdiotTape.Gameplay.Tests",
+  "rootNamespace": "IdiotTape.Gameplay.Tests",
+  "references": [
+    "IdiotTape.Gameplay"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "autoReferenced": false
+}

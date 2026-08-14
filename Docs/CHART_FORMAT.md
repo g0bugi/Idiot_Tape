@@ -121,6 +121,16 @@ unless an intentional coordinate-system design requires it.
 Chart spatial data should be capable of being interpreted consistently across different
 mobile screen conditions.
 
+### Current Prototype Representation
+
+For the first playable prototype, a chart defines a lane count and each note stores a zero-based
+lane index. The runtime converts that index into a normalized horizontal position. These lanes are
+not drawn on screen.
+
+The initial sample chart uses eight lanes. This is a reversible prototype representation rather
+than a permanent serialization decision. Lane count remains chart data, and gameplay code must not
+depend on a single hard-coded count.
+
 
 ## Note Types
 

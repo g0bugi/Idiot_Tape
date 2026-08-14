@@ -163,6 +163,20 @@ or other structured layouts when they improve readability.
 The important requirement is that the architecture does not unnecessarily prevent charts
 from changing spatial structure according to the music.
 
+### Current Prototype Layout
+
+The first playable prototype uses a landscape screen and an eight-position hidden lane grid.
+
+- lane dividers are not rendered
+- notes approach a slightly curved judgement line
+- the area below the judgement line accepts touch input
+- judgement considers both timing and horizontal touch position
+- horizontal tolerance is intentionally generous for early mobile playtesting
+
+The hidden grid is an authoring and input structure, not a requirement that the final game always
+display or use eight conventional lanes. Lane count should remain data-driven so later charts can
+test other layouts without replacing the timing or judgement architecture.
+
 
 ## Musical Parts
 
