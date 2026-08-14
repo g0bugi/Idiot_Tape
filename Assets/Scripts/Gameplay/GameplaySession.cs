@@ -42,6 +42,7 @@ namespace IdiotTape.Gameplay
         {
 
             inputRouter.Pressed += HandlePressed;
+            inputRouter.LanePressed += HandleLanePressed;
             inputRouter.RestartRequested += BeginSession;
             inputRouter.PauseRequested += TogglePause;
 
@@ -51,6 +52,7 @@ namespace IdiotTape.Gameplay
         {
 
             inputRouter.Pressed -= HandlePressed;
+            inputRouter.LanePressed -= HandleLanePressed;
             inputRouter.RestartRequested -= BeginSession;
             inputRouter.PauseRequested -= TogglePause;
 
@@ -112,8 +114,10 @@ namespace IdiotTape.Gameplay
             nextNoteIndex = 0;
             score = 0;
             combo = 0;
-            hud.SetScore(score, combo);
+            hud.SetScore(score);
+            hud.ShowCombo(0);
             hud.ShowJudgement(JudgementGrade.None);
+            hud.SetPaused(false);
             hud.SetProgress(0f);
             songClock.StartSong(chart.AudioClip);
 
@@ -155,7 +159,7 @@ namespace IdiotTape.Gameplay
                 activeNote.View.Remove();
                 activeNotes.RemoveAt(index);
                 combo = 0;
-                hud.SetScore(score, combo);
+                hud.ShowCombo(combo);
                 hud.ShowJudgement(JudgementGrade.Miss);
 
             }
@@ -165,12 +169,49 @@ namespace IdiotTape.Gameplay
         private void HandlePressed(Vector2 screenPosition, double eventTimestamp)
         {
 
-            if (!isReady || songClock.IsPaused || !presenter.TryGetInputPosition(screenPosition, out float normalizedX))
+            if (!isReady)
             {
 
                 return;
 
             }
+
+            if (hud.IsPauseButtonPress(screenPosition))
+            {
+
+                TogglePause();
+                return;
+
+            }
+
+            if (songClock.IsPaused || !presenter.TryGetInputPosition(screenPosition, out float normalizedX))
+            {
+
+                return;
+
+            }
+
+            JudgeInput(normalizedX, eventTimestamp);
+
+        }
+
+        private void HandleLanePressed(int laneIndex, double eventTimestamp)
+        {
+
+            if (!isReady || songClock.IsPaused || laneIndex < 0 || laneIndex >= chart.LaneCount)
+            {
+
+                return;
+
+            }
+
+            float normalizedX = PlayfieldGeometry.GetLaneCenterNormalized(laneIndex, chart.LaneCount);
+            JudgeInput(normalizedX, eventTimestamp);
+
+        }
+
+        private void JudgeInput(float normalizedX, double eventTimestamp)
+        {
 
             judgementCandidates.Clear();
 
@@ -201,12 +242,18 @@ namespace IdiotTape.Gameplay
             }
 
             ActiveNote judgedNote = activeNotes[result.SourceIndex];
+            Color partColor = chart.GetPartColor(judgedNote.Note.MusicalPartId);
+            presenter.PlayHitFeedback(judgedNote.Note, chart.LaneCount, partColor);
             judgedNote.View.Remove();
             activeNotes.RemoveAt(result.SourceIndex);
             combo++;
             score += result.Grade == JudgementGrade.Perfect ? 1000 : 700;
-            hud.SetScore(score, combo);
+            hud.SetScore(score);
+            hud.ShowCombo(combo);
             hud.ShowJudgement(result.Grade);
+            hud.ShowInstrument(
+                chart.GetPartDisplayName(judgedNote.Note.MusicalPartId),
+                partColor);
 
         }
 

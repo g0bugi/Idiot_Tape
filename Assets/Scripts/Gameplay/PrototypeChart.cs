@@ -10,10 +10,33 @@ namespace IdiotTape.Gameplay
     {
 
         [SerializeField] private string id = "part";
+        [SerializeField] private string displayName = "Part";
         [SerializeField] private Color color = Color.white;
 
         public string Id => id;
+        public string DisplayName => displayName;
         public Color Color => color;
+
+    }
+
+    [Serializable]
+    public sealed class MusicalPartActivationWindow
+    {
+
+        [SerializeField] private string musicalPartId = "part";
+        [SerializeField, Min(0f)] private double startTime;
+        [SerializeField, Min(0f)] private double endTime = 1d;
+
+        public string MusicalPartId => musicalPartId;
+        public double StartTime => startTime;
+        public double EndTime => endTime;
+
+        public bool Contains(double songTime)
+        {
+
+            return songTime >= startTime && songTime < endTime;
+
+        }
 
     }
 
@@ -41,11 +64,14 @@ namespace IdiotTape.Gameplay
         [SerializeField, Min(2)] private int laneCount = 8;
         [SerializeField, Min(0.1f)] private float visualLeadTime = 2.4f;
         [SerializeField] private List<MusicalPartDefinition> musicalParts = new();
+        [SerializeField] private List<MusicalPartActivationWindow> activationWindows = new();
         [SerializeField] private List<ChartNote> notes = new();
 
         public AudioClip AudioClip => audioClip;
         public int LaneCount => laneCount;
         public float VisualLeadTime => visualLeadTime;
+        public IReadOnlyList<MusicalPartDefinition> MusicalParts => musicalParts;
+        public IReadOnlyList<MusicalPartActivationWindow> ActivationWindows => activationWindows;
         public IReadOnlyList<ChartNote> Notes => notes;
 
         public double Duration
@@ -86,6 +112,46 @@ namespace IdiotTape.Gameplay
 
         }
 
+        public string GetPartDisplayName(string partId)
+        {
+
+            for (int index = 0; index < musicalParts.Count; index++)
+            {
+
+                if (musicalParts[index].Id == partId)
+                {
+
+                    return musicalParts[index].DisplayName;
+
+                }
+
+            }
+
+            return partId;
+
+        }
+
+        public bool IsPartActive(string partId, double songTime)
+        {
+
+            for (int index = 0; index < activationWindows.Count; index++)
+            {
+
+                MusicalPartActivationWindow window = activationWindows[index];
+
+                if (window.MusicalPartId == partId && window.Contains(songTime))
+                {
+
+                    return true;
+
+                }
+
+            }
+
+            return false;
+
+        }
+
         public bool TryValidate(out string error)
         {
 
@@ -104,10 +170,51 @@ namespace IdiotTape.Gameplay
             for (int index = 0; index < musicalParts.Count; index++)
             {
 
-                if (string.IsNullOrWhiteSpace(musicalParts[index].Id) || !partIds.Add(musicalParts[index].Id))
+                MusicalPartDefinition part = musicalParts[index];
+
+                if (string.IsNullOrWhiteSpace(part.Id) || !partIds.Add(part.Id))
                 {
 
                     error = $"Musical part at index {index} has an empty or duplicate ID.";
+                    return false;
+
+                }
+
+                if (string.IsNullOrWhiteSpace(part.DisplayName))
+                {
+
+                    error = $"Musical part '{part.Id}' has an empty display name.";
+                    return false;
+
+                }
+
+            }
+
+            if (activationWindows.Count == 0)
+            {
+
+                error = "At least one musical-part activation window is required.";
+                return false;
+
+            }
+
+            for (int index = 0; index < activationWindows.Count; index++)
+            {
+
+                MusicalPartActivationWindow window = activationWindows[index];
+
+                if (!partIds.Contains(window.MusicalPartId))
+                {
+
+                    error = $"Activation window {index} references unknown part '{window.MusicalPartId}'.";
+                    return false;
+
+                }
+
+                if (window.StartTime < 0d || window.EndTime <= window.StartTime)
+                {
+
+                    error = $"Activation window {index} has an invalid time range.";
                     return false;
 
                 }
@@ -147,6 +254,14 @@ namespace IdiotTape.Gameplay
                 {
 
                     error = $"Note '{note.Id}' references unknown part '{note.MusicalPartId}'.";
+                    return false;
+
+                }
+
+                if (!IsPartActive(note.MusicalPartId, note.HitTime))
+                {
+
+                    error = $"Note '{note.Id}' occurs while part '{note.MusicalPartId}' is inactive.";
                     return false;
 
                 }

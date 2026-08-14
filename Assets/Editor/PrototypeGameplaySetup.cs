@@ -76,9 +76,17 @@ namespace IdiotTape.EditorTools
 
             SerializedProperty parts = serializedChart.FindProperty("musicalParts");
             parts.arraySize = 3;
-            SetPart(parts.GetArrayElementAtIndex(0), "pulse", new Color(0.94f, 0.92f, 0.86f, 1f));
-            SetPart(parts.GetArrayElementAtIndex(1), "blue", new Color(0.28f, 0.5f, 0.95f, 1f));
-            SetPart(parts.GetArrayElementAtIndex(2), "pink", new Color(0.95f, 0.31f, 0.58f, 1f));
+            SetPart(parts.GetArrayElementAtIndex(0), "drum", "Drum", new Color(0.94f, 0.92f, 0.86f, 1f));
+            SetPart(parts.GetArrayElementAtIndex(1), "synth", "Synth", new Color(0.28f, 0.5f, 0.95f, 1f));
+            SetPart(parts.GetArrayElementAtIndex(2), "bass", "Bass", new Color(0.95f, 0.31f, 0.58f, 1f));
+
+            SerializedProperty activationWindows = serializedChart.FindProperty("activationWindows");
+            activationWindows.arraySize = 5;
+            SetActivationWindow(activationWindows.GetArrayElementAtIndex(0), "drum", 0d, 4.5d);
+            SetActivationWindow(activationWindows.GetArrayElementAtIndex(1), "bass", 4.5d, 7.2d);
+            SetActivationWindow(activationWindows.GetArrayElementAtIndex(2), "drum", 7.2d, 10d);
+            SetActivationWindow(activationWindows.GetArrayElementAtIndex(3), "synth", 7.2d, 13.5d);
+            SetActivationWindow(activationWindows.GetArrayElementAtIndex(4), "bass", 10d, 13.5d);
 
             int[] pattern =
             {
@@ -96,7 +104,33 @@ namespace IdiotTape.EditorTools
             for (int index = 0; index < pattern.Length; index++)
             {
 
-                string partId = index % 4 == 0 ? "pulse" : index % 2 == 0 ? "pink" : "blue";
+                string partId;
+
+                if (index <= 8)
+                {
+
+                    partId = "drum";
+
+                }
+                else if (index <= 16)
+                {
+
+                    partId = "bass";
+
+                }
+                else if (index <= 24)
+                {
+
+                    partId = index % 2 == 0 ? "drum" : "synth";
+
+                }
+                else
+                {
+
+                    partId = index % 2 == 0 ? "bass" : "synth";
+
+                }
+
                 SetNote(
                     notes.GetArrayElementAtIndex(index),
                     $"prototype_{index + 1:000}",
@@ -142,7 +176,9 @@ namespace IdiotTape.EditorTools
 
             GameObject canvasObject = new("HUD Canvas");
             Canvas canvas = canvasObject.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = gameplayCamera;
+            canvas.planeDistance = 1f;
             CanvasScaler scaler = canvasObject.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
@@ -173,25 +209,48 @@ namespace IdiotTape.EditorTools
                 "00000000",
                 34,
                 TextAnchor.UpperRight,
-                new Vector2(0.78f, 0.885f),
-                new Vector2(0.965f, 0.95f));
+                new Vector2(0.74f, 0.885f),
+                new Vector2(0.92f, 0.95f));
+            Text instrumentText = CreateText(
+                "Instrument",
+                canvasObject.transform,
+                string.Empty,
+                34,
+                TextAnchor.UpperLeft,
+                new Vector2(0.035f, 0.86f),
+                new Vector2(0.25f, 0.94f));
             Text comboText = CreateText(
                 "Combo",
                 canvasObject.transform,
                 string.Empty,
-                32,
-                TextAnchor.UpperCenter,
-                new Vector2(0.38f, 0.86f),
-                new Vector2(0.62f, 0.94f));
+                38,
+                TextAnchor.MiddleCenter,
+                new Vector2(0.38f, 0.14f),
+                new Vector2(0.62f, 0.23f));
             Text judgementText = CreateText(
                 "Judgement",
                 canvasObject.transform,
                 string.Empty,
                 42,
                 TextAnchor.MiddleCenter,
-                new Vector2(0.35f, 0.2f),
+                new Vector2(0.35f, 0.22f),
                 new Vector2(0.65f, 0.32f));
             judgementText.fontStyle = FontStyle.Bold;
+
+            Image pauseButtonBackground = CreateImage(
+                "PauseButton",
+                canvasObject.transform,
+                new Color(1f, 1f, 1f, 0.08f),
+                new Vector2(0.945f, 0.875f),
+                new Vector2(0.985f, 0.95f));
+            Text pauseButtonText = CreateText(
+                "PauseIcon",
+                pauseButtonBackground.transform,
+                "II",
+                25,
+                TextAnchor.MiddleCenter,
+                Vector2.zero,
+                Vector2.one);
 
             SetObjectReference(songClock, "audioSource", audioSource);
             SetObjectReference(presenter, "gameplayCamera", gameplayCamera);
@@ -200,7 +259,10 @@ namespace IdiotTape.EditorTools
             SetObjectReference(hud, "scoreText", scoreText);
             SetObjectReference(hud, "comboText", comboText);
             SetObjectReference(hud, "judgementText", judgementText);
+            SetObjectReference(hud, "instrumentText", instrumentText);
             SetObjectReference(hud, "progressFill", progressFill);
+            SetObjectReference(hud, "pauseButtonArea", pauseButtonBackground.rectTransform);
+            SetObjectReference(hud, "pauseButtonText", pauseButtonText);
             SetObjectReference(gameplaySession, "chart", chart);
             SetObjectReference(gameplaySession, "songClock", songClock);
             SetObjectReference(gameplaySession, "inputRouter", inputRouter);
@@ -223,11 +285,25 @@ namespace IdiotTape.EditorTools
 
         }
 
-        private static void SetPart(SerializedProperty part, string id, Color color)
+        private static void SetPart(SerializedProperty part, string id, string displayName, Color color)
         {
 
             part.FindPropertyRelative("id").stringValue = id;
+            part.FindPropertyRelative("displayName").stringValue = displayName;
             part.FindPropertyRelative("color").colorValue = color;
+
+        }
+
+        private static void SetActivationWindow(
+            SerializedProperty window,
+            string partId,
+            double startTime,
+            double endTime)
+        {
+
+            window.FindPropertyRelative("musicalPartId").stringValue = partId;
+            window.FindPropertyRelative("startTime").doubleValue = startTime;
+            window.FindPropertyRelative("endTime").doubleValue = endTime;
 
         }
 

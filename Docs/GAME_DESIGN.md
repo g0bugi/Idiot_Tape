@@ -177,6 +177,9 @@ The hidden grid is an authoring and input structure, not a requirement that the 
 display or use eight conventional lanes. Lane count should remain data-driven so later charts can
 test other layouts without replacing the timing or judgement architecture.
 
+For Editor playtesting, the number keys `1` through `8` trigger the corresponding hidden positions
+from left to right. This is a development input path and does not replace mobile touch input.
+
 
 ## Musical Parts
 
@@ -197,6 +200,22 @@ Do not hard-code a universal list of instruments into the core runtime unless su
 is later intentionally defined.
 
 Prefer chart-defined identifiers or data-driven musical-part definitions.
+
+### Musical-Part Activation
+
+The prototype treats musical parts and their active time ranges as chart data. A part definition
+owns a stable ID, a display name, and presentation color. Separate activation windows describe
+when each part contributes playable notes.
+
+Activation windows may overlap. This supports structures such as:
+
+- drums only
+- bass only
+- drums and synthesizer together
+- bass and synthesizer together
+
+The current HUD displays the part of the note that was just judged. A later anticipation UI may
+look ahead to upcoming activation-window boundaries without changing note timing or judgement.
 
 
 ## Notes and Interaction Types

@@ -2,7 +2,9 @@
   "name": "IdiotTape.Gameplay.PlayModeTests",
   "rootNamespace": "IdiotTape.Gameplay.Tests",
   "references": [
-    "IdiotTape.Gameplay"
+    "IdiotTape.Gameplay",
+    "Unity.InputSystem",
+    "Unity.ugui"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"

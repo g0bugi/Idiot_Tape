@@ -105,6 +105,22 @@ Do not hard-code this example list as the universal instrument model.
 
 Charts should be able to define or reference song-specific musical-part identities.
 
+### Musical-Part Activation Windows
+
+The current prototype stores musical-part activation as chart-level time windows. Each window
+contains:
+
+- a musical-part ID
+- an inclusive start time
+- an exclusive end time
+
+Windows for different parts may overlap. A note is valid only when its referenced musical part is
+active at the note's hit time. Activation affects chart structure; color remains presentation data
+and must not be used as the authoritative part identity.
+
+This representation is intended to support later look-ahead presentation, such as announcing that
+a drum or synthesizer layer will become active at an upcoming boundary.
+
 
 ## Spatial Representation
 
