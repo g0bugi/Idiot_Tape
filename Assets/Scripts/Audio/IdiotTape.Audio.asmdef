@@ -1,0 +1,8 @@
+{
+  "name": "IdiotTape.Audio",
+  "rootNamespace": "IdiotTape.Audio",
+  "references": [
+    "FMODUnity"
+  ],
+  "autoReferenced": true
+}

@@ -13,6 +13,16 @@ MonoBehaviour:
   m_Name: PrototypeChart
   m_EditorClassIdentifier: IdiotTape.Gameplay::IdiotTape.Gameplay.PrototypeChart
   audioClip: {fileID: 0}
+  songEventPath: event:/Music/Pluto
+  stemParameters:
+  - stemId: synth
+    parameterName: stems_synth1_volume
+  - stemId: bass
+    parameterName: stems_bass_volume
+  - stemId: drum
+    parameterName: stems_drum_volume
+  - stemId: etc
+    parameterName: stems_etc_volume
   laneCount: 8
   visualLeadTime: 2.4
   musicalParts:

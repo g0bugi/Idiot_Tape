@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FMOD;
 using FMOD.Studio;
 using FMODUnity;
@@ -8,6 +9,18 @@ using FmodStopMode = FMOD.Studio.STOP_MODE;
 
 namespace IdiotTape.Audio
 {
+
+    [Serializable]
+    public sealed class FmodStemDefinition
+    {
+
+        [SerializeField] private string stemId;
+        [SerializeField] private string parameterName;
+
+        public string StemId => stemId;
+        public string ParameterName => parameterName;
+
+    }
 
     public sealed class FmodSongPlayback : MonoBehaviour
     {
@@ -144,11 +157,21 @@ namespace IdiotTape.Audio
 
         private EventDescription songDescription;
         private EventInstance songInstance;
+        private string configuredEventPath;
         private bool sampleLoadRequested;
         private bool playWhenPrepared;
         private bool preparationFailed;
+        private ulong anchorDspClock;
+        private double anchorSongTime;
+        private double pausedSongTime;
+        private int dspSampleRate;
+        private bool hasTimelineAnchor;
 
         public bool IsPrepared => songInstance.isValid();
+
+        public bool PreparationFailed => preparationFailed;
+
+        public bool IsRunning => songInstance.isValid() && hasTimelineAnchor;
 
         public bool IsPlaying
         {
@@ -190,8 +213,8 @@ namespace IdiotTape.Audio
 
         }
 
-        // This millisecond FMOD timeline position is suitable for audition UI and seeking.
-        // Rhythm judgement will require a dedicated DSP-clock-backed song clock.
+        // The millisecond FMOD timeline is used for audition UI, seeking, and DSP anchor capture.
+        // Rhythm gameplay reads SongTime, which advances from the FMOD DSP sample clock.
         public double PlaybackPositionSeconds
         {
 
@@ -212,10 +235,62 @@ namespace IdiotTape.Audio
 
         }
 
+        public double SongTime
+        {
+
+            get
+            {
+
+                if (!IsRunning)
+                {
+
+                    return 0d;
+
+                }
+
+                if (IsPaused)
+                {
+
+                    return pausedSongTime;
+
+                }
+
+                return TryGetCurrentDspClock(out ulong currentDspClock)
+                    ? Math.Max(0d, SongTimelineMath.FromDspClock(
+                        anchorDspClock,
+                        currentDspClock,
+                        dspSampleRate,
+                        anchorSongTime))
+                    : Math.Max(0d, anchorSongTime);
+
+            }
+
+        }
+
+        public double DurationSeconds
+        {
+
+            get
+            {
+
+                if (!songDescription.isValid())
+                {
+
+                    return 0d;
+
+                }
+
+                RESULT result = songDescription.getLength(out int lengthMilliseconds);
+                return result == RESULT.OK ? lengthMilliseconds / 1000d : 0d;
+
+            }
+
+        }
+
         public void Configure(EventReference eventReference, bool autoPlay)
         {
 
-            if (Application.isPlaying && songInstance.isValid())
+            if (Application.isPlaying && HasPreparedResources())
             {
 
                 Release();
@@ -223,15 +298,56 @@ namespace IdiotTape.Audio
             }
 
             songEvent = eventReference;
+            configuredEventPath = string.Empty;
             playOnStart = autoPlay;
             preparationFailed = false;
+
+        }
+
+        public void ConfigureEventPath(string eventPath, bool autoPlay)
+        {
+
+            if (Application.isPlaying && HasPreparedResources())
+            {
+
+                Release();
+
+            }
+
+            configuredEventPath = eventPath;
+            songEvent = default;
+            playOnStart = autoPlay;
+            preparationFailed = false;
+
+        }
+
+        public void ConfigureStemParameters(IReadOnlyList<FmodStemDefinition> definitions)
+        {
+
+            int definitionCount = definitions == null ? 0 : definitions.Count;
+            stemVolumes = new StemVolumeControl[definitionCount];
+
+            for (int index = 0; index < definitionCount; index++)
+            {
+
+                FmodStemDefinition definition = definitions[index];
+                stemVolumes[index] = new StemVolumeControl(
+                    definition.StemId,
+                    definition.ParameterName);
+
+            }
 
         }
 
         private void Awake()
         {
 
-            Prepare();
+            if (HasSongReference())
+            {
+
+                Prepare();
+
+            }
 
         }
 
@@ -295,7 +411,7 @@ namespace IdiotTape.Audio
 
             }
 
-            if (songEvent.IsNull)
+            if (!HasSongReference())
             {
 
                 preparationFailed = true;
@@ -307,7 +423,9 @@ namespace IdiotTape.Audio
             try
             {
 
-                songDescription = RuntimeManager.GetEventDescription(songEvent);
+                songDescription = string.IsNullOrWhiteSpace(configuredEventPath)
+                    ? RuntimeManager.GetEventDescription(songEvent)
+                    : RuntimeManager.GetEventDescription(configuredEventPath);
 
             }
             catch (EventNotFoundException exception)
@@ -389,6 +507,12 @@ namespace IdiotTape.Audio
                 LogFmodError("start song", result);
 
             }
+            else
+            {
+
+                SynchronizeTimelineAnchor();
+
+            }
 
         }
 
@@ -435,6 +559,9 @@ namespace IdiotTape.Audio
 
             }
 
+            hasTimelineAnchor = false;
+            pausedSongTime = 0d;
+
         }
 
         public void Restart()
@@ -478,6 +605,12 @@ namespace IdiotTape.Audio
                 LogFmodError("restart song", startResult);
 
             }
+            else
+            {
+
+                SynchronizeTimelineAnchor();
+
+            }
 
         }
 
@@ -512,6 +645,8 @@ namespace IdiotTape.Audio
                 return false;
 
             }
+
+            CaptureTimelineAnchor();
 
             return true;
 
@@ -705,6 +840,20 @@ namespace IdiotTape.Audio
 
             }
 
+            if (paused == IsPaused)
+            {
+
+                return;
+
+            }
+
+            if (paused)
+            {
+
+                pausedSongTime = SongTime;
+
+            }
+
             RESULT result = songInstance.setPaused(paused);
 
             if (result != RESULT.OK)
@@ -726,6 +875,20 @@ namespace IdiotTape.Audio
 
             }
 
+            if (paused)
+            {
+
+                CaptureTimelineAnchor();
+                pausedSongTime = anchorSongTime;
+
+            }
+            else
+            {
+
+                CaptureTimelineAnchor(pausedSongTime);
+
+            }
+
         }
 
         private void Release()
@@ -733,6 +896,8 @@ namespace IdiotTape.Audio
 
             playWhenPrepared = false;
             sampleLoadRequested = false;
+            hasTimelineAnchor = false;
+            pausedSongTime = 0d;
 
             if (songInstance.isValid())
             {
@@ -750,6 +915,8 @@ namespace IdiotTape.Audio
 
             }
 
+            songDescription = default;
+
         }
 
         private void LogFmodError(string operation, RESULT result)
@@ -758,6 +925,118 @@ namespace IdiotTape.Audio
             Debug.LogError(
                 $"Could not {operation}: {result} ({Error.String(result)}).",
                 this);
+
+        }
+
+        public double GetSongTimeForExternalTimestamp(double eventTimestamp, double externalNow)
+        {
+
+            return SongTimelineMath.ForExternalTimestamp(SongTime, eventTimestamp, externalNow);
+
+        }
+
+        private bool HasSongReference()
+        {
+
+            return !string.IsNullOrWhiteSpace(configuredEventPath) || !songEvent.IsNull;
+
+        }
+
+        private bool HasPreparedResources()
+        {
+
+            return songInstance.isValid() || sampleLoadRequested || songDescription.isValid();
+
+        }
+
+        private void SynchronizeTimelineAnchor()
+        {
+
+            RESULT flushResult = RuntimeManager.StudioSystem.flushCommands();
+
+            if (flushResult != RESULT.OK)
+            {
+
+                LogFmodError("synchronize song start", flushResult);
+                hasTimelineAnchor = false;
+                return;
+
+            }
+
+            CaptureTimelineAnchor();
+
+        }
+
+        private void CaptureTimelineAnchor(double? explicitSongTime = null)
+        {
+
+            if (!songInstance.isValid())
+            {
+
+                hasTimelineAnchor = false;
+                return;
+
+            }
+
+            RESULT formatResult = RuntimeManager.CoreSystem.getSoftwareFormat(
+                out int sampleRate,
+                out _,
+                out _);
+
+            if (formatResult != RESULT.OK)
+            {
+
+                LogFmodError("read FMOD software sample rate", formatResult);
+                hasTimelineAnchor = false;
+                return;
+
+            }
+
+            RESULT groupResult = RuntimeManager.CoreSystem.getMasterChannelGroup(out ChannelGroup masterGroup);
+
+            if (groupResult != RESULT.OK)
+            {
+
+                LogFmodError("read FMOD master channel group", groupResult);
+                hasTimelineAnchor = false;
+                return;
+
+            }
+
+            RESULT clockResult = masterGroup.getDSPClock(out ulong currentDspClock, out _);
+
+            if (clockResult != RESULT.OK)
+            {
+
+                LogFmodError("read FMOD DSP clock", clockResult);
+                hasTimelineAnchor = false;
+                return;
+
+            }
+
+            double timelinePosition = explicitSongTime ?? PlaybackPositionSeconds;
+            dspSampleRate = sampleRate;
+            anchorDspClock = currentDspClock;
+            anchorSongTime = timelinePosition;
+            hasTimelineAnchor = true;
+
+        }
+
+        private bool TryGetCurrentDspClock(out ulong currentDspClock)
+        {
+
+            RESULT groupResult = RuntimeManager.CoreSystem.getMasterChannelGroup(out ChannelGroup masterGroup);
+
+            if (groupResult != RESULT.OK)
+            {
+
+                currentDspClock = 0;
+                return false;
+
+            }
+
+            RESULT clockResult = masterGroup.getDSPClock(out currentDspClock, out _);
+            return clockResult == RESULT.OK;
 
         }
 

@@ -88,6 +88,11 @@ Responsibilities include:
 
 There must not be multiple independent authoritative song clocks.
 
+For the current FMOD prototype, the FMOD playback component owns both event playback and the
+DSP-backed song timeline. The gameplay session reads that component for scheduling, presentation,
+input timestamp conversion, pause, resume, and restart. It must not run a parallel Unity
+`AudioSettings.dspTime` gameplay clock while FMOD is playing the song.
+
 
 ### Chart Data
 

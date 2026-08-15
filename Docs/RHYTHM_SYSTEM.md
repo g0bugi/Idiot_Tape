@@ -46,6 +46,18 @@ but the architectural requirement remains:
 
 > rhythm gameplay must use one authoritative high-precision audio timeline.
 
+### Current FMOD Prototype
+
+The current playable prototype uses the selected FMOD song event as its audio source and derives
+gameplay song time from FMOD's DSP sample clock. The FMOD millisecond timeline position is captured
+when playback state changes, then DSP-sample progression advances the authoritative song time.
+
+The millisecond timeline position remains suitable for seeking and audition UI. It must not be
+polled as the per-frame authoritative judgement clock.
+
+Starting, restarting, pausing, resuming, or seeking the FMOD event must recapture the DSP/timeline
+anchor so audio playback, note presentation, and judgement continue to share one timeline.
+
 
 ## Do Not Use Accumulated Delta Time as Song Time
 

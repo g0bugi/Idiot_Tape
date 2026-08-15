@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &50218574
+--- !u!1 &184316323
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,8 +127,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 50218576}
-  - component: {fileID: 50218575}
+  - component: {fileID: 184316325}
+  - component: {fileID: 184316324}
   m_Layer: 0
   m_Name: Song Playback
   m_TagString: Untagged
@@ -136,18 +136,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &50218575
+--- !u!114 &184316324
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 50218574}
+  m_GameObject: {fileID: 184316323}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b6602a4d46b44d4d8655e310d793518, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IdiotTape.Audio.FmodSongPlayback
+  m_EditorClassIdentifier: IdiotTape.Audio::IdiotTape.Audio.FmodSongPlayback
   songEvent:
     Guid:
       Data1: -891379783
@@ -171,13 +171,13 @@ MonoBehaviour:
   - stemId: etc
     parameterName: stems_etc_volume
     volume: 1
---- !u!4 &50218576
+--- !u!4 &184316325
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 50218574}
+  m_GameObject: {fileID: 184316323}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -186,7 +186,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1249386661
+--- !u!1 &1610931478
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -194,8 +194,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1249386663}
-  - component: {fileID: 1249386662}
+  - component: {fileID: 1610931480}
+  - component: {fileID: 1610931479}
   m_Layer: 0
   m_Name: Playback Test Harness
   m_TagString: Untagged
@@ -203,27 +203,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1249386662
+--- !u!114 &1610931479
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1249386661}
+  m_GameObject: {fileID: 1610931478}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 031b0c8587a2164408141f3b84884454, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IdiotTape.Audio.FmodSongPlaybackTestHarness
-  songPlayback: {fileID: 50218575}
+  m_EditorClassIdentifier: IdiotTape.Audio::IdiotTape.Audio.FmodSongPlaybackTestHarness
+  songPlayback: {fileID: 184316324}
   runAutomaticSmokeTest: 1
---- !u!4 &1249386663
+--- !u!4 &1610931480
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1249386661}
+  m_GameObject: {fileID: 1610931478}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -232,7 +232,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1810666325
+--- !u!1 &1868739026
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -240,9 +240,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1810666328}
-  - component: {fileID: 1810666327}
-  - component: {fileID: 1810666326}
+  - component: {fileID: 1868739029}
+  - component: {fileID: 1868739028}
+  - component: {fileID: 1868739027}
   m_Layer: 0
   m_Name: FMOD Listener
   m_TagString: MainCamera
@@ -250,13 +250,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1810666326
+--- !u!114 &1868739027
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1810666325}
+  m_GameObject: {fileID: 1868739026}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
@@ -264,13 +264,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
   nonRigidbodyVelocity: 0
   attenuationObject: {fileID: 0}
---- !u!20 &1810666327
+--- !u!20 &1868739028
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1810666325}
+  m_GameObject: {fileID: 1868739026}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -315,13 +315,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!4 &1810666328
+--- !u!4 &1868739029
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1810666325}
+  m_GameObject: {fileID: 1868739026}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
@@ -334,6 +334,6 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1810666328}
-  - {fileID: 50218576}
-  - {fileID: 1249386663}
+  - {fileID: 1868739029}
+  - {fileID: 184316325}
+  - {fileID: 1610931480}

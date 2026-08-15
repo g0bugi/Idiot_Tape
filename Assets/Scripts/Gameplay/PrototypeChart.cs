@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using IdiotTape.Audio;
 using UnityEngine;
 
 namespace IdiotTape.Gameplay
@@ -61,6 +62,8 @@ namespace IdiotTape.Gameplay
     {
 
         [SerializeField] private AudioClip audioClip;
+        [SerializeField] private string songEventPath = "event:/Music/Pluto";
+        [SerializeField] private List<FmodStemDefinition> stemParameters = new();
         [SerializeField, Min(2)] private int laneCount = 8;
         [SerializeField, Min(0.1f)] private float visualLeadTime = 2.4f;
         [SerializeField] private List<MusicalPartDefinition> musicalParts = new();
@@ -68,6 +71,8 @@ namespace IdiotTape.Gameplay
         [SerializeField] private List<ChartNote> notes = new();
 
         public AudioClip AudioClip => audioClip;
+        public string SongEventPath => songEventPath;
+        public IReadOnlyList<FmodStemDefinition> StemParameters => stemParameters;
         public int LaneCount => laneCount;
         public float VisualLeadTime => visualLeadTime;
         public IReadOnlyList<MusicalPartDefinition> MusicalParts => musicalParts;
@@ -154,6 +159,39 @@ namespace IdiotTape.Gameplay
 
         public bool TryValidate(out string error)
         {
+
+            if (string.IsNullOrWhiteSpace(songEventPath))
+            {
+
+                error = "An FMOD song event path is required.";
+                return false;
+
+            }
+
+            HashSet<string> stemIds = new();
+
+            for (int index = 0; index < stemParameters.Count; index++)
+            {
+
+                FmodStemDefinition stem = stemParameters[index];
+
+                if (stem == null || string.IsNullOrWhiteSpace(stem.StemId) || !stemIds.Add(stem.StemId))
+                {
+
+                    error = $"Stem parameter at index {index} has an empty or duplicate ID.";
+                    return false;
+
+                }
+
+                if (string.IsNullOrWhiteSpace(stem.ParameterName))
+                {
+
+                    error = $"Stem '{stem.StemId}' has an empty FMOD parameter name.";
+                    return false;
+
+                }
+
+            }
 
             if (laneCount < 2)
             {

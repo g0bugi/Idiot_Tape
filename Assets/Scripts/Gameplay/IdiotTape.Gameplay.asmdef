@@ -2,6 +2,7 @@
   "name": "IdiotTape.Gameplay",
   "rootNamespace": "IdiotTape.Gameplay",
   "references": [
+    "IdiotTape.Audio",
     "Unity.InputSystem",
     "Unity.ugui"
   ],

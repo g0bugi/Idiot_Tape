@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using IdiotTape.Audio;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 
@@ -7,6 +9,8 @@ namespace IdiotTape.Gameplay
 
     public sealed class GameplaySession : MonoBehaviour
     {
+
+        private const float SongPreparationTimeoutSeconds = 15f;
 
         private sealed class ActiveNote
         {
@@ -25,7 +29,7 @@ namespace IdiotTape.Gameplay
         }
 
         [SerializeField] private PrototypeChart chart;
-        [SerializeField] private DspSongClock songClock;
+        [SerializeField] private FmodSongPlayback songPlayback;
         [SerializeField] private GameplayInputRouter inputRouter;
         [SerializeField] private PlayfieldPresenter presenter;
         [SerializeField] private GameplayHud hud;
@@ -58,7 +62,7 @@ namespace IdiotTape.Gameplay
 
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
 
             if (!chart.TryValidate(out string error))
@@ -66,7 +70,32 @@ namespace IdiotTape.Gameplay
 
                 Debug.LogError($"Cannot start prototype chart: {error}", chart);
                 enabled = false;
-                return;
+                yield break;
+
+            }
+
+            songPlayback.ConfigureEventPath(chart.SongEventPath, false);
+            songPlayback.ConfigureStemParameters(chart.StemParameters);
+            songPlayback.Prepare();
+            float preparationDeadline = Time.realtimeSinceStartup + SongPreparationTimeoutSeconds;
+
+            while (!songPlayback.IsPrepared &&
+                   !songPlayback.PreparationFailed &&
+                   Time.realtimeSinceStartup < preparationDeadline)
+            {
+
+                yield return null;
+
+            }
+
+            if (!songPlayback.IsPrepared)
+            {
+
+                Debug.LogError(
+                    $"Cannot prepare FMOD song event '{chart.SongEventPath}'.",
+                    chart);
+                enabled = false;
+                yield break;
 
             }
 
@@ -78,17 +107,20 @@ namespace IdiotTape.Gameplay
         private void Update()
         {
 
-            if (!isReady || songClock.IsPaused)
+            if (!isReady || songPlayback.IsPaused)
             {
 
                 return;
 
             }
 
-            double songTime = songClock.SongTime;
+            double songTime = songPlayback.SongTime;
             SpawnUpcomingNotes(songTime);
             UpdateActiveNotes(songTime);
-            hud.SetProgress(chart.Duration <= 0d ? 0f : (float)(songTime / chart.Duration));
+            double duration = songPlayback.DurationSeconds > 0d
+                ? songPlayback.DurationSeconds
+                : chart.Duration;
+            hud.SetProgress(duration <= 0d ? 0f : (float)(songTime / duration));
 
         }
 
@@ -119,7 +151,7 @@ namespace IdiotTape.Gameplay
             hud.ShowJudgement(JudgementGrade.None);
             hud.SetPaused(false);
             hud.SetProgress(0f);
-            songClock.StartSong(chart.AudioClip);
+            songPlayback.Restart();
 
         }
 
@@ -184,7 +216,7 @@ namespace IdiotTape.Gameplay
 
             }
 
-            if (songClock.IsPaused || !presenter.TryGetInputPosition(screenPosition, out float normalizedX))
+            if (songPlayback.IsPaused || !presenter.TryGetInputPosition(screenPosition, out float normalizedX))
             {
 
                 return;
@@ -198,7 +230,7 @@ namespace IdiotTape.Gameplay
         private void HandleLanePressed(int laneIndex, double eventTimestamp)
         {
 
-            if (!isReady || songClock.IsPaused || laneIndex < 0 || laneIndex >= chart.LaneCount)
+            if (!isReady || songPlayback.IsPaused || laneIndex < 0 || laneIndex >= chart.LaneCount)
             {
 
                 return;
@@ -226,7 +258,9 @@ namespace IdiotTape.Gameplay
 
             }
 
-            double inputSongTime = songClock.GetSongTimeForExternalTimestamp(eventTimestamp, InputState.currentTime);
+            double inputSongTime = songPlayback.GetSongTimeForExternalTimestamp(
+                eventTimestamp,
+                InputState.currentTime);
             JudgementResult result = JudgementEvaluator.Evaluate(
                 judgementCandidates,
                 inputSongTime,
@@ -267,17 +301,17 @@ namespace IdiotTape.Gameplay
 
             }
 
-            if (songClock.IsPaused)
+            if (songPlayback.IsPaused)
             {
 
-                songClock.Resume();
+                songPlayback.Resume();
                 hud.SetPaused(false);
 
             }
             else
             {
 
-                songClock.Pause();
+                songPlayback.Pause();
                 hud.SetPaused(true);
 
             }

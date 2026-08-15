@@ -37,6 +37,9 @@ A chart may need to describe:
 - repeated musical structures
 - future chart-specific metadata
 
+The current prototype chart also identifies its FMOD song event by path. This is song-selection
+data, not a timing source: runtime timing still comes from the playback system's DSP clock.
+
 Not all of these fields need to exist in the first prototype.
 
 
@@ -146,6 +149,14 @@ not drawn on screen.
 The initial sample chart uses eight lanes. This is a reversible prototype representation rather
 than a permanent serialization decision. Lane count remains chart data, and gameplay code must not
 depend on a single hard-coded count.
+
+Each prototype chart supplies the FMOD event path for the song it accompanies. Changing songs
+therefore means selecting different chart data rather than changing the gameplay scene or
+hard-coding an event path in the playback component.
+
+Optional FMOD stem mappings are also chart data. Each mapping associates a chart-specific stem ID
+with that song event's FMOD parameter name. Songs may provide different mappings or none at all;
+the runtime must not assume that every event exposes Pluto's stem parameters.
 
 
 ## Note Types
@@ -350,6 +361,35 @@ The chart workflow should eventually make the following operations fast:
 - validate chart data
 
 Do not build the complete editor before the core chart representation has been proven.
+
+### Current Prototype Recorder
+
+The Editor menu `Tools > Idiot Tape > 차트 녹화 도구` opens the current Play Mode recording tool.
+It uses the Gameplay scene's FMOD playback component so recorded number-key input is converted to
+the same DSP-backed song timeline used by runtime judgement.
+
+The recorder currently supports:
+
+- Korean-language play, pause, restart, seek, and repeated-range controls
+- separate recording starts from the current position, a repeated range, or the beginning
+- chart-defined musical-part selection
+- number keys `1` through `8` as hidden-position input
+- a temporary recording buffer that does not modify the chart until explicitly applied
+- individual timing, lane, and part edits
+- millisecond timing nudges
+- chart-defined stem volume audition and selected-part soloing
+- appending notes or replacing recorded parts inside the selected loop
+- optional activation-window creation when recorded notes fall outside existing part windows
+- Unity Undo, chart validation, and explicit asset saving
+
+The recorder intentionally disables the live gameplay session while recording so seeking and
+looping cannot leave runtime scheduling state inconsistent. After applying and saving, exit and
+re-enter Play Mode to rebuild runtime notes from the edited chart.
+
+The current tool does not provide waveforms, tempo maps, hold/slide editing, automatic beat
+analysis, or keyboard recording beyond the first eight positions. Fixed-BPM quantization is
+intentionally unavailable because it would move notes incorrectly in a song whose tempo changes.
+Beat snapping should only return after chart tempo-map data and tempo-aware conversion are defined.
 
 
 ## Unresolved Chart Decisions

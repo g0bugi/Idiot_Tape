@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using FMODUnity;
+using IdiotTape.Audio;
 using IdiotTape.Gameplay;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -73,6 +75,14 @@ namespace IdiotTape.EditorTools
             SerializedObject serializedChart = new(chart);
             serializedChart.FindProperty("laneCount").intValue = 8;
             serializedChart.FindProperty("visualLeadTime").floatValue = 2.4f;
+            serializedChart.FindProperty("songEventPath").stringValue = "event:/Music/Pluto";
+
+            SerializedProperty stemParameters = serializedChart.FindProperty("stemParameters");
+            stemParameters.arraySize = 4;
+            SetStemParameter(stemParameters.GetArrayElementAtIndex(0), "synth", "stems_synth1_volume");
+            SetStemParameter(stemParameters.GetArrayElementAtIndex(1), "bass", "stems_bass_volume");
+            SetStemParameter(stemParameters.GetArrayElementAtIndex(2), "drum", "stems_drum_volume");
+            SetStemParameter(stemParameters.GetArrayElementAtIndex(3), "etc", "stems_etc_volume");
 
             SerializedProperty parts = serializedChart.FindProperty("musicalParts");
             parts.arraySize = 3;
@@ -154,6 +164,7 @@ namespace IdiotTape.EditorTools
             GameObject cameraObject = new("Main Camera");
             Camera gameplayCamera = cameraObject.AddComponent<Camera>();
             cameraObject.AddComponent<AudioListener>();
+            cameraObject.AddComponent<StudioListener>();
             cameraObject.AddComponent<UniversalAdditionalCameraData>();
             cameraObject.tag = "MainCamera";
             cameraObject.transform.position = new Vector3(0f, 0f, -10f);
@@ -163,9 +174,8 @@ namespace IdiotTape.EditorTools
             gameplayCamera.backgroundColor = Color.black;
 
             GameObject gameplayRoot = new("GameplayRoot");
-            AudioSource audioSource = gameplayRoot.AddComponent<AudioSource>();
-            audioSource.playOnAwake = false;
-            DspSongClock songClock = gameplayRoot.AddComponent<DspSongClock>();
+            FmodSongPlayback songPlayback = gameplayRoot.AddComponent<FmodSongPlayback>();
+            songPlayback.ConfigureEventPath(chart.SongEventPath, false);
             GameplayInputRouter inputRouter = gameplayRoot.AddComponent<GameplayInputRouter>();
             GameplaySession gameplaySession = gameplayRoot.AddComponent<GameplaySession>();
 
@@ -252,7 +262,6 @@ namespace IdiotTape.EditorTools
                 Vector2.zero,
                 Vector2.one);
 
-            SetObjectReference(songClock, "audioSource", audioSource);
             SetObjectReference(presenter, "gameplayCamera", gameplayCamera);
             SetObjectReference(presenter, "noteRoot", noteRoot.transform);
             SetObjectReference(presenter, "noteSprite", AssetDatabase.LoadAssetAtPath<Sprite>(NoteSpritePath));
@@ -264,7 +273,7 @@ namespace IdiotTape.EditorTools
             SetObjectReference(hud, "pauseButtonArea", pauseButtonBackground.rectTransform);
             SetObjectReference(hud, "pauseButtonText", pauseButtonText);
             SetObjectReference(gameplaySession, "chart", chart);
-            SetObjectReference(gameplaySession, "songClock", songClock);
+            SetObjectReference(gameplaySession, "songPlayback", songPlayback);
             SetObjectReference(gameplaySession, "inputRouter", inputRouter);
             SetObjectReference(gameplaySession, "presenter", presenter);
             SetObjectReference(gameplaySession, "hud", hud);
@@ -291,6 +300,14 @@ namespace IdiotTape.EditorTools
             part.FindPropertyRelative("id").stringValue = id;
             part.FindPropertyRelative("displayName").stringValue = displayName;
             part.FindPropertyRelative("color").colorValue = color;
+
+        }
+
+        private static void SetStemParameter(SerializedProperty stem, string stemId, string parameterName)
+        {
+
+            stem.FindPropertyRelative("stemId").stringValue = stemId;
+            stem.FindPropertyRelative("parameterName").stringValue = parameterName;
 
         }
 

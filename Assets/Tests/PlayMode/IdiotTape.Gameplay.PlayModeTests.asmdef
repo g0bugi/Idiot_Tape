@@ -3,6 +3,7 @@
   "rootNamespace": "IdiotTape.Gameplay.Tests",
   "references": [
     "IdiotTape.Gameplay",
+    "IdiotTape.Audio",
     "Unity.InputSystem",
     "Unity.ugui"
   ],

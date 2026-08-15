@@ -2,7 +2,8 @@
   "name": "IdiotTape.Gameplay.Tests",
   "rootNamespace": "IdiotTape.Gameplay.Tests",
   "references": [
-    "IdiotTape.Gameplay"
+    "IdiotTape.Gameplay",
+    "IdiotTape.Audio"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"

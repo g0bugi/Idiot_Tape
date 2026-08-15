@@ -1,5 +1,6 @@
 using System.Collections;
 using System.IO;
+using IdiotTape.Audio;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
@@ -27,19 +28,34 @@ namespace IdiotTape.Gameplay.Tests
             }
 
             yield return null;
-            yield return new WaitForSecondsRealtime(0.4f);
 
             Assert.That(Object.FindAnyObjectByType<GameplaySession>(), Is.Not.Null);
-            DspSongClock songClock = Object.FindAnyObjectByType<DspSongClock>();
-            Assert.That(songClock, Is.Not.Null);
-            Assert.That(Object.FindObjectsByType<RuntimeNoteView>(FindObjectsSortMode.None).Length, Is.GreaterThan(0));
+            FmodSongPlayback songPlayback = Object.FindAnyObjectByType<FmodSongPlayback>();
+            Assert.That(songPlayback, Is.Not.Null);
 
-            while (songClock.SongTime < 1.40d)
+            float preparationDeadline = Time.realtimeSinceStartup + 15f;
+
+            while (!songPlayback.IsRunning && Time.realtimeSinceStartup < preparationDeadline)
             {
 
                 yield return null;
 
             }
+
+            Assert.That(songPlayback.IsRunning, Is.True, "FMOD song playback did not become ready.");
+            yield return null;
+            Assert.That(Object.FindObjectsByType<RuntimeNoteView>(FindObjectsSortMode.None).Length, Is.GreaterThan(0));
+
+            float playbackDeadline = Time.realtimeSinceStartup + 5f;
+
+            while (songPlayback.SongTime < 1.40d && Time.realtimeSinceStartup < playbackDeadline)
+            {
+
+                yield return null;
+
+            }
+
+            Assert.That(songPlayback.SongTime, Is.GreaterThanOrEqualTo(1.40d));
 
             GameplayInputRouter inputRouter = Object.FindAnyObjectByType<GameplayInputRouter>();
             Assert.That(inputRouter, Is.Not.Null);
@@ -61,11 +77,11 @@ namespace IdiotTape.Gameplay.Tests
 
             inputRouter.RequestPause();
             yield return null;
-            Assert.That(songClock.IsPaused, Is.True);
+            Assert.That(songPlayback.IsPaused, Is.True);
 
             inputRouter.RequestPause();
             yield return null;
-            Assert.That(songClock.IsPaused, Is.False);
+            Assert.That(songPlayback.IsPaused, Is.False);
 
         }
 

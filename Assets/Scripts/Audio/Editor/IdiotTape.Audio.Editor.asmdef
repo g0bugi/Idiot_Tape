@@ -1,0 +1,13 @@
+{
+  "name": "IdiotTape.Audio.Editor",
+  "rootNamespace": "IdiotTape.Audio.Editor",
+  "references": [
+    "IdiotTape.Audio",
+    "FMODUnity",
+    "FMODUnityEditor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "autoReferenced": true
+}

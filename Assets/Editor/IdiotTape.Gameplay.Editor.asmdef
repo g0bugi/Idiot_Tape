@@ -3,6 +3,9 @@
   "rootNamespace": "IdiotTape.EditorTools",
   "references": [
     "IdiotTape.Gameplay",
+    "IdiotTape.Audio",
+    "FMODUnity",
+    "Unity.InputSystem",
     "Unity.ugui",
     "Unity.RenderPipelines.Universal.Runtime"
   ],
