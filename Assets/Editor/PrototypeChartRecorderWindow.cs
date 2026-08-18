@@ -16,6 +16,7 @@ namespace IdiotTape.EditorTools
 
         private const string GameplayScenePath = "Assets/Scenes/Gameplay.unity";
         private const int SupportedKeyboardLaneCount = 8;
+        private const double DuplicateInputThresholdSeconds = 0.010d;
 
         private enum ApplyMode
         {
@@ -65,6 +66,7 @@ namespace IdiotTape.EditorTools
         [SerializeField] private bool addMissingActivationWindows = true;
 
         private readonly double[] lastRecordedInputTimestamps = new double[SupportedKeyboardLaneCount];
+        private InputAction[] recordingInputActions;
         private Vector2 scrollPosition;
         private FmodSongPlayback songPlayback;
         private bool isRecording;
@@ -85,6 +87,7 @@ namespace IdiotTape.EditorTools
         private void OnEnable()
         {
 
+            CreateRecordingInputActions();
             EditorApplication.update += EditorUpdate;
 
         }
@@ -95,12 +98,14 @@ namespace IdiotTape.EditorTools
             EditorApplication.update -= EditorUpdate;
             isRecording = false;
             isLoopRecording = false;
+            DisposeRecordingInputActions();
 
         }
 
         private void OnGUI()
         {
 
+            HandleRecorderWindowKeyboardEvent(Event.current);
             EditorGUILayout.LabelField("Idiot_Tape 차트 녹화 도구", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
                 "게임플레이와 동일한 FMOD DSP 시간으로 숫자키 입력을 기록합니다. " +
@@ -179,6 +184,7 @@ namespace IdiotTape.EditorTools
 
                     isRecording = false;
                     isLoopRecording = false;
+                    DisableRecordingInputActions();
                     EditorApplication.ExitPlaymode();
 
                 }
@@ -250,6 +256,7 @@ namespace IdiotTape.EditorTools
 
                     isRecording = false;
                     isLoopRecording = false;
+                    DisableRecordingInputActions();
                     DisableGameplaySessionForAuthoring();
                     songPlayback.Stop();
 
@@ -626,6 +633,8 @@ namespace IdiotTape.EditorTools
 
                 songPlayback = null;
                 isRecording = false;
+                isLoopRecording = false;
+                DisableRecordingInputActions();
                 return;
 
             }
@@ -640,49 +649,6 @@ namespace IdiotTape.EditorTools
             {
 
                 songPlayback.Seek(loopStart);
-
-            }
-
-            if (!isRecording || songPlayback == null || chart == null)
-            {
-
-                Repaint();
-                return;
-
-            }
-
-            Keyboard keyboard = Keyboard.current;
-
-            if (keyboard == null)
-            {
-
-                return;
-
-            }
-
-            int laneCount = Math.Min(chart.LaneCount, SupportedKeyboardLaneCount);
-
-            for (int laneIndex = 0; laneIndex < laneCount; laneIndex++)
-            {
-
-                if (!WasLaneKeyPressed(keyboard, laneIndex))
-                {
-
-                    continue;
-
-                }
-
-                double eventTimestamp = keyboard.lastUpdateTime;
-
-                if (eventTimestamp <= lastRecordedInputTimestamps[laneIndex])
-                {
-
-                    continue;
-
-                }
-
-                lastRecordedInputTimestamps[laneIndex] = eventTimestamp;
-                RecordLane(laneIndex, eventTimestamp);
 
             }
 
@@ -714,6 +680,7 @@ namespace IdiotTape.EditorTools
             Array.Clear(lastRecordedInputTimestamps, 0, lastRecordedInputTimestamps.Length);
             isRecording = true;
             isLoopRecording = startMode == RecordingStartMode.Loop;
+            EnableRecordingInputActions();
 
             if (startMode == RecordingStartMode.Loop)
             {
@@ -744,6 +711,7 @@ namespace IdiotTape.EditorTools
 
             isRecording = false;
             isLoopRecording = false;
+            DisableRecordingInputActions();
             statusMessage = $"녹화를 중지했습니다. 임시 기록에 노트 {recordedNotes.Count}개가 있습니다.";
 
         }
@@ -774,6 +742,186 @@ namespace IdiotTape.EditorTools
             SortRecordedNotes();
             selectedRecordedNoteIndex = recordedNotes.IndexOf(recordedNote);
             statusMessage = $"{hitTime:0.000}초에 {laneIndex + 1}번 위치를 기록했습니다.";
+
+        }
+
+        private void CreateRecordingInputActions()
+        {
+
+            DisposeRecordingInputActions();
+            recordingInputActions = new InputAction[SupportedKeyboardLaneCount];
+
+            for (int laneIndex = 0; laneIndex < recordingInputActions.Length; laneIndex++)
+            {
+
+                int capturedLaneIndex = laneIndex;
+                InputAction action = new InputAction(
+                    $"차트 녹화 위치 {laneIndex + 1}",
+                    InputActionType.Button);
+                action.AddBinding($"<Keyboard>/digit{laneIndex + 1}");
+                action.AddBinding($"<Keyboard>/numpad{laneIndex + 1}");
+                action.performed += context => RecordLaneFromInputEvent(capturedLaneIndex, context.time);
+                recordingInputActions[laneIndex] = action;
+
+            }
+
+        }
+
+        private void EnableRecordingInputActions()
+        {
+
+            if (recordingInputActions == null)
+            {
+
+                CreateRecordingInputActions();
+
+            }
+
+            int laneCount = Math.Min(chart.LaneCount, SupportedKeyboardLaneCount);
+
+            for (int laneIndex = 0; laneIndex < recordingInputActions.Length; laneIndex++)
+            {
+
+                if (laneIndex < laneCount)
+                {
+
+                    recordingInputActions[laneIndex].Enable();
+
+                }
+                else
+                {
+
+                    recordingInputActions[laneIndex].Disable();
+
+                }
+
+            }
+
+        }
+
+        private void DisableRecordingInputActions()
+        {
+
+            if (recordingInputActions == null)
+            {
+
+                return;
+
+            }
+
+            for (int laneIndex = 0; laneIndex < recordingInputActions.Length; laneIndex++)
+            {
+
+                recordingInputActions[laneIndex].Disable();
+
+            }
+
+        }
+
+        private void DisposeRecordingInputActions()
+        {
+
+            if (recordingInputActions == null)
+            {
+
+                return;
+
+            }
+
+            for (int laneIndex = 0; laneIndex < recordingInputActions.Length; laneIndex++)
+            {
+
+                recordingInputActions[laneIndex]?.Dispose();
+
+            }
+
+            recordingInputActions = null;
+
+        }
+
+        private void RecordLaneFromInputEvent(int laneIndex, double eventTimestamp)
+        {
+
+            if (!isRecording || songPlayback == null || chart == null || laneIndex >= chart.LaneCount)
+            {
+
+                return;
+
+            }
+
+            if (eventTimestamp <=
+                lastRecordedInputTimestamps[laneIndex] + DuplicateInputThresholdSeconds)
+            {
+
+                return;
+
+            }
+
+            lastRecordedInputTimestamps[laneIndex] = eventTimestamp;
+
+            RecordLane(laneIndex, eventTimestamp);
+            Repaint();
+
+        }
+
+        private void HandleRecorderWindowKeyboardEvent(Event editorEvent)
+        {
+
+            if (!isRecording || editorEvent == null || editorEvent.type != EventType.KeyDown)
+            {
+
+                return;
+
+            }
+
+            int laneIndex = GetLaneIndex(editorEvent.keyCode);
+
+            if (laneIndex < 0)
+            {
+
+                return;
+
+            }
+
+            RecordLaneFromInputEvent(laneIndex, InputState.currentTime);
+            editorEvent.Use();
+
+        }
+
+        private static int GetLaneIndex(KeyCode keyCode)
+        {
+
+            switch (keyCode)
+            {
+
+                case KeyCode.Alpha1:
+                case KeyCode.Keypad1:
+                    return 0;
+                case KeyCode.Alpha2:
+                case KeyCode.Keypad2:
+                    return 1;
+                case KeyCode.Alpha3:
+                case KeyCode.Keypad3:
+                    return 2;
+                case KeyCode.Alpha4:
+                case KeyCode.Keypad4:
+                    return 3;
+                case KeyCode.Alpha5:
+                case KeyCode.Keypad5:
+                    return 4;
+                case KeyCode.Alpha6:
+                case KeyCode.Keypad6:
+                    return 5;
+                case KeyCode.Alpha7:
+                case KeyCode.Keypad7:
+                    return 6;
+                case KeyCode.Alpha8:
+                case KeyCode.Keypad8:
+                    return 7;
+                default:
+                    return -1;
+
+            }
 
         }
 
@@ -1185,35 +1333,6 @@ namespace IdiotTape.EditorTools
                 selectedRecordedNoteIndex,
                 -1,
                 recordedNotes.Count - 1);
-
-        }
-
-        private static bool WasLaneKeyPressed(Keyboard keyboard, int laneIndex)
-        {
-
-            switch (laneIndex)
-            {
-
-                case 0:
-                    return keyboard.digit1Key.wasPressedThisFrame || keyboard.numpad1Key.wasPressedThisFrame;
-                case 1:
-                    return keyboard.digit2Key.wasPressedThisFrame || keyboard.numpad2Key.wasPressedThisFrame;
-                case 2:
-                    return keyboard.digit3Key.wasPressedThisFrame || keyboard.numpad3Key.wasPressedThisFrame;
-                case 3:
-                    return keyboard.digit4Key.wasPressedThisFrame || keyboard.numpad4Key.wasPressedThisFrame;
-                case 4:
-                    return keyboard.digit5Key.wasPressedThisFrame || keyboard.numpad5Key.wasPressedThisFrame;
-                case 5:
-                    return keyboard.digit6Key.wasPressedThisFrame || keyboard.numpad6Key.wasPressedThisFrame;
-                case 6:
-                    return keyboard.digit7Key.wasPressedThisFrame || keyboard.numpad7Key.wasPressedThisFrame;
-                case 7:
-                    return keyboard.digit8Key.wasPressedThisFrame || keyboard.numpad8Key.wasPressedThisFrame;
-                default:
-                    return false;
-
-            }
 
         }
 
