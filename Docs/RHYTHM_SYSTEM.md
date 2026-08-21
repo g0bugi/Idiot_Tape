@@ -226,6 +226,17 @@ and centralized.
 
 Do not duplicate latency compensation logic across individual note components.
 
+### Authoring Metronome
+
+The chart authoring tool may schedule quiet Editor-only metronome clicks from chart tempo data.
+Those clicks are preparation and navigation cues, not an authoritative gameplay clock. Recorded
+input timestamps must still be converted through the FMOD DSP-backed song timeline. Count-in state
+must reject note input until the selected song position actually begins recording.
+
+Because Unity's built-in audio is disabled in the FMOD prototype, authoring clicks must be scheduled
+through FMOD. The Editor count-in display may use Editor realtime, but it must not depend on Unity's
+audio DSP clock, which does not advance while built-in audio is disabled.
+
 
 ## Pause and Resume
 

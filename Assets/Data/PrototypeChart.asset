@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30c79ae61a0853047a022f5c1103936c, type: 3}
   m_Name: PrototypeChart
   m_EditorClassIdentifier: IdiotTape.Gameplay::IdiotTape.Gameplay.PrototypeChart
-  audioClip: {fileID: 0}
-  songEventPath: event:/Music/Pluto
+  songEventPath: event:/Music/Idiotape/Pluto
   stemParameters:
   - stemId: synth
     parameterName: stems_synth1_volume

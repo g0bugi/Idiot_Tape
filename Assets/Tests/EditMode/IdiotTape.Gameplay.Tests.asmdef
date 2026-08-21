@@ -3,7 +3,8 @@
   "rootNamespace": "IdiotTape.Gameplay.Tests",
   "references": [
     "IdiotTape.Gameplay",
-    "IdiotTape.Audio"
+    "IdiotTape.Audio",
+    "IdiotTape.Gameplay.Editor"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"

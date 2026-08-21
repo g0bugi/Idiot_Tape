@@ -61,18 +61,18 @@ namespace IdiotTape.Gameplay
     public sealed class PrototypeChart : ScriptableObject
     {
 
-        [SerializeField] private AudioClip audioClip;
-        [SerializeField] private string songEventPath = "event:/Music/Pluto";
+        [SerializeField] private string songEventPath = "event:/Music/Idiotape/Pluto";
         [SerializeField] private List<FmodStemDefinition> stemParameters = new();
+        [SerializeField] private List<ChartTempoSection> tempoSections = new();
         [SerializeField, Min(2)] private int laneCount = 8;
         [SerializeField, Min(0.1f)] private float visualLeadTime = 2.4f;
         [SerializeField] private List<MusicalPartDefinition> musicalParts = new();
         [SerializeField] private List<MusicalPartActivationWindow> activationWindows = new();
         [SerializeField] private List<ChartNote> notes = new();
 
-        public AudioClip AudioClip => audioClip;
         public string SongEventPath => songEventPath;
         public IReadOnlyList<FmodStemDefinition> StemParameters => stemParameters;
+        public IReadOnlyList<ChartTempoSection> TempoSections => tempoSections;
         public int LaneCount => laneCount;
         public float VisualLeadTime => visualLeadTime;
         public IReadOnlyList<MusicalPartDefinition> MusicalParts => musicalParts;
@@ -84,13 +84,6 @@ namespace IdiotTape.Gameplay
 
             get
             {
-
-                if (audioClip != null)
-                {
-
-                    return audioClip.length;
-
-                }
 
                 return notes.Count == 0 ? 0d : notes[^1].HitTime + 1d;
 
@@ -201,6 +194,40 @@ namespace IdiotTape.Gameplay
 
             }
 
+            int previousStartBar = 0;
+            double previousStartTime = -1d;
+
+            for (int index = 0; tempoSections != null && index < tempoSections.Count; index++)
+            {
+
+                ChartTempoSection section = tempoSections[index];
+
+                if (section == null ||
+                    section.StartBar < 1 ||
+                    section.StartTime < 0d ||
+                    section.BeatsPerMinute <= 0d ||
+                    section.BeatsPerBar < 1 ||
+                    section.BeatUnit < 1)
+                {
+
+                    error = $"Tempo section {index} has invalid values.";
+                    return false;
+
+                }
+
+                if (section.StartBar <= previousStartBar || section.StartTime <= previousStartTime)
+                {
+
+                    error = $"Tempo section {index} is out of order.";
+                    return false;
+
+                }
+
+                previousStartBar = section.StartBar;
+                previousStartTime = section.StartTime;
+
+            }
+
             double previousTime = double.NegativeInfinity;
             HashSet<string> noteIds = new();
             HashSet<string> partIds = new();
@@ -225,14 +252,6 @@ namespace IdiotTape.Gameplay
                     return false;
 
                 }
-
-            }
-
-            if (activationWindows.Count == 0)
-            {
-
-                error = "At least one musical-part activation window is required.";
-                return false;
 
             }
 

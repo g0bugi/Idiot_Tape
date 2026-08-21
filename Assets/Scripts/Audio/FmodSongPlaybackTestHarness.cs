@@ -182,7 +182,7 @@ namespace IdiotTape.Audio
             if (!songPlayback.IsPrepared)
             {
 
-                Fail("Timed out while preparing event:/Music/Pluto.");
+                Fail("Timed out while preparing event:/Music/Idiotape/Pluto.");
                 yield break;
 
             }

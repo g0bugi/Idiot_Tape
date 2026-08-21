@@ -279,6 +279,10 @@ The current prototype / demo is named:
 IDIOTAPE's album `11111101` is currently being considered as the musical basis for
 prototype testing.
 
+The current chart-authoring prototype uses KIRARA's `Snow` as its primary full-song reference.
+Its authoring grid is configured for 130 BPM and 4/4. Listening verification placed the first
+downbeat one beat after song time 0, at approximately 0.461538 seconds.
+
 Likely early test tracks include:
 
 - Melodie

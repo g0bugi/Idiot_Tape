@@ -75,7 +75,7 @@ namespace IdiotTape.EditorTools
             SerializedObject serializedChart = new(chart);
             serializedChart.FindProperty("laneCount").intValue = 8;
             serializedChart.FindProperty("visualLeadTime").floatValue = 2.4f;
-            serializedChart.FindProperty("songEventPath").stringValue = "event:/Music/Pluto";
+            serializedChart.FindProperty("songEventPath").stringValue = "event:/Music/Idiotape/Pluto";
 
             SerializedProperty stemParameters = serializedChart.FindProperty("stemParameters");
             stemParameters.arraySize = 4;

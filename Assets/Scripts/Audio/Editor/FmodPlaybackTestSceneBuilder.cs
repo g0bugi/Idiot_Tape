@@ -11,7 +11,7 @@ namespace IdiotTape.Audio.Editor
     {
 
         public const string TestScenePath = "Assets/Scenes/FmodPlaybackTest.unity";
-        private const string PlutoEventPath = "event:/Music/Pluto";
+        private const string PlutoEventPath = "event:/Music/Idiotape/Pluto";
 
         [MenuItem("Idiot_Tape/Audio/Create or Refresh FMOD Playback Test Scene")]
         public static void CreateOrRefreshTestScene()

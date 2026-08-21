@@ -71,6 +71,26 @@ Tempo / BPM data may later be useful for:
 
 However, runtime judgement must not require reconstructing timing from rendering frames.
 
+### Current Prototype Tempo Map
+
+Charts may now provide ordered tempo sections for authoring. Each section identifies:
+
+- the first bar covered by the section
+- the absolute song time of that bar's downbeat
+- BPM
+- beats per bar
+- beat unit
+
+Runtime notes continue to store and judge absolute song time. Tempo sections exist to support
+musical navigation, count-in, metronome cues, timeline grids, snapping, and bar-aligned musical-part
+activation. A chart without tempo information can still run, but the authoring tool disables
+tempo-dependent operations for that chart.
+
+The Snow prototype currently uses one section: 130 BPM, 4/4, with the first downbeat at song time
+`60 / 130` seconds (approximately `0.461538` seconds). This one-beat calibration offset matches the
+audible bar position. Tempo changes remain supported by the data shape but have not yet been proven
+through a variable-tempo chart.
+
 
 ## Stable Note Identity
 
@@ -362,9 +382,9 @@ The chart workflow should eventually make the following operations fast:
 
 Do not build the complete editor before the core chart representation has been proven.
 
-### Current Prototype Recorder
+### Current Chart Authoring Tool
 
-The Editor menu `Tools > Idiot Tape > 차트 녹화 도구` opens the current Play Mode recording tool.
+The Editor menu `Tools > Idiot Tape > 채보 제작 도구` opens the current Play Mode authoring tool.
 It uses the Gameplay scene's FMOD playback component so recorded number-key input is converted to
 the same DSP-backed song timeline used by runtime judgement.
 
@@ -381,15 +401,24 @@ The recorder currently supports:
 - appending notes or replacing recorded parts inside the selected loop
 - optional activation-window creation when recorded notes fall outside existing part windows
 - Unity Undo, chart validation, and explicit asset saving
+- bar and beat display derived from chart tempo data
+- one- or multi-bar count-in with weak metronome clicks and accented downbeats
+- musical pre-roll before recording starts when enough earlier song time exists
+- loop recording that repeats through its pre-roll instead of jumping directly to the first note
+- a visual timeline containing beat/bar lines, playhead, loop range, musical-part activation,
+  applied notes, and buffered notes
+- timeline click-to-seek with quarter-beat snapping
+- bar-number loop entry and bar-aligned loop snapping
+- creating a selected musical part's activation window from the current loop
 
 The recorder intentionally disables the live gameplay session while recording so seeking and
 looping cannot leave runtime scheduling state inconsistent. After applying and saving, exit and
 re-enter Play Mode to rebuild runtime notes from the edited chart.
 
-The current tool does not provide waveforms, tempo maps, hold/slide editing, automatic beat
-analysis, or keyboard recording beyond the first eight positions. Fixed-BPM quantization is
-intentionally unavailable because it would move notes incorrectly in a song whose tempo changes.
-Beat snapping should only return after chart tempo-map data and tempo-aware conversion are defined.
+The metronome is an Editor-only audible guide. It never replaces FMOD song time as the source used
+to record notes. The current tool does not provide waveforms, hold/slide editing, automatic beat
+analysis, drag editing of notes or activation-window handles, or keyboard recording beyond the
+first eight positions.
 
 
 ## Unresolved Chart Decisions
@@ -399,7 +428,7 @@ The following remain open:
 - permanent serialization format
 - exact coordinate system
 - final note type model
-- tempo-map representation
+- variable-tempo authoring UX beyond direct tempo-section data
 - chart difficulty metadata
 - pattern / group representation
 - movement-path representation

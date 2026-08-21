@@ -15,6 +15,33 @@ namespace IdiotTape.Gameplay.Tests
     {
 
         [UnityTest]
+        public IEnumerator SnowEventPreparesAndReportsFullSongDuration()
+        {
+
+            GameObject playbackObject = new("Snow Playback Test");
+            FmodSongPlayback snowPlayback = playbackObject.AddComponent<FmodSongPlayback>();
+            snowPlayback.ConfigureEventPath("event:/Music/KIRARA/Snow", false);
+            snowPlayback.Prepare();
+            float preparationDeadline = Time.realtimeSinceStartup + 15f;
+
+            while (!snowPlayback.IsPrepared &&
+                   !snowPlayback.PreparationFailed &&
+                   Time.realtimeSinceStartup < preparationDeadline)
+            {
+
+                yield return null;
+
+            }
+
+            Assert.That(snowPlayback.PreparationFailed, Is.False);
+            Assert.That(snowPlayback.IsPrepared, Is.True, "Snow FMOD event did not become ready.");
+            Assert.That(snowPlayback.DurationSeconds, Is.GreaterThan(480d));
+            Object.Destroy(playbackObject);
+            yield return null;
+
+        }
+
+        [UnityTest]
         public IEnumerator GameplaySceneStartsAndSpawnsRuntimeNotes()
         {
 
