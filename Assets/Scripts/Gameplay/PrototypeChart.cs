@@ -276,6 +276,25 @@ namespace IdiotTape.Gameplay
 
                 }
 
+                for (int previousIndex = 0; previousIndex < index; previousIndex++)
+                {
+
+                    MusicalPartActivationWindow previousWindow = activationWindows[previousIndex];
+
+                    if (previousWindow.MusicalPartId == window.MusicalPartId &&
+                        previousWindow.StartTime < window.EndTime &&
+                        window.StartTime < previousWindow.EndTime)
+                    {
+
+                        error =
+                            $"Activation window {index} overlaps window {previousIndex} " +
+                            $"for part '{window.MusicalPartId}'.";
+                        return false;
+
+                    }
+
+                }
+
             }
 
             for (int index = 0; index < notes.Count; index++)

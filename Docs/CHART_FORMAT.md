@@ -408,17 +408,37 @@ The recorder currently supports:
 - a visual timeline containing beat/bar lines, playhead, loop range, musical-part activation,
   applied notes, and buffered notes
 - timeline click-to-seek with quarter-beat snapping
+- selectable horizontal timeline and vertical chart-sheet views
+- vertical chart-sheet auto-scrolling that follows FMOD song time during playback
+- mouse-wheel timeline navigation and pointer-centered Ctrl/Cmd-wheel zoom
+- direct selection of buffered notes from either timeline view
 - bar-number loop entry and bar-aligned loop snapping
 - creating a selected musical part's activation window from the current loop
+- tempo-aware quantization of buffered input to straight or triplet grids
+- configurable quantization strength, maximum correction distance, input-time advance, and
+  near-simultaneous chord grouping
+- preservation and restoration of the original DSP-backed input time after quantization
+- optional automatic quantization when recording stops
+- confirmation before chart changes discard buffered notes and protection against accidental
+  repeated application of the same buffer
+- two-anchor tempo calibration that derives BPM and the first downbeat from measured musical
+  positions on the FMOD song timeline
+- candidate-grid metronome preview, millisecond phase adjustment, and an explicit Undo-supported
+  tempo-map apply step that preserves absolute note times
+- activation-window overlap validation and an Editor normalization command that merges duplicate,
+  overlapping, or adjacent windows for the same musical part
+- a bar-first loop workflow using start bar plus bar count, with second-based controls kept under
+  an advanced authoring foldout
 
 The recorder intentionally disables the live gameplay session while recording so seeking and
 looping cannot leave runtime scheduling state inconsistent. After applying and saving, exit and
 re-enter Play Mode to rebuild runtime notes from the edited chart.
 
 The metronome is an Editor-only audible guide. It never replaces FMOD song time as the source used
-to record notes. The current tool does not provide waveforms, hold/slide editing, automatic beat
-analysis, drag editing of notes or activation-window handles, or keyboard recording beyond the
-first eight positions.
+to record notes. Quantization changes authoring data only; runtime notes continue to receive resolved
+absolute song times. The current tool does not provide waveforms, hold/slide editing, automatic beat
+analysis, multi-note selection, drag editing of notes or activation-window handles, or keyboard
+recording beyond the first eight positions.
 
 
 ## Unresolved Chart Decisions

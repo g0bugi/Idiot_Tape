@@ -233,6 +233,10 @@ Those clicks are preparation and navigation cues, not an authoritative gameplay 
 input timestamps must still be converted through the FMOD DSP-backed song timeline. Count-in state
 must reject note input until the selected song position actually begins recording.
 
+Tempo calibration may also preview a candidate beat grid derived from two measured musical anchors.
+The preview changes only Editor metronome scheduling. It must not modify the FMOD-backed song time,
+absolute note times, or runtime judgement until the author explicitly applies the candidate tempo map.
+
 Because Unity's built-in audio is disabled in the FMOD prototype, authoring clicks must be scheduled
 through FMOD. The Editor count-in display may use Editor realtime, but it must not depend on Unity's
 audio DSP clock, which does not advance while built-in audio is disabled.

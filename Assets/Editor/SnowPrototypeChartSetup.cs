@@ -42,7 +42,14 @@ namespace IdiotTape.EditorTools
             serializedChart.FindProperty("songEventPath").stringValue = SongEventPath;
             serializedChart.FindProperty("laneCount").intValue = 8;
             serializedChart.FindProperty("visualLeadTime").floatValue = 2.4f;
-            ConfigureTempo(serializedChart);
+
+            if (created || serializedChart.FindProperty("tempoSections").arraySize == 0)
+            {
+
+                ConfigureTempo(serializedChart);
+
+            }
+
             ConfigureStemParameters(serializedChart);
 
             SerializedProperty activationWindows = serializedChart.FindProperty("activationWindows");

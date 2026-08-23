@@ -282,6 +282,9 @@ prototype testing.
 The current chart-authoring prototype uses KIRARA's `Snow` as its primary full-song reference.
 Its authoring grid is configured for 130 BPM and 4/4. Listening verification placed the first
 downbeat one beat after song time 0, at approximately 0.461538 seconds.
+This value remains a provisional single-point estimate. The chart authoring tool now supports
+two-anchor calibration so the stored BPM and first-downbeat time can be replaced by measured values
+after checking widely separated downbeats across the song.
 
 Likely early test tracks include:
 

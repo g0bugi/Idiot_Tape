@@ -177,6 +177,15 @@ Add or update tests when:
 
 Do not create meaningless tests only to increase test count.
 
+After automated Unity tests finish:
+
+- confirm the Unity process exited normally
+- check that `Assets/_Recovery` was not created from an interrupted Test Runner scene
+- do not commit `Assets/_Recovery` or its `.meta` file
+- inspect recovery scenes in Unity before deleting them, because an interactive editor crash can place
+  unsaved user work there
+- `Temp/__Backupscenes` is generated editor state and must remain outside version control
+
 
 # 12. Unity Play Mode Verification
 
