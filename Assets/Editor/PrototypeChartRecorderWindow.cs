@@ -7,6 +7,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.Serialization;
 
 namespace IdiotTape.EditorTools
 {
@@ -17,12 +18,16 @@ namespace IdiotTape.EditorTools
         private const string GameplayScenePath = "Assets/Scenes/Gameplay.unity";
         private const int SupportedKeyboardLaneCount = 8;
         private const double DuplicateInputThresholdSeconds = 0.010d;
+        private const double DuplicateTempoTapThresholdSeconds = 0.050d;
         private const double MetronomeScheduleLeadSeconds = 0.4d;
         private const float TimelineRulerHeight = 26f;
         private const float TimelinePartHeight = 42f;
         private const float VerticalTimelineRulerWidth = 64f;
         private const float VerticalTimelineHeaderHeight = 34f;
         private const float TimelineNoteHitRadius = 8f;
+        private const float TempoAnchorBarFieldWidth = 84f;
+        private const float TempoAnchorBeatFieldWidth = 84f;
+        private const float TempoAnchorTimeFieldWidth = 132f;
         private static readonly string[] QuantizationGridNames =
         {
 
@@ -108,6 +113,7 @@ namespace IdiotTape.EditorTools
         [SerializeField] private List<RecordedNote> recordedNotes = new();
         [SerializeField] private int selectedPartIndex;
         [SerializeField] private int selectedRecordedNoteIndex = -1;
+        [SerializeField] private string selectedChartNoteId = string.Empty;
         [SerializeField] private double seekTime;
         [SerializeField] private double loopStart;
         [SerializeField] private double loopEnd = 8d;
@@ -115,6 +121,7 @@ namespace IdiotTape.EditorTools
         [SerializeField] private bool addMissingActivationWindows;
         [SerializeField, Min(1)] private int countInBars = 2;
         [SerializeField, Range(0f, 1f)] private float metronomeVolume = 0.15f;
+        [SerializeField, Range(-50f, 50f)] private float metronomeOutputOffsetMilliseconds;
         [SerializeField] private bool metronomeDuringRecording;
         [SerializeField, Min(4f)] private float timelineVisibleDuration = 16f;
         [SerializeField, Min(0f)] private double timelineStartTime;
@@ -122,7 +129,8 @@ namespace IdiotTape.EditorTools
         [SerializeField, Min(2)] private int loopEndBar = 5;
         [SerializeField, Min(1)] private int loopBarCount = 4;
         [SerializeField] private TimelineViewMode timelineViewMode;
-        [SerializeField] private bool verticalTimelineAutoScroll = true;
+        [FormerlySerializedAs("verticalTimelineAutoScroll")]
+        [SerializeField] private bool timelineAutoScroll = true;
         [SerializeField, Range(360f, 900f)] private float verticalTimelineHeight = 560f;
         [SerializeField] private bool automaticQuantization;
         [SerializeField] private QuantizationGrid quantizationGrid = QuantizationGrid.Sixteenth;
@@ -146,9 +154,13 @@ namespace IdiotTape.EditorTools
         [SerializeField, Min(0f)] private double tempoAnchorBTime;
         [SerializeField] private bool hasTempoAnchorB;
         [SerializeField, Range(-250f, 250f)] private float tempoCalibrationFineOffsetMilliseconds;
+        [SerializeField, Min(1)] private int tempoTapStartBar = 1;
+        [SerializeField, Min(1)] private int tempoTapBarInterval = 1;
 
         private readonly double[] lastRecordedInputTimestamps = new double[SupportedKeyboardLaneCount];
+        private readonly List<ChartTempoAnchor> tempoTapAnchors = new();
         private InputAction[] recordingInputActions;
+        private InputAction tempoTapInputAction;
         private Vector2 windowScrollPosition;
         private Vector2 scrollPosition;
         private FmodSongPlayback songPlayback;
@@ -168,6 +180,11 @@ namespace IdiotTape.EditorTools
         private int previewBeatsPerBar;
         private int previewBeatUnit;
         private double nextPreviewMetronomeSongTime = double.NaN;
+        private bool tempoTapCapture;
+        private bool tempoTapSpacePressed;
+        private double lastTempoTapInputTimestamp = double.NegativeInfinity;
+        private bool tempoAnchorsFromTapCapture;
+        private ChartTempoCalibrationResult tempoTapResult;
         private string statusMessage = "차트를 선택하세요.";
 
         [MenuItem("Tools/Idiot Tape/채보 제작 도구")]
@@ -192,6 +209,8 @@ namespace IdiotTape.EditorTools
             }
 
             CreateRecordingInputActions();
+            CreateTempoTapInputAction();
+            InputSystem.onEvent += OnInputSystemEvent;
             EditorApplication.update += EditorUpdate;
 
         }
@@ -200,12 +219,15 @@ namespace IdiotTape.EditorTools
         {
 
             EditorApplication.update -= EditorUpdate;
+            InputSystem.onEvent -= OnInputSystemEvent;
             isRecording = false;
             isLoopRecording = false;
             recordingPhase = RecordingPhase.Idle;
             tempoCalibrationPreview = false;
+            tempoTapCapture = false;
             DestroyMetronome();
             DisposeRecordingInputActions();
+            DisposeTempoTapInputAction();
 
         }
 
@@ -518,6 +540,7 @@ namespace IdiotTape.EditorTools
                 EditorGUILayout.HelpBox(
                     "서로 멀리 떨어진 확실한 다운비트 두 곳을 지정하세요. 절대 노트 시간은 변경되지 않습니다.",
                     MessageType.None);
+                DrawTempoTapCalibration();
 
                 DrawTempoAnchor(
                     "기준 A",
@@ -635,6 +658,256 @@ namespace IdiotTape.EditorTools
 
         }
 
+        private void DrawTempoTapCalibration()
+        {
+
+            EditorGUILayout.Space(6f);
+            EditorGUILayout.LabelField("여러 마디 다운비트 연속 측정", EditorStyles.miniBoldLabel);
+            EditorGUILayout.HelpBox(
+                "시작 마디를 지정한 뒤 음악을 들으며 각 마디의 1박에 스페이스바를 누르세요. " +
+                "두 번째 입력부터 모든 탭을 함께 계산해 BPM과 박자 원점을 계속 갱신합니다.",
+                MessageType.None);
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+
+                tempoTapStartBar = Math.Max(1, EditorGUILayout.IntField("시작 마디", tempoTapStartBar));
+                tempoTapBarInterval = Math.Max(
+                    1,
+                    EditorGUILayout.IntField("탭 간격(마디)", tempoTapBarInterval));
+
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+
+                GUI.enabled = Application.isPlaying && songPlayback != null && songPlayback.IsPrepared;
+
+                if (GUILayout.Button(tempoTapCapture ? "연속 측정 중지" : "연속 측정 시작"))
+                {
+
+                    if (tempoTapCapture)
+                    {
+
+                        StopTempoTapCapture();
+                        statusMessage = $"다운비트 연속 측정을 마쳤습니다. 앵커 {tempoTapAnchors.Count}개를 사용했습니다.";
+
+                    }
+                    else
+                    {
+
+                        StartTempoTapCapture();
+
+                    }
+
+                }
+
+                GUI.enabled = tempoTapAnchors.Count > 0;
+
+                if (GUILayout.Button("탭 측정 지우기"))
+                {
+
+                    ClearTempoTapCapture();
+
+                }
+
+                GUI.enabled = true;
+
+            }
+
+            if (tempoTapCapture)
+            {
+
+                int nextBar = tempoTapStartBar + tempoTapAnchors.Count * tempoTapBarInterval;
+                EditorGUILayout.HelpBox(
+                    $"측정 중 · {nextBar}마디 1박에서 스페이스바를 누르세요.",
+                    MessageType.Info);
+
+            }
+
+            if (tempoTapAnchors.Count > 0)
+            {
+
+                EditorGUILayout.LabelField(
+                    "연속 탭",
+                    $"{tempoTapAnchors.Count}개 · " +
+                    $"{tempoTapAnchors[0].Bar}~{tempoTapAnchors[^1].Bar}마디");
+
+            }
+
+            if (tempoTapResult.IsValid)
+            {
+
+                EditorGUILayout.LabelField(
+                    "다중 앵커 오차",
+                    $"RMS {tempoTapResult.RootMeanSquareError * 1000d:0.0}ms · " +
+                    $"{tempoTapResult.AnchorCount}개 앵커 회귀");
+
+            }
+
+        }
+
+        private void StartTempoTapCapture()
+        {
+
+            if (songPlayback == null || !songPlayback.IsPrepared || chart.TempoSections.Count == 0)
+            {
+
+                return;
+
+            }
+
+            if (recordingPhase != RecordingPhase.Idle)
+            {
+
+                StopRecording();
+
+            }
+
+            DisableGameplaySessionForAuthoring();
+            StopTempoCalibrationPreview();
+            tempoTapAnchors.Clear();
+            tempoTapResult = default;
+            tempoTapCapture = true;
+            tempoTapSpacePressed = false;
+            lastTempoTapInputTimestamp = double.NegativeInfinity;
+
+            if (tempoTapInputAction == null)
+            {
+
+                CreateTempoTapInputAction();
+
+            }
+
+            tempoTapInputAction?.Enable();
+            tempoTapStartBar = Math.Max(1, tempoTapStartBar);
+            tempoTapBarInterval = Math.Max(1, tempoTapBarInterval);
+            tempoCalibrationFineOffsetMilliseconds = 0f;
+
+            if (songPlayback.IsPaused)
+            {
+
+                songPlayback.Resume();
+
+            }
+            else if (!songPlayback.IsPlaying)
+            {
+
+                songPlayback.Play();
+
+            }
+
+            statusMessage = $"다운비트 연속 측정을 시작했습니다. {tempoTapStartBar}마디 1박에서 스페이스바를 누르세요.";
+
+        }
+
+        private void CaptureTempoDownbeat(double eventTimestamp)
+        {
+
+            if (!tempoTapCapture || songPlayback == null || !songPlayback.IsPlaying)
+            {
+
+                statusMessage = "다운비트 탭은 음악이 재생 중일 때만 기록됩니다.";
+                return;
+
+            }
+
+            ChartTempoSection currentTempo = chart.TempoSections[0];
+            int bar = tempoTapStartBar + tempoTapAnchors.Count * tempoTapBarInterval;
+            double songTime = songPlayback.GetSongTimeForExternalTimestamp(
+                eventTimestamp,
+                InputState.currentTime);
+            ChartTempoAnchor anchor = new(bar, 1, songTime);
+            tempoTapAnchors.Add(anchor);
+
+            if (tempoTapAnchors.Count < 2)
+            {
+
+                statusMessage = $"{bar}마디 1박을 {anchor.SongTime:0.000000}초에 기록했습니다.";
+                return;
+
+            }
+
+            ChartTempoCalibrationResult result = ChartTempoCalibration.Calculate(
+                tempoTapAnchors,
+                currentTempo.BeatsPerBar,
+                currentTempo.BeatUnit);
+
+            if (!result.IsValid)
+            {
+
+                tempoTapAnchors.RemoveAt(tempoTapAnchors.Count - 1);
+                statusMessage = result.Error;
+                return;
+
+            }
+
+            tempoTapResult = result;
+            ChartTempoAnchor firstTap = tempoTapAnchors[0];
+            ChartTempoAnchor lastTap = tempoTapAnchors[^1];
+            tempoAnchorABar = firstTap.Bar;
+            tempoAnchorABeat = 1;
+            tempoAnchorATime = ChartTempoCalibration.GetExpectedSongTime(
+                result.FirstDownbeatTime,
+                result.BeatsPerMinute,
+                currentTempo.BeatsPerBar,
+                currentTempo.BeatUnit,
+                firstTap.Bar,
+                1);
+            tempoAnchorBBar = lastTap.Bar;
+            tempoAnchorBBeat = 1;
+            tempoAnchorBTime = ChartTempoCalibration.GetExpectedSongTime(
+                result.FirstDownbeatTime,
+                result.BeatsPerMinute,
+                currentTempo.BeatsPerBar,
+                currentTempo.BeatUnit,
+                lastTap.Bar,
+                1);
+            hasTempoAnchorA = true;
+            hasTempoAnchorB = true;
+            tempoAnchorsFromTapCapture = true;
+            statusMessage =
+                $"{tempoTapAnchors.Count}개 다운비트로 {result.BeatsPerMinute:0.######} BPM을 계산했습니다.";
+
+        }
+
+        private void TryCaptureTempoDownbeat(double eventTimestamp)
+        {
+
+            if (eventTimestamp <=
+                lastTempoTapInputTimestamp + DuplicateTempoTapThresholdSeconds)
+            {
+
+                return;
+
+            }
+
+            lastTempoTapInputTimestamp = eventTimestamp;
+            CaptureTempoDownbeat(eventTimestamp);
+            Repaint();
+
+        }
+
+        private void ClearTempoTapCapture()
+        {
+
+            StopTempoTapCapture();
+            tempoTapAnchors.Clear();
+            tempoTapResult = default;
+
+            if (tempoAnchorsFromTapCapture)
+            {
+
+                hasTempoAnchorA = false;
+                hasTempoAnchorB = false;
+                tempoAnchorsFromTapCapture = false;
+
+            }
+
+            statusMessage = "다운비트 연속 측정을 지웠습니다.";
+
+        }
+
         private void DrawTempoAnchor(
             string label,
             ref int bar,
@@ -650,13 +923,35 @@ namespace IdiotTape.EditorTools
             using (new EditorGUILayout.HorizontalScope())
             {
 
+                GUILayout.Label(
+                    "마디",
+                    EditorStyles.centeredGreyMiniLabel,
+                    GUILayout.Width(TempoAnchorBarFieldWidth));
+                GUILayout.Label(
+                    "박",
+                    EditorStyles.centeredGreyMiniLabel,
+                    GUILayout.Width(TempoAnchorBeatFieldWidth));
+                GUILayout.Label(
+                    "시간(초)",
+                    EditorStyles.centeredGreyMiniLabel,
+                    GUILayout.Width(TempoAnchorTimeFieldWidth));
+
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+
                 EditorGUI.BeginChangeCheck();
-                int nextBar = Math.Max(1, EditorGUILayout.IntField("마디", bar));
+                int nextBar = Math.Max(
+                    1,
+                    EditorGUILayout.IntField(bar, GUILayout.Width(TempoAnchorBarFieldWidth)));
                 int nextBeat = Mathf.Clamp(
-                    EditorGUILayout.IntField("박", beat),
+                    EditorGUILayout.IntField(beat, GUILayout.Width(TempoAnchorBeatFieldWidth)),
                     1,
                     Math.Max(1, beatsPerBar));
-                double nextSongTime = Math.Max(0d, EditorGUILayout.DoubleField("시간", songTime));
+                double nextSongTime = Math.Max(
+                    0d,
+                    EditorGUILayout.DoubleField(songTime, GUILayout.Width(TempoAnchorTimeFieldWidth)));
 
                 if (EditorGUI.EndChangeCheck())
                 {
@@ -665,6 +960,7 @@ namespace IdiotTape.EditorTools
                     beat = nextBeat;
                     songTime = nextSongTime;
                     hasAnchor = true;
+                    MarkTempoAnchorManuallyEdited();
 
                 }
 
@@ -675,6 +971,7 @@ namespace IdiotTape.EditorTools
 
                     songTime = songPlayback.SongTime;
                     hasAnchor = true;
+                    MarkTempoAnchorManuallyEdited();
                     tempoCalibrationPreview = false;
                     metronome?.StopAll();
 
@@ -696,13 +993,14 @@ namespace IdiotTape.EditorTools
             using (new EditorGUILayout.HorizontalScope())
             {
 
-                GUILayout.Space(EditorGUIUtility.labelWidth);
+                GUILayout.Space(TempoAnchorBarFieldWidth + TempoAnchorBeatFieldWidth + 8f);
 
                 if (GUILayout.Button("-10ms"))
                 {
 
                     songTime = Math.Max(0d, songTime - 0.010d);
                     hasAnchor = true;
+                    MarkTempoAnchorManuallyEdited();
 
                 }
 
@@ -711,6 +1009,7 @@ namespace IdiotTape.EditorTools
 
                     songTime = Math.Max(0d, songTime - 0.001d);
                     hasAnchor = true;
+                    MarkTempoAnchorManuallyEdited();
 
                 }
 
@@ -719,6 +1018,7 @@ namespace IdiotTape.EditorTools
 
                     songTime += 0.001d;
                     hasAnchor = true;
+                    MarkTempoAnchorManuallyEdited();
 
                 }
 
@@ -727,12 +1027,23 @@ namespace IdiotTape.EditorTools
 
                     songTime += 0.010d;
                     hasAnchor = true;
+                    MarkTempoAnchorManuallyEdited();
 
                 }
 
                 GUILayout.Label(hasAnchor ? "설정됨" : "미설정", GUILayout.Width(52f));
 
             }
+
+        }
+
+        private void MarkTempoAnchorManuallyEdited()
+        {
+
+            StopTempoTapCapture();
+            tempoTapAnchors.Clear();
+            tempoTapResult = default;
+            tempoAnchorsFromTapCapture = false;
 
         }
 
@@ -863,7 +1174,14 @@ namespace IdiotTape.EditorTools
             string[] partNames = GetPartNames();
             selectedPartIndex = EditorGUILayout.Popup("음악 파트", selectedPartIndex, partNames);
             countInBars = Mathf.Max(1, EditorGUILayout.IntField("카운트인 마디", countInBars));
-            metronomeVolume = EditorGUILayout.Slider("메트로놈 음량", metronomeVolume, 0f, 1f);
+            metronomeVolume = EditorGUILayout.Slider("메트로놈 음량(2배 출력)", metronomeVolume, 0f, 1f);
+            metronomeOutputOffsetMilliseconds = EditorGUILayout.Slider(
+                new GUIContent(
+                    "메트로놈 출력 보정(ms)",
+                    "음수는 클릭을 앞당기고 양수는 늦춥니다. 차트와 판정 시간은 변경하지 않습니다."),
+                metronomeOutputOffsetMilliseconds,
+                -50f,
+                50f);
             metronomeDuringRecording = EditorGUILayout.Toggle("녹화 중 메트로놈", metronomeDuringRecording);
             showQuantizationSettings = EditorGUILayout.Foldout(
                 showQuantizationSettings,
@@ -1324,6 +1642,7 @@ namespace IdiotTape.EditorTools
                 isLoopRecording = false;
                 recordingPhase = RecordingPhase.Idle;
                 tempoCalibrationPreview = false;
+                StopTempoTapCapture();
                 configuredEventPath = string.Empty;
                 DestroyMetronome();
                 DisableRecordingInputActions();
@@ -1343,11 +1662,10 @@ namespace IdiotTape.EditorTools
             if (recordingPhase == RecordingPhase.CountIn)
             {
 
-                if (EditorApplication.timeSinceStartup >= countInEndRealtime)
+                if (songPlayback.HasReachedScheduledStart &&
+                    songPlayback.SongTime >= recordingTargetTime)
                 {
 
-                    songPlayback.Seek(recordingTargetTime);
-                    songPlayback.Play();
                     ActivateRecording();
 
                 }
@@ -1392,12 +1710,10 @@ namespace IdiotTape.EditorTools
 
             }
 
-            if (timelineViewMode == TimelineViewMode.Vertical &&
-                verticalTimelineAutoScroll &&
-                songPlayback.IsPlaying)
+            if (timelineAutoScroll && songPlayback.IsPlaying)
             {
 
-                UpdateVerticalTimelineAutoScroll();
+                UpdateTimelineAutoScroll();
 
             }
 
@@ -1461,6 +1777,13 @@ namespace IdiotTape.EditorTools
 
             BeginCountInOrPreRoll();
 
+            if (recordingPhase == RecordingPhase.Idle)
+            {
+
+                return;
+
+            }
+
             statusMessage = startMode switch
             {
                 RecordingStartMode.CurrentPosition => "현재 위치 녹화를 위한 카운트인을 시작했습니다.",
@@ -1507,19 +1830,27 @@ namespace IdiotTape.EditorTools
 
             }
 
+            if (tempoTapCapture && Keyboard.current?.spaceKey.wasPressedThisFrame == true)
+            {
+
+                TryCaptureTempoDownbeat(InputState.currentTime);
+
+            }
+
             timelineViewMode = (TimelineViewMode)GUILayout.Toolbar(
                 (int)timelineViewMode,
                 new[] { "가로 타임라인", "세로 채보 시트" });
 
-            if (timelineViewMode == TimelineViewMode.Vertical)
+            using (new EditorGUILayout.HorizontalScope())
             {
 
-                using (new EditorGUILayout.HorizontalScope())
+                timelineAutoScroll = EditorGUILayout.Toggle(
+                    "재생 위치 자동 따라가기",
+                    timelineAutoScroll);
+
+                if (timelineViewMode == TimelineViewMode.Vertical)
                 {
 
-                    verticalTimelineAutoScroll = EditorGUILayout.Toggle(
-                        "재생 중 자동 내려가기",
-                        verticalTimelineAutoScroll);
                     verticalTimelineHeight = EditorGUILayout.Slider(
                         "시트 높이",
                         verticalTimelineHeight,
@@ -1590,14 +1921,25 @@ namespace IdiotTape.EditorTools
 
                 }
 
+                GUI.enabled = chart.MusicalParts.Count > 0;
+
+                if (GUILayout.Button("선택 파트 활성 구간 모두 지우기"))
+                {
+
+                    ClearSelectedPartActivationWindows();
+
+                }
+
                 GUI.enabled = true;
 
             }
 
+            DrawAppliedNoteDeletionControls();
+
             EditorGUILayout.HelpBox(
                 "진한 선은 마디, 옅은 선은 박입니다. 빈 곳을 클릭하면 이동하고 임시 노트를 클릭하면 선택합니다. " +
-                "마우스 휠로 이동하고 Ctrl+휠로 확대할 수 있습니다. 기존 노트는 채워진 표시, " +
-                "임시 녹화 노트는 노란 테두리로 표시됩니다.",
+                "마우스 휠로 이동하고 Ctrl+휠로 확대할 수 있습니다. 기존 노트는 채워진 표시이며 클릭해서 " +
+                "삭제 대상으로 선택할 수 있습니다. 임시 녹화 노트는 노란 테두리로 표시됩니다.",
                 MessageType.Info);
 
         }
@@ -1724,6 +2066,16 @@ namespace IdiotTape.EditorTools
                     contentRect.height);
                 float x = GetVerticalLaneTimelineX(columnRect, note.LaneIndex);
                 float y = TimeToVerticalTimelineY(contentRect, note.HitTime);
+
+                if (note.Id == selectedChartNoteId)
+                {
+
+                    EditorGUI.DrawRect(
+                        new Rect(x - 5f, y - 5f, 11f, 11f),
+                        new Color(0.3f, 0.9f, 1f, 1f));
+
+                }
+
                 EditorGUI.DrawRect(new Rect(x - 3f, y - 3f, 7f, 7f), chart.GetPartColor(note.MusicalPartId));
 
             }
@@ -1880,10 +2232,18 @@ namespace IdiotTape.EditorTools
 
             }
 
+            if (TrySelectChartNoteVertical(contentRect, currentEvent.mousePosition))
+            {
+
+                currentEvent.Use();
+                return;
+
+            }
+
             double normalized = Mathf.InverseLerp(contentRect.y, contentRect.yMax, currentEvent.mousePosition.y);
             double selectedTime = timelineStartTime + normalized * timelineVisibleDuration;
             seekTime = ChartTempoMap.SnapSongTime(chart.TempoSections, selectedTime, (int)quantizationGrid);
-            verticalTimelineAutoScroll = false;
+            timelineAutoScroll = false;
 
             if (Application.isPlaying && songPlayback != null && songPlayback.IsPrepared)
             {
@@ -1945,9 +2305,65 @@ namespace IdiotTape.EditorTools
             }
 
             selectedRecordedNoteIndex = closestIndex;
+            selectedChartNoteId = string.Empty;
             scrollPosition.y = Math.Max(
                 0f,
                 closestIndex * (EditorGUIUtility.singleLineHeight + 2f) - 60f);
+            return true;
+
+        }
+
+        private bool TrySelectChartNoteVertical(Rect contentRect, Vector2 mousePosition)
+        {
+
+            int partCount = Math.Max(1, chart.MusicalParts.Count);
+            float partWidth = contentRect.width / partCount;
+            ChartNote closestNote = null;
+            float closestDistance = TimelineNoteHitRadius;
+
+            for (int index = 0; index < chart.Notes.Count; index++)
+            {
+
+                ChartNote note = chart.Notes[index];
+
+                if (note.HitTime < timelineStartTime ||
+                    note.HitTime > timelineStartTime + timelineVisibleDuration)
+                {
+
+                    continue;
+
+                }
+
+                int partIndex = FindPartIndex(note.MusicalPartId);
+                Rect columnRect = new(
+                    contentRect.x + partIndex * partWidth,
+                    contentRect.y,
+                    partWidth,
+                    contentRect.height);
+                Vector2 notePosition = new(
+                    GetVerticalLaneTimelineX(columnRect, note.LaneIndex),
+                    TimeToVerticalTimelineY(contentRect, note.HitTime));
+                float distance = Vector2.Distance(mousePosition, notePosition);
+
+                if (distance <= closestDistance)
+                {
+
+                    closestDistance = distance;
+                    closestNote = note;
+
+                }
+
+            }
+
+            if (closestNote == null)
+            {
+
+                return false;
+
+            }
+
+            selectedChartNoteId = closestNote.Id;
+            selectedRecordedNoteIndex = -1;
             return true;
 
         }
@@ -2100,6 +2516,16 @@ namespace IdiotTape.EditorTools
 
                 float x = TimeToTimelineX(rowRect, note.HitTime);
                 float y = GetLaneTimelineY(rowRect, note.LaneIndex);
+
+                if (note.Id == selectedChartNoteId)
+                {
+
+                    EditorGUI.DrawRect(
+                        new Rect(x - 5f, y - 5f, 11f, 11f),
+                        new Color(0.3f, 0.9f, 1f, 1f));
+
+                }
+
                 EditorGUI.DrawRect(new Rect(x - 3f, y - 3f, 7f, 7f), partColor);
 
             }
@@ -2222,12 +2648,21 @@ namespace IdiotTape.EditorTools
 
             }
 
+            if (TrySelectChartNoteHorizontal(contentRect, currentEvent.mousePosition))
+            {
+
+                currentEvent.Use();
+                return;
+
+            }
+
             double normalized = Mathf.InverseLerp(contentRect.x, contentRect.xMax, currentEvent.mousePosition.x);
             double selectedTime = timelineStartTime + normalized * timelineVisibleDuration;
             seekTime = ChartTempoMap.SnapSongTime(
                 chart.TempoSections,
                 selectedTime,
                 (int)quantizationGrid);
+            timelineAutoScroll = false;
 
             if (Application.isPlaying && songPlayback != null && songPlayback.IsPrepared)
             {
@@ -2288,27 +2723,93 @@ namespace IdiotTape.EditorTools
             ChartTempoSection tempo = ChartTempoMap.FindSectionForTime(
                 chart.TempoSections,
                 recordingTargetTime);
-            int clickCount = Math.Max(1, countInBars * tempo.BeatsPerBar);
-            const double firstClickDelay = 0.12d;
-            double firstClickRealtime = EditorApplication.timeSinceStartup + firstClickDelay;
-            EnsureMetronome();
-            metronome.StopAll();
-            songPlayback.Stop();
-            songPlayback.Seek(recordingTargetTime);
+            IReadOnlyList<ChartAuthoringCountInBeat> countInBeats =
+                ChartAuthoringCountIn.BuildBeats(
+                    tempo,
+                    recordingTargetTime,
+                    countInBars);
 
-            for (int index = 0; index < clickCount; index++)
+            if (countInBeats.Count == 0)
             {
 
-                bool accent = index % tempo.BeatsPerBar == 0;
-                metronome.Schedule(
-                    firstClickDelay + index * tempo.SecondsPerBeat,
-                    accent,
-                    metronomeVolume);
+                statusMessage = "카운트인에 배치할 박자를 계산하지 못했습니다.";
+                recordingPhase = RecordingPhase.Idle;
+                return;
 
             }
 
-            countInEndRealtime = firstClickRealtime + clickCount * tempo.SecondsPerBeat;
+            const double firstClickDelay = 0.20d;
+            double firstClickSongTime = countInBeats[0].SongTime;
+            double songStartDelay = firstClickDelay - firstClickSongTime;
+            EnsureMetronome();
+            metronome.StopAll();
+            songPlayback.Stop();
+
+            if (!songPlayback.SchedulePlay(
+                songStartDelay,
+                0d,
+                out ulong songStartDspClock,
+                out int sampleRate))
+            {
+
+                statusMessage = "FMOD DSP 시계에 카운트인과 음원 시작을 예약하지 못했습니다.";
+                recordingPhase = RecordingPhase.Idle;
+                return;
+
+            }
+
+            for (int index = 0; index < countInBeats.Count; index++)
+            {
+
+                ChartAuthoringCountInBeat beat = countInBeats[index];
+                double clickSongTime = beat.SongTime +
+                    metronomeOutputOffsetMilliseconds / 1000d;
+                ulong clickDspClock = AddSongTimeToDspClock(
+                    songStartDspClock,
+                    clickSongTime,
+                    sampleRate);
+
+                if (!metronome.ScheduleAtDspClock(
+                    clickDspClock,
+                    beat.Accent,
+                    metronomeVolume))
+                {
+
+                    metronome.StopAll();
+                    songPlayback.Stop();
+                    statusMessage = "카운트인 박자를 충분히 미리 예약하지 못했습니다. 다시 시도하세요.";
+                    recordingPhase = RecordingPhase.Idle;
+                    return;
+
+                }
+
+            }
+
+            countInEndRealtime = EditorApplication.timeSinceStartup +
+                songStartDelay + recordingTargetTime;
             recordingPhase = RecordingPhase.CountIn;
+
+        }
+
+        private static ulong AddSongTimeToDspClock(
+            ulong songStartDspClock,
+            double songTime,
+            int sampleRate)
+        {
+
+            long sampleOffset = (long)Math.Round(songTime * sampleRate);
+
+            if (sampleOffset >= 0)
+            {
+
+                return songStartDspClock + (ulong)sampleOffset;
+
+            }
+
+            ulong samplesBeforeStart = (ulong)(-sampleOffset);
+            return samplesBeforeStart >= songStartDspClock
+                ? 0
+                : songStartDspClock - samplesBeforeStart;
 
         }
 
@@ -2411,8 +2912,19 @@ namespace IdiotTape.EditorTools
                 long beatIndex = (long)Math.Round(
                     (nextPreviewMetronomeSongTime - previewFirstDownbeatTime) / secondsPerBeat);
                 bool accent = beatIndex >= 0 && beatIndex % previewBeatsPerBar == 0;
-                double delay = Math.Max(0.025d, nextPreviewMetronomeSongTime - songTime);
-                metronome.Schedule(delay, accent, metronomeVolume);
+                double adjustedClickTime = nextPreviewMetronomeSongTime +
+                    metronomeOutputOffsetMilliseconds / 1000d;
+
+                if (ChartAuthoringMetronome.TryGetScheduleDelay(
+                    adjustedClickTime,
+                    songTime,
+                    out double delay))
+                {
+
+                    metronome.Schedule(delay, accent, metronomeVolume);
+
+                }
+
                 nextPreviewMetronomeSongTime += secondsPerBeat;
 
             }
@@ -2454,11 +2966,22 @@ namespace IdiotTape.EditorTools
                 ChartBeatPosition position = ChartTempoMap.GetBeatPosition(
                     chart.TempoSections,
                     nextMetronomeSongTime);
-                double delay = Math.Max(0.025d, nextMetronomeSongTime - songTime);
-                metronome.Schedule(
-                    delay,
-                    position.Beat == 1,
-                    metronomeVolume);
+                double adjustedClickTime = nextMetronomeSongTime +
+                    metronomeOutputOffsetMilliseconds / 1000d;
+
+                if (ChartAuthoringMetronome.TryGetScheduleDelay(
+                    adjustedClickTime,
+                    songTime,
+                    out double delay))
+                {
+
+                    metronome.Schedule(
+                        delay,
+                        position.Beat == 1,
+                        metronomeVolume);
+
+                }
+
                 nextMetronomeSongTime = ChartTempoMap.GetBeatTimeAfter(
                     chart.TempoSections,
                     nextMetronomeSongTime + 0.000001d);
@@ -2556,6 +3079,93 @@ namespace IdiotTape.EditorTools
             SortRecordedNotes();
             selectedRecordedNoteIndex = recordedNotes.IndexOf(recordedNote);
             statusMessage = $"{hitTime:0.000}초에 {laneIndex + 1}번 위치를 기록했습니다.";
+
+        }
+
+        private void CreateTempoTapInputAction()
+        {
+
+            DisposeTempoTapInputAction();
+            tempoTapInputAction = new InputAction(
+                "다운비트 연속 측정",
+                InputActionType.Button,
+                "<Keyboard>/space");
+            tempoTapInputAction.performed += OnTempoTapPerformed;
+
+        }
+
+        private void OnTempoTapPerformed(InputAction.CallbackContext context)
+        {
+
+            if (!tempoTapCapture)
+            {
+
+                return;
+
+            }
+
+            TryCaptureTempoDownbeat(context.time);
+
+        }
+
+        private void OnInputSystemEvent(InputEventPtr eventPointer, InputDevice device)
+        {
+
+            if (!tempoTapCapture || device is not Keyboard keyboard)
+            {
+
+                return;
+
+            }
+
+            if (!eventPointer.IsA<StateEvent>() && !eventPointer.IsA<DeltaStateEvent>())
+            {
+
+                return;
+
+            }
+
+            bool isSpacePressed = keyboard.spaceKey.ReadValueFromEvent(eventPointer) > 0f;
+
+            if (!isSpacePressed)
+            {
+
+                tempoTapSpacePressed = false;
+                return;
+
+            }
+
+            if (!tempoTapSpacePressed)
+            {
+
+                tempoTapSpacePressed = true;
+                TryCaptureTempoDownbeat(eventPointer.time);
+
+            }
+
+        }
+
+        private void StopTempoTapCapture()
+        {
+
+            tempoTapCapture = false;
+            tempoTapInputAction?.Disable();
+
+        }
+
+        private void DisposeTempoTapInputAction()
+        {
+
+            if (tempoTapInputAction == null)
+            {
+
+                return;
+
+            }
+
+            tempoTapInputAction.performed -= OnTempoTapPerformed;
+            tempoTapInputAction.Dispose();
+            tempoTapInputAction = null;
 
         }
 
@@ -2707,6 +3317,15 @@ namespace IdiotTape.EditorTools
             if (!isRecording && !EditorGUIUtility.editingTextField)
             {
 
+                if (editorEvent.keyCode == KeyCode.Space && tempoTapCapture)
+                {
+
+                    TryCaptureTempoDownbeat(InputState.currentTime);
+                    editorEvent.Use();
+                    return;
+
+                }
+
                 if (editorEvent.keyCode == KeyCode.Space && songPlayback != null && songPlayback.IsPrepared)
                 {
 
@@ -2749,6 +3368,16 @@ namespace IdiotTape.EditorTools
                         -1,
                         recordedNotes.Count - 1);
                     bufferWasApplied = false;
+                    editorEvent.Use();
+                    return;
+
+                }
+
+                if (editorEvent.keyCode == KeyCode.Delete &&
+                    !string.IsNullOrWhiteSpace(selectedChartNoteId))
+                {
+
+                    DeleteSelectedChartNote(true);
                     editorEvent.Use();
                     return;
 
@@ -3007,9 +3636,63 @@ namespace IdiotTape.EditorTools
             }
 
             selectedRecordedNoteIndex = closestIndex;
+            selectedChartNoteId = string.Empty;
             scrollPosition.y = Math.Max(
                 0f,
                 closestIndex * (EditorGUIUtility.singleLineHeight + 2f) - 60f);
+            return true;
+
+        }
+
+        private bool TrySelectChartNoteHorizontal(Rect contentRect, Vector2 mousePosition)
+        {
+
+            ChartNote closestNote = null;
+            float closestDistance = TimelineNoteHitRadius;
+
+            for (int index = 0; index < chart.Notes.Count; index++)
+            {
+
+                ChartNote note = chart.Notes[index];
+
+                if (note.HitTime < timelineStartTime ||
+                    note.HitTime > timelineStartTime + timelineVisibleDuration)
+                {
+
+                    continue;
+
+                }
+
+                int partIndex = FindPartIndex(note.MusicalPartId);
+                Rect rowRect = new(
+                    contentRect.x,
+                    contentRect.y + TimelineRulerHeight + partIndex * TimelinePartHeight,
+                    contentRect.width,
+                    TimelinePartHeight);
+                Vector2 notePosition = new(
+                    TimeToTimelineX(contentRect, note.HitTime),
+                    GetLaneTimelineY(rowRect, note.LaneIndex));
+                float distance = Vector2.Distance(mousePosition, notePosition);
+
+                if (distance <= closestDistance)
+                {
+
+                    closestDistance = distance;
+                    closestNote = note;
+
+                }
+
+            }
+
+            if (closestNote == null)
+            {
+
+                return false;
+
+            }
+
+            selectedChartNoteId = closestNote.Id;
+            selectedRecordedNoteIndex = -1;
             return true;
 
         }
@@ -3042,12 +3725,7 @@ namespace IdiotTape.EditorTools
             double maximumStart = Math.Max(0d, duration - timelineVisibleDuration);
             timelineStartTime = Math.Max(0d, Math.Min(maximumStart, timelineStartTime));
 
-            if (vertical)
-            {
-
-                verticalTimelineAutoScroll = false;
-
-            }
+            timelineAutoScroll = false;
 
             currentEvent.Use();
             Repaint();
@@ -3226,6 +3904,7 @@ namespace IdiotTape.EditorTools
             Undo.RecordObject(this, "임시 기록 지우기");
             recordedNotes.Clear();
             selectedRecordedNoteIndex = -1;
+            selectedChartNoteId = string.Empty;
             bufferWasApplied = false;
             statusMessage = "임시 기록을 지웠습니다. 차트 원본은 바뀌지 않았습니다.";
 
@@ -3251,7 +3930,8 @@ namespace IdiotTape.EditorTools
             }
 
             EditorGUILayout.LabelField(
-                "단축키: Space 재생/일시정지 · R 현재 위치 녹화 · Esc 녹화 중지 · Delete 선택 노트 삭제",
+                "단축키: Space 재생/일시정지(연속 측정 중에는 다운비트 입력) · " +
+                "R 현재 위치 녹화 · Esc 녹화 중지 · Delete 선택 노트 삭제",
                 EditorStyles.miniLabel);
 
         }
@@ -3287,6 +3967,7 @@ namespace IdiotTape.EditorTools
 
             chart = selectedChart;
             StopTempoCalibrationPreview();
+            ClearTempoTapCapture();
             configuredEventPath = string.Empty;
             recordedNotes.Clear();
             selectedRecordedNoteIndex = -1;
@@ -3371,10 +4052,206 @@ namespace IdiotTape.EditorTools
             window.FindPropertyRelative("endTime").doubleValue = endTime;
             serializedChart.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(chart);
+            ChartActivationWindowUtility.Normalize(chart);
             ChartBeatPosition startPosition = ChartTempoMap.GetBeatPosition(chart.TempoSections, startTime);
             ChartBeatPosition endPosition = ChartTempoMap.GetBeatPosition(chart.TempoSections, endTime);
             statusMessage =
                 $"{partId} 활성 구간을 {startPosition.Bar}~{endPosition.Bar - 1}마디로 추가했습니다.";
+
+        }
+
+        private void ClearSelectedPartActivationWindows()
+        {
+
+            if (chart.MusicalParts.Count == 0)
+            {
+
+                return;
+
+            }
+
+            string partId = chart.MusicalParts[selectedPartIndex].Id;
+            int removedCount = ChartActivationWindowUtility.RemovePart(chart, partId);
+            statusMessage = removedCount > 0
+                ? $"{partId} 활성 구간 {removedCount}개를 지웠습니다. Undo로 되돌릴 수 있습니다."
+                : $"{partId}에 지울 활성 구간이 없습니다.";
+
+        }
+
+        private void DrawAppliedNoteDeletionControls()
+        {
+
+            if (chart.MusicalParts.Count == 0)
+            {
+
+                return;
+
+            }
+
+            EditorGUILayout.Space(4f);
+            EditorGUILayout.LabelField("적용된 노트 삭제", EditorStyles.miniBoldLabel);
+            ChartNote selectedNote = FindSelectedChartNote();
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+
+                string selectedDescription = selectedNote == null
+                    ? "선택된 적용 노트 없음"
+                    : $"{selectedNote.MusicalPartId} · {selectedNote.HitTime:0.000}초 · " +
+                      $"위치 {selectedNote.LaneIndex + 1} · {selectedNote.Id}";
+                EditorGUILayout.LabelField(selectedDescription);
+                GUI.enabled = selectedNote != null;
+
+                if (GUILayout.Button("선택 노트 삭제", GUILayout.Width(112f)))
+                {
+
+                    DeleteSelectedChartNote(true);
+
+                }
+
+                GUI.enabled = true;
+
+            }
+
+            string partId = chart.MusicalParts[selectedPartIndex].Id;
+            string partName = chart.MusicalParts[selectedPartIndex].DisplayName;
+            int rangeNoteCount = ChartAuthoringNoteUtility.CountNotesInRange(
+                chart,
+                partId,
+                loopStart,
+                loopEnd);
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+
+                EditorGUILayout.LabelField(
+                    $"현재 반복 구간 · {partName} · 적용 노트 {rangeNoteCount}개");
+                GUI.enabled = loopEnd > loopStart && rangeNoteCount > 0;
+
+                if (GUILayout.Button("범위 노트 삭제", GUILayout.Width(112f)))
+                {
+
+                    DeleteChartNotesInLoop(partId, partName, rangeNoteCount);
+
+                }
+
+                GUI.enabled = true;
+
+            }
+
+            EditorGUILayout.HelpBox(
+                "삭제는 차트 에셋에 즉시 반영되며 Unity Undo로 되돌릴 수 있습니다. " +
+                "영구 저장하려면 아래의 에셋 저장을 누르세요.",
+                MessageType.None);
+
+        }
+
+        private ChartNote FindSelectedChartNote()
+        {
+
+            if (string.IsNullOrWhiteSpace(selectedChartNoteId))
+            {
+
+                return null;
+
+            }
+
+            for (int index = 0; index < chart.Notes.Count; index++)
+            {
+
+                ChartNote note = chart.Notes[index];
+
+                if (note.Id == selectedChartNoteId)
+                {
+
+                    return note;
+
+                }
+
+            }
+
+            selectedChartNoteId = string.Empty;
+            return null;
+
+        }
+
+        private bool DeleteSelectedChartNote(bool requestConfirmation)
+        {
+
+            ChartNote selectedNote = FindSelectedChartNote();
+
+            if (selectedNote == null)
+            {
+
+                return false;
+
+            }
+
+            if (requestConfirmation &&
+                !EditorUtility.DisplayDialog(
+                    "적용된 노트 삭제",
+                    $"'{selectedNote.Id}' 노트를 삭제할까요?\n\n" +
+                    $"파트: {selectedNote.MusicalPartId}\n" +
+                    $"시간: {selectedNote.HitTime:0.000000}초\n" +
+                    $"위치: {selectedNote.LaneIndex + 1}",
+                    "삭제",
+                    "취소"))
+            {
+
+                return false;
+
+            }
+
+            string deletedNoteId = selectedNote.Id;
+            bool deleted = ChartAuthoringNoteUtility.DeleteNote(chart, deletedNoteId);
+
+            if (deleted)
+            {
+
+                selectedChartNoteId = string.Empty;
+                statusMessage = $"적용된 노트 '{deletedNoteId}'를 삭제했습니다. 에셋 저장 전에는 Undo로 되돌릴 수 있습니다.";
+                Repaint();
+
+            }
+
+            return deleted;
+
+        }
+
+        private void DeleteChartNotesInLoop(string partId, string partName, int noteCount)
+        {
+
+            ChartBeatPosition startPosition = ChartTempoMap.GetBeatPosition(
+                chart.TempoSections,
+                loopStart);
+            ChartBeatPosition endPosition = ChartTempoMap.GetBeatPosition(
+                chart.TempoSections,
+                loopEnd);
+
+            if (!EditorUtility.DisplayDialog(
+                    "반복 구간의 적용 노트 삭제",
+                    $"현재 반복 구간에서 {partName} 적용 노트 {noteCount}개를 삭제할까요?\n\n" +
+                    $"범위: {startPosition.Bar}마디 {startPosition.Beat}박부터 " +
+                    $"{endPosition.Bar}마디 {endPosition.Beat}박 직전까지\n" +
+                    $"시간: {loopStart:0.000}초 이상, {loopEnd:0.000}초 미만",
+                    "모두 삭제",
+                    "취소"))
+            {
+
+                return;
+
+            }
+
+            int deletedCount = ChartAuthoringNoteUtility.DeleteNotesInRange(
+                chart,
+                partId,
+                loopStart,
+                loopEnd);
+            selectedChartNoteId = string.Empty;
+            statusMessage =
+                $"현재 반복 구간의 {partName} 적용 노트 {deletedCount}개를 삭제했습니다. " +
+                "에셋 저장 전에는 Undo로 되돌릴 수 있습니다.";
+            Repaint();
 
         }
 
@@ -3489,7 +4366,7 @@ namespace IdiotTape.EditorTools
 
         }
 
-        private void UpdateVerticalTimelineAutoScroll()
+        private void UpdateTimelineAutoScroll()
         {
 
             double maximumStart = Math.Max(0d, GetAuthoringDuration() - timelineVisibleDuration);
@@ -3721,6 +4598,14 @@ namespace IdiotTape.EditorTools
                 selectedRecordedNoteIndex,
                 -1,
                 recordedNotes.Count - 1);
+
+            if (!string.IsNullOrWhiteSpace(selectedChartNoteId) &&
+                FindSelectedChartNote() == null)
+            {
+
+                selectedChartNoteId = string.Empty;
+
+            }
 
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace IdiotTape.EditorTools
 {
@@ -30,7 +31,9 @@ namespace IdiotTape.EditorTools
             double beatsPerMinute,
             double firstDownbeatTime,
             int beatDistance,
-            double timeDistance)
+            double timeDistance,
+            int anchorCount = 2,
+            double rootMeanSquareError = 0d)
         {
 
             IsValid = isValid;
@@ -39,6 +42,8 @@ namespace IdiotTape.EditorTools
             FirstDownbeatTime = firstDownbeatTime;
             BeatDistance = beatDistance;
             TimeDistance = timeDistance;
+            AnchorCount = anchorCount;
+            RootMeanSquareError = rootMeanSquareError;
 
         }
 
@@ -48,6 +53,8 @@ namespace IdiotTape.EditorTools
         public double FirstDownbeatTime { get; }
         public int BeatDistance { get; }
         public double TimeDistance { get; }
+        public int AnchorCount { get; }
+        public double RootMeanSquareError { get; }
 
     }
 
@@ -61,6 +68,19 @@ namespace IdiotTape.EditorTools
             int beatUnit)
         {
 
+            return Calculate(
+                new[] { firstAnchor, secondAnchor },
+                beatsPerBar,
+                beatUnit);
+
+        }
+
+        public static ChartTempoCalibrationResult Calculate(
+            IReadOnlyList<ChartTempoAnchor> anchors,
+            int beatsPerBar,
+            int beatUnit)
+        {
+
             if (beatsPerBar < 1 || beatUnit < 1)
             {
 
@@ -68,35 +88,82 @@ namespace IdiotTape.EditorTools
 
             }
 
-            if (!IsAnchorValid(firstAnchor, beatsPerBar) || !IsAnchorValid(secondAnchor, beatsPerBar))
+            if (anchors == null || anchors.Count < 2)
             {
 
-                return Invalid($"앵커의 박은 1부터 {beatsPerBar} 사이여야 합니다.");
+                return Invalid("캘리브레이션에는 앵커가 두 개 이상 필요합니다.");
 
             }
 
-            int firstBeatIndex = GetBeatIndex(firstAnchor, beatsPerBar);
-            int secondBeatIndex = GetBeatIndex(secondAnchor, beatsPerBar);
+            double beatIndexSum = 0d;
+            double songTimeSum = 0d;
+            int previousBeatIndex = -1;
+            double previousSongTime = -1d;
+
+            for (int index = 0; index < anchors.Count; index++)
+            {
+
+                ChartTempoAnchor anchor = anchors[index];
+
+                if (!IsAnchorValid(anchor, beatsPerBar))
+                {
+
+                    return Invalid($"앵커의 박은 1부터 {beatsPerBar} 사이여야 합니다.");
+
+                }
+
+                int beatIndex = GetBeatIndex(anchor, beatsPerBar);
+
+                if (index > 0 && beatIndex <= previousBeatIndex)
+                {
+
+                    return Invalid("뒤의 앵커는 앞의 앵커보다 뒤의 음악적 위치여야 합니다.");
+
+                }
+
+                if (index > 0 && anchor.SongTime <= previousSongTime)
+                {
+
+                    return Invalid("뒤의 앵커는 앞의 앵커보다 뒤의 곡 시간이어야 합니다.");
+
+                }
+
+                beatIndexSum += beatIndex;
+                songTimeSum += anchor.SongTime;
+                previousBeatIndex = beatIndex;
+                previousSongTime = anchor.SongTime;
+
+            }
+
+            int firstBeatIndex = GetBeatIndex(anchors[0], beatsPerBar);
+            int secondBeatIndex = GetBeatIndex(anchors[^1], beatsPerBar);
             int beatDistance = secondBeatIndex - firstBeatIndex;
-            double timeDistance = secondAnchor.SongTime - firstAnchor.SongTime;
+            double timeDistance = anchors[^1].SongTime - anchors[0].SongTime;
+            double meanBeatIndex = beatIndexSum / anchors.Count;
+            double meanSongTime = songTimeSum / anchors.Count;
+            double beatVariance = 0d;
+            double beatTimeCovariance = 0d;
 
-            if (beatDistance <= 0)
+            for (int index = 0; index < anchors.Count; index++)
             {
 
-                return Invalid("기준 B의 음악적 위치는 기준 A보다 뒤여야 합니다.");
+                double centeredBeatIndex = GetBeatIndex(anchors[index], beatsPerBar) - meanBeatIndex;
+                double centeredSongTime = anchors[index].SongTime - meanSongTime;
+                beatVariance += centeredBeatIndex * centeredBeatIndex;
+                beatTimeCovariance += centeredBeatIndex * centeredSongTime;
 
             }
 
-            if (timeDistance <= 0d)
+            if (beatVariance <= 0d || beatTimeCovariance <= 0d)
             {
 
-                return Invalid("기준 B의 곡 시간은 기준 A보다 뒤여야 합니다.");
+                return Invalid("앵커 간격으로 유효한 BPM을 계산할 수 없습니다.");
 
             }
 
-            double beatsPerMinute = beatDistance * 60d * (4d / beatUnit) / timeDistance;
-            double secondsPerBeat = 60d / beatsPerMinute * (4d / beatUnit);
-            double firstDownbeatTime = firstAnchor.SongTime - firstBeatIndex * secondsPerBeat;
+            double secondsPerBeat = beatTimeCovariance / beatVariance;
+            double beatsPerMinute = 60d * (4d / beatUnit) / secondsPerBeat;
+            double firstDownbeatTime = meanSongTime - meanBeatIndex * secondsPerBeat;
 
             if (beatsPerMinute < 1d || beatsPerMinute > 1000d)
             {
@@ -112,13 +179,27 @@ namespace IdiotTape.EditorTools
 
             }
 
+            double squaredErrorSum = 0d;
+
+            for (int index = 0; index < anchors.Count; index++)
+            {
+
+                int beatIndex = GetBeatIndex(anchors[index], beatsPerBar);
+                double expectedTime = firstDownbeatTime + beatIndex * secondsPerBeat;
+                double error = anchors[index].SongTime - expectedTime;
+                squaredErrorSum += error * error;
+
+            }
+
             return new ChartTempoCalibrationResult(
                 true,
                 string.Empty,
                 beatsPerMinute,
                 firstDownbeatTime,
                 beatDistance,
-                timeDistance);
+                timeDistance,
+                anchors.Count,
+                Math.Sqrt(squaredErrorSum / anchors.Count));
 
         }
 

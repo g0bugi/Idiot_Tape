@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FMODUnity;
+using IdiotTape.Gameplay;
 using UnityEngine;
 
 namespace IdiotTape.EditorTools
@@ -9,10 +10,12 @@ namespace IdiotTape.EditorTools
     public sealed class ChartAuthoringMetronome : IDisposable
     {
 
-        private const float ClickDurationSeconds = 0.045f;
-        private const double MinimumScheduleDelaySeconds = 0.025d;
-        private const float RegularFrequency = 920f;
-        private const float AccentFrequency = 1380f;
+        public const double MinimumScheduleLeadSeconds = 0.025d;
+
+        private const float ClickDurationSeconds = 0.012f;
+        private const float RegularFrequency = 1500f;
+        private const float AccentFrequency = 2400f;
+        private const float OutputVolumeMultiplier = 2f;
 
         private sealed class ScheduledClick
         {
@@ -51,10 +54,49 @@ namespace IdiotTape.EditorTools
 
         }
 
-        public void Schedule(double delaySeconds, bool accent, float volume)
+        public bool Schedule(double delaySeconds, bool accent, float volume)
+        {
+
+            if (delaySeconds < MinimumScheduleLeadSeconds)
+            {
+
+                return false;
+
+            }
+
+            Initialize();
+            CheckResult(
+                masterChannelGroup.getDSPClock(out ulong currentClock, out _),
+                "read the FMOD DSP clock");
+            return ScheduleAtClock(
+                currentClock + SecondsToSamples(delaySeconds),
+                accent,
+                volume);
+
+        }
+
+        public bool ScheduleAtDspClock(ulong startClock, bool accent, float volume)
         {
 
             Initialize();
+            CheckResult(
+                masterChannelGroup.getDSPClock(out ulong currentClock, out _),
+                "read the FMOD DSP clock");
+
+            if (startClock < currentClock + SecondsToSamples(MinimumScheduleLeadSeconds))
+            {
+
+                return false;
+
+            }
+
+            return ScheduleAtClock(startClock, accent, volume);
+
+        }
+
+        private bool ScheduleAtClock(ulong startClock, bool accent, float volume)
+        {
+
             ReleaseFinishedClicks();
             FMOD.DSP dsp = default;
             FMOD.Channel channel = default;
@@ -74,18 +116,18 @@ namespace IdiotTape.EditorTools
                         accent ? AccentFrequency : RegularFrequency),
                     "set the metronome frequency");
                 CheckResult(
-                    masterChannelGroup.getDSPClock(out ulong currentClock, out _),
-                    "read the FMOD DSP clock");
-                CheckResult(
                     coreSystem.playDSP(dsp, masterChannelGroup, true, out channel),
                     "create a metronome channel");
+                float outputVolume = Mathf.Clamp01(volume * OutputVolumeMultiplier);
                 CheckResult(
-                    channel.setVolume(Mathf.Clamp01(volume)),
+                    channel.setVolume(outputVolume),
                     "set the metronome volume");
 
-                ulong startClock = currentClock + SecondsToSamples(
-                    Math.Max(MinimumScheduleDelaySeconds, delaySeconds));
                 ulong endClock = startClock + SecondsToSamples(ClickDurationSeconds);
+                AddEnvelopeFadePoint(channel, startClock, 1f);
+                AddEnvelopeFadePoint(channel, startClock + SecondsToSamples(0.002d), 0.65f);
+                AddEnvelopeFadePoint(channel, startClock + SecondsToSamples(0.005d), 0.25f);
+                AddEnvelopeFadePoint(channel, endClock, 0f);
                 CheckResult(
                     channel.setDelay(startClock, endClock, true),
                     "schedule the metronome click");
@@ -99,6 +141,7 @@ namespace IdiotTape.EditorTools
                     Dsp = dsp
 
                 });
+                return true;
 
             }
             catch
@@ -121,6 +164,17 @@ namespace IdiotTape.EditorTools
                 throw;
 
             }
+
+        }
+
+        public static bool TryGetScheduleDelay(
+            double targetSongTime,
+            double currentSongTime,
+            out double delaySeconds)
+        {
+
+            delaySeconds = targetSongTime - currentSongTime;
+            return delaySeconds >= MinimumScheduleLeadSeconds;
 
         }
 
@@ -199,6 +253,15 @@ namespace IdiotTape.EditorTools
 
         }
 
+        private static void AddEnvelopeFadePoint(FMOD.Channel channel, ulong dspClock, float volume)
+        {
+
+            CheckResult(
+                channel.addFadePoint(dspClock, volume),
+                "shape the metronome click envelope");
+
+        }
+
         private static void CheckResult(FMOD.RESULT result, string operation)
         {
 
@@ -211,6 +274,79 @@ namespace IdiotTape.EditorTools
 
             throw new InvalidOperationException(
                 $"Could not {operation}: {result} ({FMOD.Error.String(result)}).");
+
+        }
+
+    }
+
+    public readonly struct ChartAuthoringCountInBeat
+    {
+
+        public ChartAuthoringCountInBeat(double songTime, bool accent)
+        {
+
+            SongTime = songTime;
+            Accent = accent;
+
+        }
+
+        public double SongTime { get; }
+        public bool Accent { get; }
+
+    }
+
+    public static class ChartAuthoringCountIn
+    {
+
+        private const double BoundaryTolerance = 0.000001d;
+
+        public static IReadOnlyList<ChartAuthoringCountInBeat> BuildBeats(
+            ChartTempoSection tempo,
+            double recordingTargetTime,
+            int countInBars)
+        {
+
+            if (tempo == null)
+            {
+
+                throw new ArgumentNullException(nameof(tempo));
+
+            }
+
+            int barCount = Math.Max(1, countInBars);
+            double virtualStartTime = recordingTargetTime - tempo.SecondsPerBar * barCount;
+            double beatsFromTempoOrigin =
+                (virtualStartTime - tempo.StartTime) / tempo.SecondsPerBeat;
+            long firstBeatIndex = (long)Math.Ceiling(beatsFromTempoOrigin - BoundaryTolerance);
+            List<ChartAuthoringCountInBeat> beats = new(barCount * tempo.BeatsPerBar);
+
+            for (long beatIndex = firstBeatIndex; ; beatIndex++)
+            {
+
+                double beatTime = tempo.StartTime + beatIndex * tempo.SecondsPerBeat;
+
+                if (beatTime >= recordingTargetTime - BoundaryTolerance)
+                {
+
+                    break;
+
+                }
+
+                beats.Add(new ChartAuthoringCountInBeat(
+                    beatTime,
+                    PositiveModulo(beatIndex, tempo.BeatsPerBar) == 0));
+
+            }
+
+            return beats;
+
+        }
+
+        private static long PositiveModulo(long value, int divisor)
+        {
+
+            long remainder = value % divisor;
+            return remainder < 0 ? remainder + divisor : remainder;
 
         }
 

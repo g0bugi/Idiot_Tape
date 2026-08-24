@@ -11,7 +11,7 @@ namespace IdiotTape.EditorTools
         public const string ChartPath = "Assets/Data/SnowPrototypeChart.asset";
         public const string SongEventPath = "event:/Music/KIRARA/Snow";
         private const double SnowDurationSeconds = 488.557619047619d;
-        private const double SnowFirstDownbeatSeconds = 60d / 130d;
+        private const double SnowFirstDownbeatSeconds = 0d;
 
         [MenuItem("Tools/Idiot Tape/Snow 채보 생성 또는 갱신")]
         public static void CreateOrUpdateFromMenu()

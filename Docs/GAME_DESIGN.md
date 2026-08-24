@@ -207,6 +207,10 @@ The prototype treats musical parts and their active time ranges as chart data. A
 owns a stable ID, a display name, and presentation color. Separate activation windows describe
 when each part contributes playable notes.
 
+All authored musical parts remain visible together. Notes whose hit times belong to an inactive
+part window are presented dimly and are not judgement targets. Only playable notes can change
+score or combo, and missing a dim inactive note has no gameplay consequence.
+
 Activation windows may overlap. This supports structures such as:
 
 - drums only
@@ -280,11 +284,11 @@ IDIOTAPE's album `11111101` is currently being considered as the musical basis f
 prototype testing.
 
 The current chart-authoring prototype uses KIRARA's `Snow` as its primary full-song reference.
-Its authoring grid is configured for 130 BPM and 4/4. Listening verification placed the first
-downbeat one beat after song time 0, at approximately 0.461538 seconds.
-This value remains a provisional single-point estimate. The chart authoring tool now supports
-two-anchor calibration so the stored BPM and first-downbeat time can be replaced by measured values
-after checking widely separated downbeats across the song.
+Its authoring grid is configured for 130 BPM and 4/4, with the first downbeat at song time 0.
+The earlier forced one-beat offset was removed because it shifted the beat grid after restarting
+from the beginning. The chart authoring tool supports two-anchor calibration so the stored BPM and
+first-downbeat time can be replaced by measured values after checking widely separated downbeats
+across the song.
 
 Likely early test tracks include:
 

@@ -16,14 +16,14 @@ namespace IdiotTape.Gameplay.Tests
         {
 
             ChartTempoSection section = JsonUtility.FromJson<ChartTempoSection>(
-                "{\"startBar\":1,\"startTime\":0.46153846153846156,\"beatsPerMinute\":130.0," +
+                "{\"startBar\":1,\"startTime\":0.0,\"beatsPerMinute\":130.0," +
                 "\"beatsPerBar\":4,\"beatUnit\":4}");
             snowTempo = new[] { section };
 
         }
 
         [Test]
-        public void QuantizeUsesSnowDownbeatOffset()
+        public void QuantizeUsesSnowBeatGridFromSongStart()
         {
 
             double gridTime = ChartTempoMap.GetSongTime(snowTempo, 3, 2, 0.25d);

@@ -10,8 +10,12 @@ namespace IdiotTape.Gameplay
     public sealed class GameplayInputRouter : MonoBehaviour
     {
 
-        public event Action<Vector2, double> Pressed;
+        private const int MouseContactId = -1;
+
+        public event Action<int, Vector2, double> ContactPressed;
+        public event Action<int> ContactReleased;
         public event Action<int, double> LanePressed;
+        public event Action<int> LaneReleased;
         public event Action RestartRequested;
         public event Action PauseRequested;
 
@@ -26,6 +30,20 @@ namespace IdiotTape.Gameplay
             }
 
             LanePressed?.Invoke(laneIndex, eventTimestamp);
+
+        }
+
+        public void SubmitLaneRelease(int laneIndex)
+        {
+
+            if (laneIndex < 0 || laneIndex >= 8)
+            {
+
+                return;
+
+            }
+
+            LaneReleased?.Invoke(laneIndex);
 
         }
 
@@ -55,29 +73,45 @@ namespace IdiotTape.Gameplay
 
             HandleKeyboard();
 
-            bool handledTouch = false;
+            bool handledTouch = Touch.activeTouches.Count > 0;
 
             for (int index = 0; index < Touch.activeTouches.Count; index++)
             {
 
                 Touch touch = Touch.activeTouches[index];
 
-                if (touch.phase != UnityEngine.InputSystem.TouchPhase.Began)
+                if (touch.phase == UnityEngine.InputSystem.TouchPhase.Began)
                 {
 
+                    ContactPressed?.Invoke(touch.touchId, touch.screenPosition, touch.time);
                     continue;
 
                 }
 
-                handledTouch = true;
-                Pressed?.Invoke(touch.screenPosition, touch.time);
+                if (touch.phase == UnityEngine.InputSystem.TouchPhase.Ended ||
+                    touch.phase == UnityEngine.InputSystem.TouchPhase.Canceled)
+                {
+
+                    ContactReleased?.Invoke(touch.touchId);
+
+                }
 
             }
 
             if (!handledTouch && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
             {
 
-                Pressed?.Invoke(Mouse.current.position.ReadValue(), Mouse.current.lastUpdateTime);
+                ContactPressed?.Invoke(
+                    MouseContactId,
+                    Mouse.current.position.ReadValue(),
+                    Mouse.current.lastUpdateTime);
+
+            }
+
+            if (Mouse.current != null && Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+
+                ContactReleased?.Invoke(MouseContactId);
 
             }
 
@@ -102,6 +136,13 @@ namespace IdiotTape.Gameplay
                 {
 
                     SubmitLaneInput(laneIndex, keyboard.lastUpdateTime);
+
+                }
+
+                else if (WasLaneKeyReleased(keyboard, laneIndex))
+                {
+
+                    SubmitLaneRelease(laneIndex);
 
                 }
 
@@ -145,6 +186,35 @@ namespace IdiotTape.Gameplay
                     return keyboard.digit7Key.wasPressedThisFrame || keyboard.numpad7Key.wasPressedThisFrame;
                 case 7:
                     return keyboard.digit8Key.wasPressedThisFrame || keyboard.numpad8Key.wasPressedThisFrame;
+                default:
+                    return false;
+
+            }
+
+        }
+
+        private static bool WasLaneKeyReleased(Keyboard keyboard, int laneIndex)
+        {
+
+            switch (laneIndex)
+            {
+
+                case 0:
+                    return keyboard.digit1Key.wasReleasedThisFrame || keyboard.numpad1Key.wasReleasedThisFrame;
+                case 1:
+                    return keyboard.digit2Key.wasReleasedThisFrame || keyboard.numpad2Key.wasReleasedThisFrame;
+                case 2:
+                    return keyboard.digit3Key.wasReleasedThisFrame || keyboard.numpad3Key.wasReleasedThisFrame;
+                case 3:
+                    return keyboard.digit4Key.wasReleasedThisFrame || keyboard.numpad4Key.wasReleasedThisFrame;
+                case 4:
+                    return keyboard.digit5Key.wasReleasedThisFrame || keyboard.numpad5Key.wasReleasedThisFrame;
+                case 5:
+                    return keyboard.digit6Key.wasReleasedThisFrame || keyboard.numpad6Key.wasReleasedThisFrame;
+                case 6:
+                    return keyboard.digit7Key.wasReleasedThisFrame || keyboard.numpad7Key.wasReleasedThisFrame;
+                case 7:
+                    return keyboard.digit8Key.wasReleasedThisFrame || keyboard.numpad8Key.wasReleasedThisFrame;
                 default:
                     return false;
 

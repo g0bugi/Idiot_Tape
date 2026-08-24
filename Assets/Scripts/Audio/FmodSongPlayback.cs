@@ -166,12 +166,40 @@ namespace IdiotTape.Audio
         private double pausedSongTime;
         private int dspSampleRate;
         private bool hasTimelineAnchor;
+        private bool hasScheduledStart;
 
         public bool IsPrepared => songInstance.isValid();
 
         public bool PreparationFailed => preparationFailed;
 
         public bool IsRunning => songInstance.isValid() && hasTimelineAnchor;
+
+        public bool HasReachedScheduledStart
+        {
+
+            get
+            {
+
+                if (!IsRunning)
+                {
+
+                    return false;
+
+                }
+
+                if (!hasScheduledStart)
+                {
+
+                    return true;
+
+                }
+
+                return TryGetCurrentDspClock(out ulong currentDspClock) &&
+                    currentDspClock >= anchorDspClock;
+
+            }
+
+        }
 
         public bool IsPlaying
         {
@@ -498,6 +526,7 @@ namespace IdiotTape.Audio
 
             }
 
+            ClearScheduleDelay();
             ApplyStemVolumes();
             RESULT result = songInstance.start();
 
@@ -510,9 +539,163 @@ namespace IdiotTape.Audio
             else
             {
 
+                hasScheduledStart = false;
                 SynchronizeTimelineAnchor();
 
             }
+
+        }
+
+        public bool SchedulePlay(
+            double delaySeconds,
+            double songTimeSeconds,
+            out ulong scheduledStartDspClock,
+            out int sampleRate)
+        {
+
+            scheduledStartDspClock = 0;
+            sampleRate = 0;
+
+            if (!songInstance.isValid() || delaySeconds <= 0d)
+            {
+
+                return false;
+
+            }
+
+            Stop();
+
+            RESULT formatResult = RuntimeManager.CoreSystem.getSoftwareFormat(
+                out sampleRate,
+                out _,
+                out _);
+
+            if (formatResult != RESULT.OK)
+            {
+
+                LogFmodError("read FMOD software sample rate", formatResult);
+                return false;
+
+            }
+
+            double clampedSongTime = Math.Max(0d, songTimeSeconds);
+            int positionMilliseconds = (int)Math.Min(int.MaxValue, clampedSongTime * 1000d);
+            RESULT seekResult = songInstance.setTimelinePosition(positionMilliseconds);
+
+            if (seekResult != RESULT.OK)
+            {
+
+                LogFmodError("seek the scheduled song", seekResult);
+                return false;
+
+            }
+
+            ClearScheduleDelay();
+            RESULT pauseResult = songInstance.setPaused(true);
+
+            if (pauseResult != RESULT.OK)
+            {
+
+                LogFmodError("pause the song before scheduling", pauseResult);
+                return false;
+
+            }
+
+            ApplyStemVolumes();
+            RESULT startResult = songInstance.start();
+
+            if (startResult != RESULT.OK)
+            {
+
+                LogFmodError("schedule the song start", startResult);
+                songInstance.setPaused(false);
+                return false;
+
+            }
+
+            RESULT flushResult = RuntimeManager.StudioSystem.flushCommands();
+
+            if (flushResult != RESULT.OK)
+            {
+
+                LogFmodError("synchronize the scheduled song start", flushResult);
+                Stop();
+                return false;
+
+            }
+
+            RESULT groupResult = songInstance.getChannelGroup(out ChannelGroup channelGroup);
+
+            if (groupResult != RESULT.OK)
+            {
+
+                LogFmodError("read the scheduled song channel group", groupResult);
+                Stop();
+                return false;
+
+            }
+
+            RESULT clockResult = channelGroup.getDSPClock(
+                out _,
+                out ulong parentDspClock);
+
+            if (clockResult != RESULT.OK)
+            {
+
+                LogFmodError("read the scheduled song parent DSP clock", clockResult);
+                Stop();
+                return false;
+
+            }
+
+            scheduledStartDspClock = parentDspClock +
+                SecondsToDspClock(delaySeconds, sampleRate);
+            RESULT scheduledDelayResult = channelGroup.setDelay(
+                scheduledStartDspClock,
+                0,
+                false);
+
+            if (scheduledDelayResult != RESULT.OK)
+            {
+
+                LogFmodError("set the scheduled song DSP clock", scheduledDelayResult);
+                Stop();
+                scheduledStartDspClock = 0;
+                return false;
+
+            }
+
+            RESULT resumeResult = songInstance.setPaused(false);
+
+            if (resumeResult != RESULT.OK)
+            {
+
+                LogFmodError("arm the scheduled song start", resumeResult);
+                Stop();
+                scheduledStartDspClock = 0;
+                return false;
+
+            }
+
+            RESULT scheduleFlushResult = RuntimeManager.StudioSystem.flushCommands();
+
+            if (scheduleFlushResult != RESULT.OK)
+            {
+
+                LogFmodError("apply the scheduled song DSP clock", scheduleFlushResult);
+                Stop();
+                scheduledStartDspClock = 0;
+                return false;
+
+            }
+
+            dspSampleRate = sampleRate;
+            anchorDspClock = scheduledStartDspClock;
+            anchorSongTime = clampedSongTime;
+            pausedSongTime = clampedSongTime;
+            hasTimelineAnchor = true;
+            hasScheduledStart = true;
+            return true;
 
         }
 
@@ -559,7 +742,17 @@ namespace IdiotTape.Audio
 
             }
 
+            RESULT unpauseResult = songInstance.setPaused(false);
+
+            if (unpauseResult != RESULT.OK)
+            {
+
+                LogFmodError("reset stopped song pause state", unpauseResult);
+
+            }
+
             hasTimelineAnchor = false;
+            hasScheduledStart = false;
             pausedSongTime = 0d;
 
         }
@@ -597,6 +790,7 @@ namespace IdiotTape.Audio
             }
 
             ApplyStemVolumes();
+            ClearScheduleDelay();
             RESULT startResult = songInstance.start();
 
             if (startResult != RESULT.OK)
@@ -608,6 +802,7 @@ namespace IdiotTape.Audio
             else
             {
 
+                hasScheduledStart = false;
                 SynchronizeTimelineAnchor();
 
             }
@@ -897,6 +1092,7 @@ namespace IdiotTape.Audio
             playWhenPrepared = false;
             sampleLoadRequested = false;
             hasTimelineAnchor = false;
+            hasScheduledStart = false;
             pausedSongTime = 0d;
 
             if (songInstance.isValid())
@@ -1037,6 +1233,34 @@ namespace IdiotTape.Audio
 
             RESULT clockResult = masterGroup.getDSPClock(out currentDspClock, out _);
             return clockResult == RESULT.OK;
+
+        }
+
+        private void ClearScheduleDelay()
+        {
+
+            if (!songInstance.isValid())
+            {
+
+                return;
+
+            }
+
+            RESULT result = songInstance.setProperty(EVENT_PROPERTY.SCHEDULE_DELAY, -1f);
+
+            if (result != RESULT.OK)
+            {
+
+                LogFmodError("clear the scheduled song delay", result);
+
+            }
+
+        }
+
+        private static ulong SecondsToDspClock(double seconds, int sampleRate)
+        {
+
+            return (ulong)Math.Ceiling(Math.Max(0d, seconds) * sampleRate);
 
         }
 

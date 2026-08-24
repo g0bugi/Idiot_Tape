@@ -139,6 +139,61 @@ namespace IdiotTape.EditorTools
 
         }
 
+        public static int RemovePart(PrototypeChart chart, string partId)
+        {
+
+            if (chart == null || string.IsNullOrWhiteSpace(partId))
+            {
+
+                return 0;
+
+            }
+
+            int removedCount = 0;
+
+            for (int index = 0; index < chart.ActivationWindows.Count; index++)
+            {
+
+                if (chart.ActivationWindows[index].MusicalPartId == partId)
+                {
+
+                    removedCount++;
+
+                }
+
+            }
+
+            if (removedCount == 0)
+            {
+
+                return 0;
+
+            }
+
+            Undo.RecordObject(chart, "선택 파트 활성 구간 지우기");
+            SerializedObject serializedChart = new(chart);
+            SerializedProperty windows = serializedChart.FindProperty("activationWindows");
+
+            for (int index = windows.arraySize - 1; index >= 0; index--)
+            {
+
+                SerializedProperty window = windows.GetArrayElementAtIndex(index);
+
+                if (window.FindPropertyRelative("musicalPartId").stringValue == partId)
+                {
+
+                    windows.DeleteArrayElementAtIndex(index);
+
+                }
+
+            }
+
+            serializedChart.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(chart);
+            return removedCount;
+
+        }
+
         [MenuItem("Tools/Idiot Tape/Snow 활성 구간 중복 정리")]
         public static void NormalizeSnowChart()
         {

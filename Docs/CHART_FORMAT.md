@@ -87,9 +87,9 @@ activation. A chart without tempo information can still run, but the authoring t
 tempo-dependent operations for that chart.
 
 The Snow prototype currently uses one section: 130 BPM, 4/4, with the first downbeat at song time
-`60 / 130` seconds (approximately `0.461538` seconds). This one-beat calibration offset matches the
-audible bar position. Tempo changes remain supported by the data shape but have not yet been proven
-through a variable-tempo chart.
+`0`. The earlier forced one-beat offset was removed so restarting from the beginning and the
+authoring beat grid share the same origin. Tempo changes remain supported by the data shape but
+have not yet been proven through a variable-tempo chart.
 
 
 ## Stable Note Identity
@@ -137,9 +137,11 @@ contains:
 - an inclusive start time
 - an exclusive end time
 
-Windows for different parts may overlap. A note is valid only when its referenced musical part is
-active at the note's hit time. Activation affects chart structure; color remains presentation data
-and must not be used as the authoritative part identity.
+Windows for different parts may overlap. A note is valid when its referenced musical part is
+defined. A note is playable only when that part is active at the note's hit time. Notes outside
+activation windows remain valid chart data and are rendered as dim, non-interactive notes.
+Activation affects chart structure; color remains presentation data and must not be used as the
+authoritative part identity.
 
 This representation is intended to support later look-ahead presentation, such as announcing that
 a drum or synthesizer layer will become active at an upcoming boundary.
@@ -409,9 +411,11 @@ The recorder currently supports:
   applied notes, and buffered notes
 - timeline click-to-seek with quarter-beat snapping
 - selectable horizontal timeline and vertical chart-sheet views
-- vertical chart-sheet auto-scrolling that follows FMOD song time during playback
+- playback auto-follow in both horizontal and vertical timeline views, derived from FMOD song time
 - mouse-wheel timeline navigation and pointer-centered Ctrl/Cmd-wheel zoom
 - direct selection of buffered notes from either timeline view
+- direct selection and Undo-supported deletion of applied notes from either timeline view
+- confirmation-protected deletion of a selected musical part's applied notes inside the current loop
 - bar-number loop entry and bar-aligned loop snapping
 - creating a selected musical part's activation window from the current loop
 - tempo-aware quantization of buffered input to straight or triplet grids
@@ -421,8 +425,8 @@ The recorder currently supports:
 - optional automatic quantization when recording stops
 - confirmation before chart changes discard buffered notes and protection against accidental
   repeated application of the same buffer
-- two-anchor tempo calibration that derives BPM and the first downbeat from measured musical
-  positions on the FMOD song timeline
+- manual two-anchor calibration plus successive-bar downbeat tapping that derives BPM and the first
+  downbeat through a least-squares fit across all captured anchors on the FMOD song timeline
 - candidate-grid metronome preview, millisecond phase adjustment, and an explicit Undo-supported
   tempo-map apply step that preserves absolute note times
 - activation-window overlap validation and an Editor normalization command that merges duplicate,

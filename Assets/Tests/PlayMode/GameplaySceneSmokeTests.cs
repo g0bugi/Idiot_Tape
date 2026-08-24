@@ -75,14 +75,14 @@ namespace IdiotTape.Gameplay.Tests
 
             float playbackDeadline = Time.realtimeSinceStartup + 5f;
 
-            while (songPlayback.SongTime < 1.40d && Time.realtimeSinceStartup < playbackDeadline)
+            while (songPlayback.SongTime < 1.47d && Time.realtimeSinceStartup < playbackDeadline)
             {
 
                 yield return null;
 
             }
 
-            Assert.That(songPlayback.SongTime, Is.GreaterThanOrEqualTo(1.40d));
+            Assert.That(songPlayback.SongTime, Is.GreaterThanOrEqualTo(1.47d));
 
             GameplayInputRouter inputRouter = Object.FindAnyObjectByType<GameplayInputRouter>();
             Assert.That(inputRouter, Is.Not.Null);
@@ -92,7 +92,8 @@ namespace IdiotTape.Gameplay.Tests
             Text instrumentText = GameObject.Find("Instrument").GetComponent<Text>();
             Assert.That(comboText.text, Is.EqualTo("1"));
             Assert.That(instrumentText.text, Is.EqualTo("Drum"));
-            Assert.That(GameObject.Find("HitBurst_prototype_001"), Is.Not.Null);
+            Assert.That(GameObject.Find("HitEffect_prototype_001"), Is.Not.Null);
+            Assert.That(GameObject.Find("LineReaction_prototype_001"), Is.Not.Null);
 
             yield return new WaitForSecondsRealtime(0.12f);
             CaptureGameplayCamera(Path.GetFullPath("Logs/GameplayPreview.png"));

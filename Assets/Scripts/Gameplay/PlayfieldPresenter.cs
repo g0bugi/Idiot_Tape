@@ -8,6 +8,8 @@ namespace IdiotTape.Gameplay
 
         private const int LinePointCount = 65;
         private const float LineFlashDuration = 0.16f;
+        private const int HitEffectPoolSize = 16;
+        private const int LineReactionPoolSize = 8;
 
         private static readonly Color MainLineColor = new(0.92f, 0.91f, 0.88f, 0.9f);
         private static readonly Color EchoLineColor = new(0.75f, 0.72f, 0.7f, 0.28f);
@@ -23,14 +25,40 @@ namespace IdiotTape.Gameplay
 
         private LineRenderer mainLine;
         private LineRenderer echoLine;
+        private Material lineMaterial;
+        private Material additiveMaterial;
+        private HitEffectView[] hitEffectPool;
+        private JudgementLineReaction[] lineReactionPool;
+        private LanePressFeedbackView[] laneFeedbackViews;
+        private int nextHitEffectIndex;
+        private int nextLineReactionIndex;
         private float lineFlashRemaining;
         private Color lineFlashColor = Color.white;
 
         private void Awake()
         {
 
+            lineMaterial = new Material(Shader.Find("Sprites/Default"))
+            {
+                name = "Runtime Judgement Line Material"
+            };
+            Shader additiveShader = Shader.Find("IdiotTape/GameplayAdditiveSprite");
+
+            if (additiveShader == null)
+            {
+
+                Debug.LogError("Gameplay additive sprite shader could not be loaded.", this);
+                additiveShader = Shader.Find("Sprites/Default");
+
+            }
+
+            additiveMaterial = new Material(additiveShader)
+            {
+                name = "Runtime Gameplay Additive Material"
+            };
             mainLine = CreateSketchLine("JudgementLine_Main", MainLineColor, 0.025f, 0f);
             echoLine = CreateSketchLine("JudgementLine_Echo", EchoLineColor, 0.012f, -0.035f);
+            CreateFeedbackPools();
 
         }
 
@@ -63,7 +91,12 @@ namespace IdiotTape.Gameplay
 
         }
 
-        public RuntimeNoteView CreateNote(ChartNote note, Color color, int laneCount, float visualLeadTime)
+        public RuntimeNoteView CreateNote(
+            ChartNote note,
+            Color color,
+            int laneCount,
+            float visualLeadTime,
+            bool isPlayable)
         {
 
             GameObject noteObject = new($"Note_{note.Id}");
@@ -79,7 +112,9 @@ namespace IdiotTape.Gameplay
                 judgementBaseY,
                 judgementCurvature,
                 visualLeadTime,
-                noteScale);
+                noteScale,
+                additiveMaterial,
+                isPlayable);
             return view;
 
         }
@@ -103,7 +138,11 @@ namespace IdiotTape.Gameplay
 
         }
 
-        public void PlayHitFeedback(ChartNote note, int laneCount, Color partColor)
+        public void PlayHitFeedback(
+            ChartNote note,
+            int laneCount,
+            Color partColor,
+            JudgementGrade grade)
         {
 
             lineFlashRemaining = LineFlashDuration;
@@ -112,10 +151,16 @@ namespace IdiotTape.Gameplay
             float normalizedX = PlayfieldGeometry.GetLaneCenterNormalized(note.LaneIndex, laneCount);
             float worldX = PlayfieldGeometry.GetWorldX(normalizedX, halfWidth);
             float worldY = PlayfieldGeometry.GetJudgementLineY(normalizedX, judgementBaseY, judgementCurvature);
-            GameObject burstObject = new($"HitBurst_{note.Id}");
-            burstObject.transform.SetParent(transform, false);
-            SketchHitBurst burst = burstObject.AddComponent<SketchHitBurst>();
-            burst.Initialize(noteSprite, partColor, new Vector3(worldX, worldY, 0f), noteScale);
+            HitEffectView hitEffect = GetNextHitEffect();
+            hitEffect.Play(
+                note.Id,
+                new Vector3(worldX, worldY, 0f),
+                partColor,
+                noteScale,
+                grade);
+
+            JudgementLineReaction lineReaction = GetNextLineReaction();
+            lineReaction.Play(note.Id, normalizedX, partColor, grade);
 
         }
 
@@ -133,7 +178,7 @@ namespace IdiotTape.Gameplay
             line.endColor = color;
             line.numCapVertices = 2;
             line.textureMode = LineTextureMode.Stretch;
-            line.material = new Material(Shader.Find("Sprites/Default"));
+            line.sharedMaterial = lineMaterial;
             line.sortingOrder = 2;
 
             for (int index = 0; index < LinePointCount; index++)
@@ -150,6 +195,169 @@ namespace IdiotTape.Gameplay
             }
 
             return line;
+
+        }
+
+        public void ConfigureLaneFeedback(int laneCount)
+        {
+
+            if (laneFeedbackViews != null && laneFeedbackViews.Length == laneCount)
+            {
+
+                return;
+
+            }
+
+            if (laneFeedbackViews != null)
+            {
+
+                for (int index = 0; index < laneFeedbackViews.Length; index++)
+                {
+
+                    Destroy(laneFeedbackViews[index].gameObject);
+
+                }
+
+            }
+
+            laneFeedbackViews = new LanePressFeedbackView[laneCount];
+            float bottomY = gameplayCamera.ViewportToWorldPoint(new Vector3(0f, 0f, 0f)).y;
+
+            for (int laneIndex = 0; laneIndex < laneCount; laneIndex++)
+            {
+
+                GameObject feedbackObject = new($"LanePressFeedback_{laneIndex + 1:00}");
+                feedbackObject.transform.SetParent(transform, false);
+                LanePressFeedbackView feedbackView = feedbackObject.AddComponent<LanePressFeedbackView>();
+                feedbackView.Initialize(
+                    additiveMaterial,
+                    laneIndex,
+                    laneCount,
+                    halfWidth,
+                    bottomY,
+                    judgementBaseY,
+                    judgementCurvature);
+                laneFeedbackViews[laneIndex] = feedbackView;
+
+            }
+
+        }
+
+        public void SetLanePressed(int laneIndex, bool isPressed)
+        {
+
+            if (laneFeedbackViews == null || laneIndex < 0 || laneIndex >= laneFeedbackViews.Length)
+            {
+
+                return;
+
+            }
+
+            laneFeedbackViews[laneIndex].SetPressed(isPressed);
+
+        }
+
+        private void OnDestroy()
+        {
+
+            if (lineMaterial != null)
+            {
+
+                Destroy(lineMaterial);
+
+            }
+
+            if (additiveMaterial != null)
+            {
+
+                Destroy(additiveMaterial);
+
+            }
+
+        }
+
+        private void CreateFeedbackPools()
+        {
+
+            hitEffectPool = new HitEffectView[HitEffectPoolSize];
+
+            for (int index = 0; index < hitEffectPool.Length; index++)
+            {
+
+                GameObject effectObject = new($"HitEffectPool_{index:00}");
+                effectObject.transform.SetParent(transform, false);
+                HitEffectView effect = effectObject.AddComponent<HitEffectView>();
+                effect.Initialize(additiveMaterial);
+                effectObject.SetActive(false);
+                hitEffectPool[index] = effect;
+
+            }
+
+            lineReactionPool = new JudgementLineReaction[LineReactionPoolSize];
+
+            for (int index = 0; index < lineReactionPool.Length; index++)
+            {
+
+                GameObject reactionObject = new($"LineReactionPool_{index:00}");
+                reactionObject.transform.SetParent(transform, false);
+                JudgementLineReaction reaction = reactionObject.AddComponent<JudgementLineReaction>();
+                reaction.Initialize(additiveMaterial, halfWidth, judgementBaseY, judgementCurvature);
+                reactionObject.SetActive(false);
+                lineReactionPool[index] = reaction;
+
+            }
+
+        }
+
+        private HitEffectView GetNextHitEffect()
+        {
+
+            for (int offset = 0; offset < hitEffectPool.Length; offset++)
+            {
+
+                int index = (nextHitEffectIndex + offset) % hitEffectPool.Length;
+
+                if (hitEffectPool[index].gameObject.activeSelf)
+                {
+
+                    continue;
+
+                }
+
+                nextHitEffectIndex = (index + 1) % hitEffectPool.Length;
+                return hitEffectPool[index];
+
+            }
+
+            HitEffectView reusedEffect = hitEffectPool[nextHitEffectIndex];
+            nextHitEffectIndex = (nextHitEffectIndex + 1) % hitEffectPool.Length;
+            return reusedEffect;
+
+        }
+
+        private JudgementLineReaction GetNextLineReaction()
+        {
+
+            for (int offset = 0; offset < lineReactionPool.Length; offset++)
+            {
+
+                int index = (nextLineReactionIndex + offset) % lineReactionPool.Length;
+
+                if (lineReactionPool[index].gameObject.activeSelf)
+                {
+
+                    continue;
+
+                }
+
+                nextLineReactionIndex = (index + 1) % lineReactionPool.Length;
+                return lineReactionPool[index];
+
+            }
+
+            JudgementLineReaction reusedReaction = lineReactionPool[nextLineReactionIndex];
+            nextLineReactionIndex = (nextLineReactionIndex + 1) % lineReactionPool.Length;
+            return reusedReaction;
 
         }
 

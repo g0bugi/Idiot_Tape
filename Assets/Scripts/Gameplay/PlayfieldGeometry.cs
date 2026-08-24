@@ -13,6 +13,13 @@ namespace IdiotTape.Gameplay
 
         }
 
+        public static int GetLaneIndex(float normalizedX, int laneCount)
+        {
+
+            return Mathf.Clamp(Mathf.FloorToInt(normalizedX * laneCount), 0, laneCount - 1);
+
+        }
+
         public static float GetWorldX(float normalizedX, float halfWidth)
         {
 

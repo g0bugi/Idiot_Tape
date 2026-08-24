@@ -8,10 +8,10 @@ namespace IdiotTape.Gameplay.Tests
     {
 
         [Test]
-        public void SnowAnchorsRecoverBpmAndFirstDownbeat()
+        public void SnowAnchorsRecoverBpmAndZeroFirstDownbeat()
         {
 
-            double firstDownbeat = 60d / 130d;
+            const double firstDownbeat = 0d;
             ChartTempoAnchor first = new(17, 1, firstDownbeat + 64d * 60d / 130d);
             ChartTempoAnchor second = new(81, 1, firstDownbeat + 320d * 60d / 130d);
 
@@ -36,6 +36,31 @@ namespace IdiotTape.Gameplay.Tests
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.BeatsPerMinute, Is.EqualTo(120d).Within(0.000001d));
             Assert.That(result.FirstDownbeatTime, Is.EqualTo(measuredFirstDownbeat).Within(0.000001d));
+
+        }
+
+        [Test]
+        public void MultipleAnchorsUseAllMeasuredDownbeats()
+        {
+
+            ChartTempoAnchor[] anchors =
+            {
+
+                new(1, 1, 0.510d),
+                new(2, 1, 2.495d),
+                new(3, 1, 4.505d),
+                new(4, 1, 6.490d),
+                new(5, 1, 8.500d)
+
+            };
+
+            ChartTempoCalibrationResult result = ChartTempoCalibration.Calculate(anchors, 4, 4);
+
+            Assert.That(result.IsValid, Is.True);
+            Assert.That(result.AnchorCount, Is.EqualTo(5));
+            Assert.That(result.BeatsPerMinute, Is.EqualTo(120d).Within(0.2d));
+            Assert.That(result.FirstDownbeatTime, Is.EqualTo(0.5d).Within(0.01d));
+            Assert.That(result.RootMeanSquareError, Is.GreaterThan(0d));
 
         }
 

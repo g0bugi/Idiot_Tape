@@ -150,6 +150,13 @@ namespace IdiotTape.Gameplay
 
         }
 
+        public bool IsNotePlayable(ChartNote note)
+        {
+
+            return note != null && IsPartActive(note.MusicalPartId, note.HitTime);
+
+        }
+
         public bool TryValidate(out string error)
         {
 
@@ -330,14 +337,6 @@ namespace IdiotTape.Gameplay
                 {
 
                     error = $"Note '{note.Id}' references unknown part '{note.MusicalPartId}'.";
-                    return false;
-
-                }
-
-                if (!IsPartActive(note.MusicalPartId, note.HitTime))
-                {
-
-                    error = $"Note '{note.Id}' occurs while part '{note.MusicalPartId}' is inactive.";
                     return false;
 
                 }

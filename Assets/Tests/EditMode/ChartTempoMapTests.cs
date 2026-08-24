@@ -15,7 +15,7 @@ namespace IdiotTape.Gameplay.Tests
         {
 
             ChartTempoSection section = JsonUtility.FromJson<ChartTempoSection>(
-                "{\"startBar\":1,\"startTime\":0.46153846153846156,\"beatsPerMinute\":130.0," +
+                "{\"startBar\":1,\"startTime\":0.0,\"beatsPerMinute\":130.0," +
                 "\"beatsPerBar\":4,\"beatUnit\":4}");
             snowTempo = new[] { section };
 
@@ -36,19 +36,18 @@ namespace IdiotTape.Gameplay.Tests
 
             double thirdBarSecondBeat = ChartTempoMap.GetSongTime(snowTempo, 3, 2);
 
-            Assert.That(thirdBarSecondBeat, Is.EqualTo(10d * 60d / 130d).Within(0.000001d));
+            Assert.That(thirdBarSecondBeat, Is.EqualTo(9d * 60d / 130d).Within(0.000001d));
 
         }
 
         [Test]
-        public void SnowFirstDownbeatOffsetKeepsDisplayedBeatAligned()
+        public void SnowFirstDownbeatStartsAtSongTimeZero()
         {
 
-            double beat = snowTempo[0].SecondsPerBeat;
-            ChartBeatPosition position = ChartTempoMap.GetBeatPosition(snowTempo, beat * 2d);
+            ChartBeatPosition position = ChartTempoMap.GetBeatPosition(snowTempo, 0d);
 
             Assert.That(position.Bar, Is.EqualTo(1));
-            Assert.That(position.Beat, Is.EqualTo(2));
+            Assert.That(position.Beat, Is.EqualTo(1));
 
         }
 

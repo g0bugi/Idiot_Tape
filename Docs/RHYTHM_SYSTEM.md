@@ -233,13 +233,28 @@ Those clicks are preparation and navigation cues, not an authoritative gameplay 
 input timestamps must still be converted through the FMOD DSP-backed song timeline. Count-in state
 must reject note input until the selected song position actually begins recording.
 
-Tempo calibration may also preview a candidate beat grid derived from two measured musical anchors.
+Tempo calibration may also preview a candidate beat grid derived from two manual anchors or a
+least-squares fit across multiple downbeats tapped on successive bars. Tap timestamps must use the
+same FMOD-backed song time as the rest of the authoring tool. The current Editor metronome applies
+a doubled, clamped output gain so its guide clicks remain audible alongside the song.
+Clicks use a short, fast-decaying oscillator envelope and are scheduled ahead on the FMOD DSP
+clock. If a click cannot retain at least 25 ms of scheduling lead, it is skipped instead of being
+played late; the following beat resumes normal ahead-of-time scheduling. An Editor-only output
+offset may move metronome clicks by up to 50 ms in either direction without changing chart time,
+song time, note times, or judgement.
 The preview changes only Editor metronome scheduling. It must not modify the FMOD-backed song time,
 absolute note times, or runtime judgement until the author explicitly applies the candidate tempo map.
 
 Because Unity's built-in audio is disabled in the FMOD prototype, authoring clicks must be scheduled
 through FMOD. The Editor count-in display may use Editor realtime, but it must not depend on Unity's
 audio DSP clock, which does not advance while built-in audio is disabled.
+
+When a requested recording pre-roll extends before song time zero, the authoring tool must extend
+the active tempo grid into virtual negative song time. Those count-in clicks and the song start must
+be scheduled against one FMOD DSP clock. Editor realtime may estimate the remaining duration for UI,
+but it must not trigger song playback or recording activation. A non-zero first-downbeat offset must
+therefore remain part of the continuous interval between the final negative-time count-in beat and
+the first musical downbeat after the audio begins.
 
 
 ## Pause and Resume

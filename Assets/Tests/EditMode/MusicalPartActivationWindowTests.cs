@@ -73,6 +73,67 @@ namespace IdiotTape.Gameplay.Tests
 
         }
 
+        [Test]
+        public void ChartAllowsVisibleNotesOutsideActivationWindows()
+        {
+
+            PrototypeChart chart = ScriptableObject.CreateInstance<PrototypeChart>();
+            ConfigureChart(
+                chart,
+                new[] { "drum" },
+                new[] { ("drum", 1d, 2d) });
+            AddNote(chart, "inactive_note", 3d, "drum");
+
+            bool valid = chart.TryValidate(out string error);
+
+            Assert.That(valid, Is.True, error);
+            Assert.That(chart.IsNotePlayable(chart.Notes[0]), Is.False);
+            Object.DestroyImmediate(chart);
+
+        }
+
+        [Test]
+        public void NotePlayabilityUsesItsHitTime()
+        {
+
+            PrototypeChart chart = ScriptableObject.CreateInstance<PrototypeChart>();
+            ConfigureChart(
+                chart,
+                new[] { "drum" },
+                new[] { ("drum", 2d, 4d) });
+            AddNote(chart, "active_note", 2d, "drum");
+
+            Assert.That(chart.IsNotePlayable(chart.Notes[0]), Is.True);
+            Object.DestroyImmediate(chart);
+
+        }
+
+        [Test]
+        public void RemovePartLeavesOtherPartWindowsIntact()
+        {
+
+            PrototypeChart chart = ScriptableObject.CreateInstance<PrototypeChart>();
+            ConfigureChart(
+                chart,
+                new[] { "drum", "bass" },
+                new[]
+                {
+
+                    ("drum", 1d, 2d),
+                    ("bass", 2d, 3d),
+                    ("drum", 3d, 4d)
+
+                });
+
+            int removedCount = ChartActivationWindowUtility.RemovePart(chart, "drum");
+
+            Assert.That(removedCount, Is.EqualTo(2));
+            Assert.That(chart.ActivationWindows.Count, Is.EqualTo(1));
+            Assert.That(chart.ActivationWindows[0].MusicalPartId, Is.EqualTo("bass"));
+            Object.DestroyImmediate(chart);
+
+        }
+
         private static void ConfigureChart(
             PrototypeChart chart,
             string[] partIds,
@@ -107,6 +168,25 @@ namespace IdiotTape.Gameplay.Tests
 
             }
 
+            serializedChart.ApplyModifiedPropertiesWithoutUndo();
+
+        }
+
+        private static void AddNote(
+            PrototypeChart chart,
+            string noteId,
+            double hitTime,
+            string partId)
+        {
+
+            SerializedObject serializedChart = new(chart);
+            SerializedProperty notes = serializedChart.FindProperty("notes");
+            notes.arraySize = 1;
+            SerializedProperty note = notes.GetArrayElementAtIndex(0);
+            note.FindPropertyRelative("id").stringValue = noteId;
+            note.FindPropertyRelative("hitTime").doubleValue = hitTime;
+            note.FindPropertyRelative("laneIndex").intValue = 0;
+            note.FindPropertyRelative("musicalPartId").stringValue = partId;
             serializedChart.ApplyModifiedPropertiesWithoutUndo();
 
         }

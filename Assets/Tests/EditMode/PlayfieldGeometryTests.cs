@@ -15,6 +15,18 @@ namespace IdiotTape.Gameplay.Tests
 
         }
 
+        [TestCase(0f, 0)]
+        [TestCase(0.1249f, 0)]
+        [TestCase(0.125f, 1)]
+        [TestCase(0.9999f, 7)]
+        [TestCase(1f, 7)]
+        public void NormalizedInputMapsToEightLaneGrid(float normalizedX, int expectedLaneIndex)
+        {
+
+            Assert.That(PlayfieldGeometry.GetLaneIndex(normalizedX, 8), Is.EqualTo(expectedLaneIndex));
+
+        }
+
         [Test]
         public void JudgementLineIsOnlySlightlyRaisedAtEdges()
         {
