@@ -31,11 +31,21 @@ Before making significant changes, read the documentation relevant to the task.
 
 Read the relevant documents before working on the corresponding system.
 
+- `Docs/README.md`
+  - Documentation authority and routing
+  - Status vocabulary
+  - Current versus future interpretation rules
+
 - `Docs/GAME_DESIGN.md`
   - Core game concept
   - Prototype goals
   - Gameplay design principles
   - Current design decisions and unresolved questions
+
+- `Docs/PROTOTYPE_MILESTONE.md`
+  - Current validation hypotheses
+  - P0/P1 scope
+  - Milestone gates and exit criteria
 
 - `Docs/RHYTHM_SYSTEM.md`
   - Authoritative rhythm clock
@@ -51,6 +61,11 @@ Read the relevant documents before working on the corresponding system.
   - Runtime versus authoring data
   - Chart validation rules
 
+- `Docs/CHART_AUTHORING.md`
+  - Current Play Mode authoring workflow
+  - Metronome, quantization, and tempo-calibration constraints
+  - Tool capabilities and known limitations
+
 - `Docs/ARCHITECTURE.md`
   - Major runtime systems
   - System responsibilities
@@ -63,6 +78,18 @@ Read the relevant documents before working on the corresponding system.
   - Testing and verification
   - Git safety
   - Definition of Done
+
+- `Docs/BACKLOG.md`
+  - Current milestone work items
+  - Dependencies, scope, and acceptance evidence
+
+- `Docs/Playtests/`
+  - Manual validation records
+  - Physical-device, timing, readability, and authoring evidence
+
+- `Docs/ADR/`
+  - Accepted consequential technical decisions
+  - Tradeoffs and reconsideration conditions
 
 
 ## Instruction Priority

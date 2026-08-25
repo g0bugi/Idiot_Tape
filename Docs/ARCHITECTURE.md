@@ -1,5 +1,10 @@
 # Idiot_Tape — Architecture
 
+> Status: Current
+> Last reviewed: 2026-08-25
+> Applies to: The current Unity prototype
+> Authority: Runtime ownership, dependency, and data-flow contracts
+
 ## Document Purpose
 
 This document describes intended high-level system boundaries for Idiot_Tape.
@@ -54,6 +59,70 @@ Gameplay Session
 Visual systems observe gameplay state.
 
 Visual systems must not become the authoritative source of musical timing.
+
+
+## Current Implementation Map
+
+This section maps the conceptual responsibilities in this document to the current repository.
+It is descriptive, not permission to preserve an implementation that violates a documented
+contract.
+
+| Responsibility | Current implementation | Owned state or output |
+|---|---|---|
+| FMOD playback and authoritative song time | `FmodSongPlayback` | FMOD event instance, DSP/timeline anchor, current song time, pause and seek state, stem volumes |
+| Timeline calculations | `SongTimelineMath` | Pure DSP-clock-to-song-time calculations |
+| Session orchestration | `GameplaySession` | Active-note and timing-guide collections, scheduler indices, score, combo, input-to-judgement flow |
+| Chart definition and validation | `PrototypeChart` | Song event path, stem mappings, tempo sections, lane count, parts, activation windows, notes |
+| Tempo navigation math | `ChartTempoMap` | Bar, beat, and song-time conversion for authoring and runtime timing guides |
+| Input collection | `GameplayInputRouter` | Touch, mouse, and development keyboard events with timestamps |
+| Judgement calculation | `JudgementEvaluator` | Pure candidate selection and judgement result |
+| Playfield presentation | `PlayfieldPresenter` and focused view classes | Note and timing-guide visuals, lane feedback, hit effects, judgement-line reaction |
+| HUD presentation | `GameplayHud` | Score, combo, judgement, instrument, progress, and pause display |
+| Chart authoring | `PrototypeChartRecorderWindow` and Editor utilities | Play Mode recording, navigation, quantization, tempo calibration, apply, Undo, validation, save |
+
+### Current Assembly Boundaries
+
+| Assembly | Current responsibility | Current dependency direction |
+|---|---|---|
+| `IdiotTape.Audio` | FMOD playback and timeline math | FMOD Unity integration |
+| `IdiotTape.Gameplay` | Chart data, session, input, judgement, and presentation | Audio, Input System, uGUI |
+| `IdiotTape.Gameplay.Editor` | Chart-authoring and prototype setup tools | Gameplay, Audio, Editor-facing Unity and FMOD APIs |
+| `IdiotTape.Gameplay.Tests` | EditMode tests for isolated gameplay, timing, and authoring logic | Gameplay, Audio, Editor tool assembly |
+| `IdiotTape.Gameplay.PlayModeTests` | Gameplay-scene and view smoke tests | Gameplay, Audio, Input System, uGUI |
+
+Runtime assemblies must not acquire a dependency on the Editor assembly. Gameplay may read the
+public audio timeline contract, but it must not duplicate FMOD timing ownership.
+
+### Current Session Lifecycle
+
+The current prototype uses an implicit lifecycle rather than a dedicated state enum:
+
+```text
+Validate chart
+  -> configure and prepare the chart-selected FMOD event
+  -> mark the session ready
+  -> restart playback and clear runtime state
+  -> schedule, present, and judge notes from SongTime
+  <-> pause and resume
+  -> continue until playback ends
+```
+
+Restart clears active note and timing-guide views, candidates, scheduler positions, score, combo,
+progress, and lane-press presentation before restarting the FMOD timeline.
+
+The current implementation does not expose a distinct end-of-song or results state. The current
+prototype milestone treats that as a small missing lifecycle boundary, not as permission to invent
+final scoring, failure, reward, or progression systems.
+
+### Current Failure Behavior
+
+- invalid chart data logs a contextual error and disables the gameplay session
+- FMOD preparation failure or timeout logs the selected event path and disables the gameplay session
+- unsupported or invalid input is rejected before judgement
+- chart authoring disables the live gameplay session while recording to prevent stale scheduler state
+
+New failure handling should remain explicit and testable. Do not hide essential data or playback
+failures by silently substituting unrelated charts, songs, or clocks.
 
 
 ## Core Responsibility Boundaries
@@ -368,14 +437,16 @@ When intentionally changing a core responsibility:
 
 The following are not yet mandatory architectural decisions:
 
-- exact class names
-- exact scene structure
-- exact assembly definition structure
-- exact event system
-- exact note pooling implementation
-- exact chart loader
-- dependency injection
-- final save system
-- final song database
+| ID | Open decision | Status |
+|---|---|---|
+| `AR-OPEN-001` | Long-term class names beyond current responsibility ownership | Open |
+| `AR-OPEN-002` | Final scene structure | Open |
+| `AR-OPEN-003` | Final assembly definition structure | Open |
+| `AR-OPEN-004` | Final event and notification approach | Open |
+| `AR-OPEN-005` | Whether and when runtime note pooling is required | Open |
+| `AR-OPEN-006` | Final chart loading and preprocessing boundary | Open |
+| `AR-OPEN-007` | Whether dependency-injection infrastructure is warranted | Open |
+| `AR-OPEN-008` | Final save system | Open |
+| `AR-OPEN-009` | Final song database and selection ownership | Open |
 
 Codex must not create these systems simply because they appear as unresolved items.

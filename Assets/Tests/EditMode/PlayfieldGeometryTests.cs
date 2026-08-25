@@ -39,6 +39,22 @@ namespace IdiotTape.Gameplay.Tests
 
         }
 
+        [Test]
+        public void TimingGuideStartsFlatAndEndsOnJudgementLine()
+        {
+
+            float spawnCenter = PlayfieldGeometry.GetTimingGuideY(0.5f, 4.45f, -2.75f, 0.18f, 0f);
+            float spawnEdge = PlayfieldGeometry.GetTimingGuideY(0f, 4.45f, -2.75f, 0.18f, 0f);
+            float hitCenter = PlayfieldGeometry.GetTimingGuideY(0.5f, 4.45f, -2.75f, 0.18f, 1f);
+            float hitEdge = PlayfieldGeometry.GetTimingGuideY(0f, 4.45f, -2.75f, 0.18f, 1f);
+
+            Assert.That(spawnCenter, Is.EqualTo(4.45f).Within(0.0001f));
+            Assert.That(spawnEdge, Is.EqualTo(spawnCenter).Within(0.0001f));
+            Assert.That(hitCenter, Is.EqualTo(-2.75f).Within(0.0001f));
+            Assert.That(hitEdge, Is.EqualTo(-2.57f).Within(0.0001f));
+
+        }
+
     }
 
 }

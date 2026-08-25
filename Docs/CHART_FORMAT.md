@@ -1,5 +1,10 @@
 # Idiot_Tape — Chart Format
 
+> Status: Current
+> Last reviewed: 2026-08-25
+> Applies to: Current prototype chart data and future-compatible chart contracts
+> Authority: Chart data semantics, validation, and runtime interpretation
+
 ## Document Purpose
 
 This document defines the conceptual contract for Idiot_Tape chart data.
@@ -81,15 +86,18 @@ Charts may now provide ordered tempo sections for authoring. Each section identi
 - beats per bar
 - beat unit
 
-Runtime notes continue to store and judge absolute song time. Tempo sections exist to support
-musical navigation, count-in, metronome cues, timeline grids, snapping, and bar-aligned musical-part
-activation. A chart without tempo information can still run, but the authoring tool disables
-tempo-dependent operations for that chart.
+Runtime notes continue to store and judge absolute song time. Tempo sections support musical
+navigation, count-in, metronome cues, timeline grids, snapping, bar-aligned musical-part activation,
+and runtime bar/beat presentation guides. Runtime guides are presentation-only: their position is
+derived from the guide's absolute beat time and the authoritative song time, and they disappear at
+the judgement line without affecting note timing or judgement. A chart without tempo information
+can still run, but tempo-dependent authoring operations and runtime timing guides are disabled for
+that chart.
 
-The Snow prototype currently uses one section: 130 BPM, 4/4, with the first downbeat at song time
-`0`. The earlier forced one-beat offset was removed so restarting from the beginning and the
-authoring beat grid share the same origin. Tempo changes remain supported by the data shape but
-have not yet been proven through a variable-tempo chart.
+The Snow prototype currently uses one section: approximately 129.993 BPM, 4/4, with the calibrated
+first downbeat at song time `0.233293`. This is a measured musical-grid origin rather than an added
+runtime lead-in or judgement offset. Tempo changes remain supported by the data shape but have not
+yet been proven through a variable-tempo chart.
 
 
 ## Stable Note Identity
@@ -168,6 +176,10 @@ For the first playable prototype, a chart defines a lane count and each note sto
 lane index. The runtime converts that index into a normalized horizontal position. These lanes are
 not drawn on screen.
 
+The current authoring representation and reversible hidden-lane choice are recorded in
+`ADR/0002-scriptableobject-prototype-chart-authoring.md` and
+`ADR/0003-hidden-lane-prototype-layout.md`.
+
 The initial sample chart uses eight lanes. This is a reversible prototype representation rather
 than a permanent serialization decision. Lane count remains chart data, and gameplay code must not
 depend on a single hard-coded count.
@@ -179,6 +191,24 @@ hard-coding an event path in the playback component.
 Optional FMOD stem mappings are also chart data. Each mapping associates a chart-specific stem ID
 with that song event's FMOD parameter name. Songs may provide different mappings or none at all;
 the runtime must not assume that every event exposes Pluto's stem parameters.
+
+### Current Prototype Field Contract
+
+The current `PrototypeChart` ScriptableObject persists the following authoring data:
+
+| Data | Unit or identity | Current requirement |
+|---|---|---|
+| FMOD song event path | FMOD event path string | Required and non-empty |
+| Stem mappings | Chart-specific stem ID to FMOD parameter name | Optional; IDs must be non-empty and unique |
+| Tempo sections | Start bar, absolute start time in seconds, BPM, beats per bar, beat unit | Optional for runtime; ordered and valid when present |
+| Lane count | Integer count of hidden normalized horizontal positions | At least 2; current sample uses 8 |
+| Visual lead time | Seconds before hit time | Positive presentation value; does not change hit time |
+| Musical parts | Stable part ID, display name, presentation color | IDs must be non-empty and unique |
+| Activation windows | Part ID with inclusive start and exclusive end time in seconds | Must reference a part and not overlap another window for that part |
+| Notes | Stable ID, absolute hit time in seconds, zero-based lane index, part ID | Ordered by time with valid unique IDs and references |
+
+This table describes the current implementation. It does not finalize the permanent production
+serialization format, coordinate system, or note-type model.
 
 
 ## Note Types
@@ -351,7 +381,13 @@ to fix the problem.
 
 ## Schema Versioning
 
-Once serialized chart files become persistent project content, include an explicit schema version.
+The current ScriptableObject prototype does not store a separate chart schema-version field.
+Unity asset serialization and repository history currently provide the storage context, but they
+do not remove the need to migrate breaking field or semantic changes intentionally.
+
+Add an explicit schema version when the project introduces an external chart file, a build-time
+conversion product, independently distributed chart content, or another representation that must
+be interpreted outside the exact current Unity asset layout.
 
 Do not silently reinterpret older chart data after a breaking format change.
 
@@ -386,77 +422,28 @@ Do not build the complete editor before the core chart representation has been p
 
 ### Current Chart Authoring Tool
 
-The Editor menu `Tools > Idiot Tape > 채보 제작 도구` opens the current Play Mode authoring tool.
-It uses the Gameplay scene's FMOD playback component so recorded number-key input is converted to
-the same DSP-backed song timeline used by runtime judgement.
+The current Play Mode workflow, supported features, timing invariants, and limitations are defined
+in `CHART_AUTHORING.md`.
 
-The recorder currently supports:
-
-- Korean-language play, pause, restart, seek, and repeated-range controls
-- separate recording starts from the current position, a repeated range, or the beginning
-- chart-defined musical-part selection
-- number keys `1` through `8` as hidden-position input
-- a temporary recording buffer that does not modify the chart until explicitly applied
-- individual timing, lane, and part edits
-- millisecond timing nudges
-- chart-defined stem volume audition and selected-part soloing
-- appending notes or replacing recorded parts inside the selected loop
-- optional activation-window creation when recorded notes fall outside existing part windows
-- Unity Undo, chart validation, and explicit asset saving
-- bar and beat display derived from chart tempo data
-- one- or multi-bar count-in with weak metronome clicks and accented downbeats
-- musical pre-roll before recording starts when enough earlier song time exists
-- loop recording that repeats through its pre-roll instead of jumping directly to the first note
-- a visual timeline containing beat/bar lines, playhead, loop range, musical-part activation,
-  applied notes, and buffered notes
-- timeline click-to-seek with quarter-beat snapping
-- selectable horizontal timeline and vertical chart-sheet views
-- playback auto-follow in both horizontal and vertical timeline views, derived from FMOD song time
-- mouse-wheel timeline navigation and pointer-centered Ctrl/Cmd-wheel zoom
-- direct selection of buffered notes from either timeline view
-- direct selection and Undo-supported deletion of applied notes from either timeline view
-- confirmation-protected deletion of a selected musical part's applied notes inside the current loop
-- bar-number loop entry and bar-aligned loop snapping
-- creating a selected musical part's activation window from the current loop
-- tempo-aware quantization of buffered input to straight or triplet grids
-- configurable quantization strength, maximum correction distance, input-time advance, and
-  near-simultaneous chord grouping
-- preservation and restoration of the original DSP-backed input time after quantization
-- optional automatic quantization when recording stops
-- confirmation before chart changes discard buffered notes and protection against accidental
-  repeated application of the same buffer
-- manual two-anchor calibration plus successive-bar downbeat tapping that derives BPM and the first
-  downbeat through a least-squares fit across all captured anchors on the FMOD song timeline
-- candidate-grid metronome preview, millisecond phase adjustment, and an explicit Undo-supported
-  tempo-map apply step that preserves absolute note times
-- activation-window overlap validation and an Editor normalization command that merges duplicate,
-  overlapping, or adjacent windows for the same musical part
-- a bar-first loop workflow using start bar plus bar count, with second-based controls kept under
-  an advanced authoring foldout
-
-The recorder intentionally disables the live gameplay session while recording so seeking and
-looping cannot leave runtime scheduling state inconsistent. After applying and saving, exit and
-re-enter Play Mode to rebuild runtime notes from the edited chart.
-
-The metronome is an Editor-only audible guide. It never replaces FMOD song time as the source used
-to record notes. Quantization changes authoring data only; runtime notes continue to receive resolved
-absolute song times. The current tool does not provide waveforms, hold/slide editing, automatic beat
-analysis, multi-note selection, drag editing of notes or activation-window handles, or keyboard
-recording beyond the first eight positions.
+Authoring tools must continue to produce data that satisfies this document. A convenient Editor
+operation must not silently redefine absolute note time, musical-part identity, activation-window
+semantics, or runtime judgement.
 
 
 ## Unresolved Chart Decisions
 
 The following remain open:
 
-- permanent serialization format
-- exact coordinate system
-- final note type model
-- variable-tempo authoring UX beyond direct tempo-section data
-- chart difficulty metadata
-- pattern / group representation
-- movement-path representation
-- editor UI
-- runtime preprocessing format
+| ID | Open decision | Status |
+|---|---|---|
+| `CF-OPEN-001` | Permanent chart serialization format | Open |
+| `CF-OPEN-002` | Final chart coordinate system | Open |
+| `CF-OPEN-003` | Final note-type model | Open |
+| `CF-OPEN-004` | Variable-tempo authoring UX beyond direct tempo-section data | Open |
+| `CF-OPEN-005` | Chart difficulty metadata | Open |
+| `CF-OPEN-006` | Pattern and group representation | Open |
+| `CF-OPEN-007` | Movement-path representation | Open |
+| `CF-OPEN-008` | Final chart-authoring UI and interaction model | Open |
+| `CF-OPEN-009` | Runtime preprocessing format | Open |
 
 Treat these as design questions, not missing fields that Codex should invent automatically.

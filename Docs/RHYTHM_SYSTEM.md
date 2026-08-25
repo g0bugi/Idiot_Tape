@@ -1,5 +1,10 @@
 # Idiot_Tape — Rhythm System
 
+> Status: Current
+> Last reviewed: 2026-08-25
+> Applies to: All rhythm-sensitive runtime and chart-authoring behavior
+> Authority: Song time, synchronization, input timing, and judgement timing contracts
+
 ## Document Purpose
 
 This document defines timing and synchronization rules for rhythm-sensitive gameplay.
@@ -45,6 +50,9 @@ The exact implementation may change if the project later adopts another audio ba
 but the architectural requirement remains:
 
 > rhythm gameplay must use one authoritative high-precision audio timeline.
+
+The current FMOD-specific choice and its reconsideration conditions are recorded in
+`ADR/0001-fmod-dsp-authoritative-song-time.md`.
 
 ### Current FMOD Prototype
 
@@ -119,6 +127,12 @@ This affects presentation.
 
 It must not redefine the note's actual hit timing.
 
+The current gameplay HUD exposes a visual note-speed multiplier from `x1` through `x4`. `x1`
+uses the chart's authored visual lead time. Higher values divide that lead time, so notes and
+timing guides enter later and travel faster while their absolute hit times, song time, input
+timestamps, and judgement windows remain unchanged. Changing the multiplier must immediately
+recalculate active presentation from authoritative song time rather than accumulating movement.
+
 
 ### Judgement Offset
 
@@ -147,6 +161,11 @@ Visual position should ultimately be recoverable from timing state.
 
 Do not make correct note position depend only on repeatedly moving the note from its previous
 frame position.
+
+Runtime bar and beat guides follow the same rule. Each guide is resolved from the chart tempo map
+to an absolute beat time, displayed within the chart visual lead window, and positioned from
+`beatTime - currentSongTime`. It must not accumulate transform movement or become a timing source.
+The guide is removed when its beat reaches the judgement line.
 
 This ensures that after a temporary frame hitch, the visual can return immediately to the
 correct timeline position instead of preserving accumulated drift.
@@ -368,17 +387,36 @@ If mobile latency is relevant and no device test was performed, report:
 
 `Not verified on physical mobile hardware.`
 
+### Timing Verification Evidence
+
+For a milestone or regression check, record the test in `Playtests/` using
+`Playtests/TEMPLATE.md`. Include, where relevant:
+
+- Git commit or build identifier
+- Unity version, device, display mode, and audio output route
+- chart and FMOD song event
+- beginning, middle, and end observations
+- pause, resume, restart, seek, and frame-hitch conditions
+- input timestamp source and applied offset semantics
+- automated tests and Play Mode checks actually run
+- relevant checks that were not performed
+
+Do not convert a perceived offset into a hidden constant before distinguishing input latency,
+output latency, chart timing error, and clock-conversion error.
+
 
 ## Unresolved Timing Decisions
 
 The following are not yet fixed:
 
-- final judgement window values
-- device calibration UX
-- exact input-latency compensation strategy
-- exact output-latency compensation strategy
-- final audio backend
-- playback-rate modification behavior
-- detailed pause UX
+| ID | Open decision | Status |
+|---|---|---|
+| `RT-OPEN-001` | Final judgement-window values | Open |
+| `RT-OPEN-002` | Device calibration UX | Open |
+| `RT-OPEN-003` | Exact input-latency compensation strategy | Open |
+| `RT-OPEN-004` | Exact output-latency compensation strategy | Open |
+| `RT-OPEN-005` | Final production audio backend | Open |
+| `RT-OPEN-006` | Playback-rate modification behavior | Open |
+| `RT-OPEN-007` | Detailed pause UX | Open |
 
 Do not hard-code unresolved design decisions into unrelated systems.

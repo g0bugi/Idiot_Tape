@@ -45,2792 +45,390 @@ MonoBehaviour:
     color: {r: 0.52, g: 0.42, b: 0.95, a: 1}
   activationWindows:
   - musicalPartId: drum
-    startTime: 0.2332931141569361
+    startTime: 2.079548162592274
     endTime: 15.003333501639636
-  - musicalPartId: synth
-    startTime: 15.003333501639636
-    endTime: 44.543414276605034
-  - musicalPartId: bass
-    startTime: 44.543414276605034
-    endTime: 59.313454664087736
   notes:
   - id: snowprototypechart_drum_0001
-    hitTime: 0.28708149999998933
+    hitTime: 0.2332931141569361
     laneIndex: 0
     musicalPartId: drum
   - id: snowprototypechart_drum_0002
-    hitTime: 0.6927704333333571
-    laneIndex: 0
+    hitTime: 0.4640749952113533
+    laneIndex: 3
     musicalPartId: drum
   - id: snowprototypechart_drum_0003
-    hitTime: 1.151437299999955
-    laneIndex: 0
+    hitTime: 0.5794659357385619
+    laneIndex: 4
     musicalPartId: drum
   - id: snowprototypechart_drum_0004
-    hitTime: 1.610103866666656
+    hitTime: 0.6948568762657705
     laneIndex: 0
     musicalPartId: drum
   - id: snowprototypechart_drum_0005
-    hitTime: 2.0687705333333226
-    laneIndex: 0
+    hitTime: 0.9256387573201876
+    laneIndex: 3
     musicalPartId: drum
   - id: snowprototypechart_drum_0006
-    hitTime: 2.5274373000000687
-    laneIndex: 0
+    hitTime: 1.0410296978473963
+    laneIndex: 4
     musicalPartId: drum
   - id: snowprototypechart_drum_0007
-    hitTime: 2.996770633333402
+    hitTime: 1.156420638374605
     laneIndex: 0
     musicalPartId: drum
   - id: snowprototypechart_drum_0008
-    hitTime: 3.4661039666667355
-    laneIndex: 0
+    hitTime: 1.387202519429022
+    laneIndex: 3
     musicalPartId: drum
   - id: snowprototypechart_drum_0009
-    hitTime: 3.9354373000000686
-    laneIndex: 0
+    hitTime: 1.5025934599562307
+    laneIndex: 4
     musicalPartId: drum
   - id: snowprototypechart_drum_0010
-    hitTime: 4.394103966666735
+    hitTime: 1.6179844004834392
     laneIndex: 0
     musicalPartId: drum
   - id: snowprototypechart_drum_0011
-    hitTime: 4.852770633333402
-    laneIndex: 0
+    hitTime: 1.8487662815378565
+    laneIndex: 3
     musicalPartId: drum
   - id: snowprototypechart_drum_0012
-    hitTime: 5.31143719999999
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0013
-    hitTime: 5.759437299999955
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0014
-    hitTime: 6.228770633333402
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0015
-    hitTime: 6.708770433333357
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0016
-    hitTime: 7.178103866666656
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0017
-    hitTime: 7.626103866666656
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0018
-    hitTime: 8.095437300000068
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0019
-    hitTime: 8.532770533333323
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0020
-    hitTime: 9.02343719999999
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0021
-    hitTime: 9.47143719999999
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0022
-    hitTime: 9.962103866666656
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0023
-    hitTime: 10.410103866666656
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0024
-    hitTime: 10.836770633333401
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0025
-    hitTime: 11.306103966666623
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0026
-    hitTime: 11.78610386666677
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0027
-    hitTime: 12.244770533333323
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0028
-    hitTime: 12.724770633333288
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0029
-    hitTime: 13.172770633333288
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0030
-    hitTime: 13.642103966666735
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0031
-    hitTime: 14.122103966666621
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0032
-    hitTime: 14.548770533333323
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0001
-    hitTime: 15.007437200000103
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0217
-    hitTime: 15.007437200000103
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0033
-    hitTime: 15.018103866666657
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0034
-    hitTime: 15.23143719999999
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0035
-    hitTime: 15.48743719999999
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0036
-    hitTime: 15.732770533333323
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0037
-    hitTime: 15.946103966666621
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0002
-    hitTime: 15.946103966666621
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0218
-    hitTime: 15.946103966666621
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0003
-    hitTime: 16.020770533333323
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0219
-    hitTime: 16.020770533333323
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0004
-    hitTime: 16.116770533333437
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0220
-    hitTime: 16.116770533333437
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0038
-    hitTime: 16.18077063333329
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0005
-    hitTime: 16.223437200000102
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0221
-    hitTime: 16.223437200000102
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0006
-    hitTime: 16.31943719999999
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0222
-    hitTime: 16.31943719999999
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0007
-    hitTime: 16.38343719999999
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0223
-    hitTime: 16.38343719999999
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0039
-    hitTime: 16.394103966666734
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0008
-    hitTime: 16.500770533333323
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0224
-    hitTime: 16.500770533333323
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0040
-    hitTime: 16.607437299999955
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0009
-    hitTime: 16.650103866666655
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0225
-    hitTime: 16.650103866666655
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0010
-    hitTime: 16.820770533333324
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0226
-    hitTime: 16.820770533333324
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0041
-    hitTime: 16.87410376666669
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0042
-    hitTime: 17.098103966666734
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0043
-    hitTime: 17.35410376666669
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0044
-    hitTime: 17.556770533333324
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0011
-    hitTime: 17.79143719999999
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0227
-    hitTime: 17.79143719999999
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0045
-    hitTime: 17.81277053333332
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0012
-    hitTime: 17.88743719999999
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0228
-    hitTime: 17.88743719999999
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0013
-    hitTime: 17.951437299999956
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0229
-    hitTime: 17.951437299999956
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0046
-    hitTime: 18.02610386666677
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0014
-    hitTime: 18.079437100000025
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0230
-    hitTime: 18.079437100000025
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0015
-    hitTime: 18.20743700000006
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0231
-    hitTime: 18.20743700000006
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0047
-    hitTime: 18.27143719999999
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0016
-    hitTime: 18.28210396666662
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0232
-    hitTime: 18.28210396666662
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0017
-    hitTime: 18.399437299999956
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0233
-    hitTime: 18.399437299999956
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0048
-    hitTime: 18.506103866666656
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0018
-    hitTime: 18.55943719999999
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0234
-    hitTime: 18.55943719999999
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0019
-    hitTime: 18.68743730000007
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0235
-    hitTime: 18.68743730000007
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0049
-    hitTime: 18.740770633333288
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0050
-    hitTime: 18.954103866666657
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0051
-    hitTime: 19.188770533333322
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0052
-    hitTime: 19.423437199999988
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0020
-    hitTime: 19.636770533333323
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0236
-    hitTime: 19.636770533333323
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0053
-    hitTime: 19.668770533333323
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0021
-    hitTime: 19.754103866666657
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0237
-    hitTime: 19.754103866666657
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0022
-    hitTime: 19.83943719999999
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0238
-    hitTime: 19.83943719999999
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0054
-    hitTime: 19.90343719999999
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0023
-    hitTime: 19.96743719999999
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0239
-    hitTime: 19.96743719999999
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0024
-    hitTime: 20.106103866666658
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0240
-    hitTime: 20.106103866666658
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0055
-    hitTime: 20.138103866666658
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0025
-    hitTime: 20.180770533333437
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0241
-    hitTime: 20.180770533333437
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0026
-    hitTime: 20.308770533333437
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0242
-    hitTime: 20.308770533333437
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0056
-    hitTime: 20.35143719999999
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0027
-    hitTime: 20.447437300000068
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0243
-    hitTime: 20.447437300000068
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0028
-    hitTime: 20.54343719999999
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0244
-    hitTime: 20.54343719999999
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0057
-    hitTime: 20.564770533333323
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0058
-    hitTime: 20.78877063333329
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0059
-    hitTime: 21.044770533333324
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0060
-    hitTime: 21.25810396666662
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0029
-    hitTime: 21.45010396666662
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0245
-    hitTime: 21.45010396666662
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0061
-    hitTime: 21.49277063333329
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0030
-    hitTime: 21.56743719999999
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0246
-    hitTime: 21.56743719999999
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0031
-    hitTime: 21.67410366666661
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0247
-    hitTime: 21.67410366666661
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0062
-    hitTime: 21.72743719999999
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0032
-    hitTime: 21.866103866666656
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0248
-    hitTime: 21.866103866666656
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0063
-    hitTime: 21.95143719999999
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0033
-    hitTime: 22.01543719999999
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0249
-    hitTime: 22.01543719999999
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0034
-    hitTime: 22.07943719999999
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0250
-    hitTime: 22.07943719999999
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0064
-    hitTime: 22.18610376666669
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0035
-    hitTime: 22.20743719999999
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0251
-    hitTime: 22.20743719999999
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0036
-    hitTime: 22.2927706333334
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0252
-    hitTime: 22.2927706333334
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0037
-    hitTime: 22.39943730000007
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0253
-    hitTime: 22.39943730000007
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0065
-    hitTime: 22.431437299999956
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0066
-    hitTime: 22.666103866666656
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0067
-    hitTime: 22.804770633333288
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0068
-    hitTime: 22.900770433333356
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0069
-    hitTime: 23.124770633333288
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0070
-    hitTime: 23.295437299999953
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0038
-    hitTime: 23.338103866666657
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0254
-    hitTime: 23.338103866666657
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0071
-    hitTime: 23.348770433333243
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0039
-    hitTime: 23.444770533333323
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0255
-    hitTime: 23.444770533333323
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0040
-    hitTime: 23.530103966666623
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0256
-    hitTime: 23.530103966666623
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0072
-    hitTime: 23.594103866666657
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0041
-    hitTime: 23.668770533333323
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0257
-    hitTime: 23.668770533333323
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0073
-    hitTime: 23.732770533333323
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0042
-    hitTime: 23.754103766666578
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0258
-    hitTime: 23.754103766666578
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0074
-    hitTime: 23.839437299999954
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0043
-    hitTime: 23.860770533333323
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0259
-    hitTime: 23.860770533333323
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0044
-    hitTime: 23.978103766666692
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0260
-    hitTime: 23.978103766666692
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0075
-    hitTime: 24.042103766666692
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0045
-    hitTime: 24.095437100000023
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0261
-    hitTime: 24.095437100000023
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0076
-    hitTime: 24.170103866666658
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0046
-    hitTime: 24.244770533333323
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0262
-    hitTime: 24.244770533333323
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0077
-    hitTime: 24.27677033333328
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0078
-    hitTime: 24.47943719999999
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0079
-    hitTime: 24.62877063333329
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0080
-    hitTime: 24.724770533333324
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0081
-    hitTime: 24.938103866666655
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0082
-    hitTime: 25.098103966666734
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0047
-    hitTime: 25.15143719999999
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0263
-    hitTime: 25.15143719999999
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0083
-    hitTime: 25.194103866666655
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0048
-    hitTime: 25.279437100000024
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0264
-    hitTime: 25.279437100000024
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0049
-    hitTime: 25.386103866666655
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0265
-    hitTime: 25.386103866666655
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0084
-    hitTime: 25.418103866666655
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0050
-    hitTime: 25.50343719999999
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0266
-    hitTime: 25.50343719999999
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0085
-    hitTime: 25.56743730000007
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0051
-    hitTime: 25.620770533333438
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0267
-    hitTime: 25.620770533333438
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0086
-    hitTime: 25.674103866666655
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0052
-    hitTime: 25.695437100000024
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0268
-    hitTime: 25.695437100000024
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0053
-    hitTime: 25.82343730000007
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0269
-    hitTime: 25.82343730000007
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0087
-    hitTime: 25.876770633333287
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0054
-    hitTime: 25.90877053333332
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0270
-    hitTime: 25.90877053333332
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0088
-    hitTime: 26.026103866666656
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0055
-    hitTime: 26.036770533333435
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0271
-    hitTime: 26.036770533333435
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0089
-    hitTime: 26.11143719999999
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0090
-    hitTime: 26.34610396666662
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0091
-    hitTime: 26.474103866666656
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0092
-    hitTime: 26.580770633333287
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0093
-    hitTime: 26.783437299999957
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0094
-    hitTime: 26.95410386666677
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0056
-    hitTime: 26.975437299999957
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0272
-    hitTime: 26.975437299999957
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0095
-    hitTime: 27.050103866666657
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0057
-    hitTime: 27.114103766666577
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0273
-    hitTime: 27.114103766666577
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0058
-    hitTime: 27.220770533333322
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0274
-    hitTime: 27.220770533333322
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0096
-    hitTime: 27.263437199999988
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0059
-    hitTime: 27.348770533333322
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0275
-    hitTime: 27.348770533333322
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0097
-    hitTime: 27.412770533333322
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0060
-    hitTime: 27.48743709999991
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0276
-    hitTime: 27.48743709999991
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0098
-    hitTime: 27.487437199999988
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0061
-    hitTime: 27.583437199999988
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0277
-    hitTime: 27.583437199999988
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0062
-    hitTime: 27.700770533333323
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0278
-    hitTime: 27.700770533333323
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0099
-    hitTime: 27.711437199999988
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0063
-    hitTime: 27.80743719999999
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0279
-    hitTime: 27.80743719999999
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0100
-    hitTime: 27.83943719999999
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0064
-    hitTime: 27.914103866666657
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0280
-    hitTime: 27.914103866666657
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0101
-    hitTime: 27.946103866666657
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0102
-    hitTime: 28.170103866666658
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0103
-    hitTime: 28.319437300000068
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0104
-    hitTime: 28.415437299999954
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0105
-    hitTime: 28.639437299999955
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0106
-    hitTime: 28.76743719999999
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0065
-    hitTime: 28.810103866666655
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0281
-    hitTime: 28.810103866666655
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0107
-    hitTime: 28.92743719999999
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0066
-    hitTime: 28.95943719999999
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0282
-    hitTime: 28.95943719999999
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0067
-    hitTime: 29.08743719999999
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0283
-    hitTime: 29.08743719999999
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0108
-    hitTime: 29.10877043333336
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0109
-    hitTime: 29.247437100000024
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0068
-    hitTime: 29.25810396666662
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0284
-    hitTime: 29.25810396666662
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0069
-    hitTime: 29.34343719999999
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0285
-    hitTime: 29.34343719999999
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0110
-    hitTime: 29.38610386666677
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0070
-    hitTime: 29.47143730000007
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0286
-    hitTime: 29.47143730000007
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0071
-    hitTime: 29.56743719999999
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0287
-    hitTime: 29.56743719999999
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0111
-    hitTime: 29.578103866666655
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0072
-    hitTime: 29.66343719999999
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0288
-    hitTime: 29.66343719999999
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0112
-    hitTime: 29.716770433333355
-    laneIndex: 4
-    musicalPartId: drum
-  - id: snowprototypechart_synth_0073
-    hitTime: 29.78077053333332
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0289
-    hitTime: 29.78077053333332
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0113
-    hitTime: 29.83410396666662
-    laneIndex: 0
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0114
-    hitTime: 30.03677053333332
-    laneIndex: 3
-    musicalPartId: drum
-  - id: snowprototypechart_drum_0115
-    hitTime: 30.132770533333435
+    hitTime: 1.964157222065065
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_drum_0116
-    hitTime: 30.26077053333332
+  - id: snowprototypechart_drum_copy_0001
+    hitTime: 2.079548162592274
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_drum_0117
-    hitTime: 30.474103866666656
+  - id: snowprototypechart_drum_copy_0002
+    hitTime: 2.3103300436466907
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0118
-    hitTime: 30.602103866666656
+  - id: snowprototypechart_drum_copy_0003
+    hitTime: 2.4257209841738994
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0074
-    hitTime: 30.73010366666661
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0290
-    hitTime: 30.73010366666661
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0119
-    hitTime: 30.772770533333322
+  - id: snowprototypechart_drum_copy_0004
+    hitTime: 2.541111924701108
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0075
-    hitTime: 30.890103866666657
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0291
-    hitTime: 30.890103866666657
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0120
-    hitTime: 30.954103966666622
+  - id: snowprototypechart_drum_copy_0005
+    hitTime: 2.7718938057555254
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_synth_0076
-    hitTime: 30.996770533333322
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0292
-    hitTime: 30.996770533333322
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0121
-    hitTime: 31.092770533333322
+  - id: snowprototypechart_drum_copy_0006
+    hitTime: 2.8872847462827336
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0077
-    hitTime: 31.103437199999988
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0293
-    hitTime: 31.103437199999988
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0122
-    hitTime: 31.178103866666657
+  - id: snowprototypechart_drum_copy_0007
+    hitTime: 3.0026756868099422
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0078
-    hitTime: 31.178103866666657
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0294
-    hitTime: 31.178103866666657
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0079
-    hitTime: 31.284770533333322
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0295
-    hitTime: 31.284770533333322
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0080
-    hitTime: 31.402103866666657
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0296
-    hitTime: 31.402103866666657
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0123
-    hitTime: 31.402103966666623
+  - id: snowprototypechart_drum_copy_0008
+    hitTime: 3.2334575678643596
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0124
-    hitTime: 31.540770533333323
+  - id: snowprototypechart_drum_copy_0009
+    hitTime: 3.3488485083915682
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0081
-    hitTime: 31.55143709999991
+  - id: snowprototypechart_drum_copy_0010
+    hitTime: 3.464239448918777
     laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0297
-    hitTime: 31.55143709999991
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0125
-    hitTime: 31.647437300000067
-    laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0082
-    hitTime: 31.647437300000067
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0298
-    hitTime: 31.647437300000067
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0126
-    hitTime: 31.860770533333323
+  - id: snowprototypechart_drum_copy_0011
+    hitTime: 3.6950213299731938
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0127
-    hitTime: 31.978103866666657
+  - id: snowprototypechart_drum_copy_0012
+    hitTime: 3.8104122705004024
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_drum_0128
-    hitTime: 32.12743719999999
+  - id: snowprototypechart_drum_copy_0013
+    hitTime: 3.925803211027611
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_drum_0129
-    hitTime: 32.33010376666669
+  - id: snowprototypechart_drum_copy_0014
+    hitTime: 4.156585092082029
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0130
-    hitTime: 32.46877053333343
+  - id: snowprototypechart_drum_copy_0015
+    hitTime: 4.271976032609237
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0083
-    hitTime: 32.55410386666677
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0299
-    hitTime: 32.55410386666677
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0131
-    hitTime: 32.586103866666654
+  - id: snowprototypechart_drum_copy_0016
+    hitTime: 4.387366973136445
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0084
-    hitTime: 32.68210366666673
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0300
-    hitTime: 32.68210366666673
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0132
-    hitTime: 32.756770533333324
+  - id: snowprototypechart_drum_copy_0017
+    hitTime: 4.618148854190863
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_synth_0085
-    hitTime: 32.76743719999999
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0301
-    hitTime: 32.76743719999999
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0133
-    hitTime: 32.906103866666655
+  - id: snowprototypechart_drum_copy_0018
+    hitTime: 4.733539794718071
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0086
-    hitTime: 32.91677053333332
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0302
-    hitTime: 32.91677053333332
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0134
-    hitTime: 33.012770533333324
+  - id: snowprototypechart_drum_copy_0019
+    hitTime: 4.84893073524528
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0087
-    hitTime: 33.034103866666655
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0303
-    hitTime: 33.034103866666655
+  - id: snowprototypechart_drum_copy_0020
+    hitTime: 5.079712616299697
     laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0088
-    hitTime: 33.162103866666655
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0304
-    hitTime: 33.162103866666655
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0135
-    hitTime: 33.247437199999986
-    laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_synth_0089
-    hitTime: 33.25810386666666
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0305
-    hitTime: 33.25810386666666
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0090
-    hitTime: 33.343437299999955
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0306
-    hitTime: 33.343437299999955
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0136
-    hitTime: 33.38610376666669
+  - id: snowprototypechart_drum_copy_0021
+    hitTime: 5.195103556826906
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0091
-    hitTime: 33.4714372000001
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0307
-    hitTime: 33.4714372000001
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0137
-    hitTime: 33.535437100000024
+  - id: snowprototypechart_drum_copy_0022
+    hitTime: 5.310494497354115
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_drum_0138
-    hitTime: 33.738103866666656
+  - id: snowprototypechart_drum_copy_0023
+    hitTime: 5.541276378408531
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0139
-    hitTime: 33.86610396666662
+  - id: snowprototypechart_drum_copy_0024
+    hitTime: 5.65666731893574
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_drum_0140
-    hitTime: 33.96210386666666
+  - id: snowprototypechart_drum_copy_0025
+    hitTime: 5.772058259462948
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_drum_0141
-    hitTime: 34.18610376666669
+  - id: snowprototypechart_drum_copy_0026
+    hitTime: 6.002840140517366
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0142
-    hitTime: 34.356770533333325
+  - id: snowprototypechart_drum_copy_0027
+    hitTime: 6.118231081044574
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0092
-    hitTime: 34.420770533333325
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0308
-    hitTime: 34.420770533333325
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0143
-    hitTime: 34.442103866666656
+  - id: snowprototypechart_drum_copy_0028
+    hitTime: 6.233622021571783
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0093
-    hitTime: 34.54877063333329
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0309
-    hitTime: 34.54877063333329
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0144
-    hitTime: 34.65543730000007
+  - id: snowprototypechart_drum_copy_0029
+    hitTime: 6.4644039026262
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_synth_0094
-    hitTime: 34.66610376666669
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0310
-    hitTime: 34.66610376666669
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0095
-    hitTime: 34.772770533333436
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0311
-    hitTime: 34.772770533333436
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0145
-    hitTime: 34.78343699999994
+  - id: snowprototypechart_drum_copy_0030
+    hitTime: 6.579794843153409
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0096
-    hitTime: 34.91143719999999
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0312
-    hitTime: 34.91143719999999
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0146
-    hitTime: 34.91143729999995
+  - id: snowprototypechart_drum_copy_0031
+    hitTime: 6.695185783680618
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0097
-    hitTime: 35.060770533333326
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0313
-    hitTime: 35.060770533333326
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0147
-    hitTime: 35.09277063333329
+  - id: snowprototypechart_drum_copy_0032
+    hitTime: 6.925967664735034
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_synth_0098
-    hitTime: 35.16743719999999
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0314
-    hitTime: 35.16743719999999
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0148
-    hitTime: 35.22077043333324
+  - id: snowprototypechart_drum_copy_0033
+    hitTime: 7.041358605262243
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0099
-    hitTime: 35.27410396666662
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0315
-    hitTime: 35.27410396666662
+  - id: snowprototypechart_drum_copy_0034
+    hitTime: 7.156749545789451
     laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0149
-    hitTime: 35.35943719999999
-    laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0100
-    hitTime: 35.380770533333326
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0316
-    hitTime: 35.380770533333326
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0150
-    hitTime: 35.56210396666673
+  - id: snowprototypechart_drum_copy_0035
+    hitTime: 7.387531426843869
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0151
-    hitTime: 35.7007706333334
+  - id: snowprototypechart_drum_copy_0036
+    hitTime: 7.502922367371077
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_drum_0152
-    hitTime: 35.78610386666677
+  - id: snowprototypechart_drum_copy_0037
+    hitTime: 7.618313307898286
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_drum_0153
-    hitTime: 36.04210386666677
+  - id: snowprototypechart_drum_copy_0038
+    hitTime: 7.849095188952703
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0154
-    hitTime: 36.22343710000003
+  - id: snowprototypechart_drum_copy_0039
+    hitTime: 7.964486129479912
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0101
-    hitTime: 36.2447706333334
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0317
-    hitTime: 36.2447706333334
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0155
-    hitTime: 36.36210386666666
+  - id: snowprototypechart_drum_copy_0040
+    hitTime: 8.079877070007122
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0102
-    hitTime: 36.37277053333332
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0318
-    hitTime: 36.37277053333332
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0156
-    hitTime: 36.51143709999991
+  - id: snowprototypechart_drum_copy_0041
+    hitTime: 8.310658951061537
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_synth_0103
-    hitTime: 36.51143709999991
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0319
-    hitTime: 36.51143709999991
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0157
-    hitTime: 36.60743719999999
+  - id: snowprototypechart_drum_copy_0042
+    hitTime: 8.426049891588747
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0104
-    hitTime: 36.628770533333324
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0320
-    hitTime: 36.628770533333324
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0158
-    hitTime: 36.73543719999999
+  - id: snowprototypechart_drum_copy_0043
+    hitTime: 8.541440832115955
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0105
-    hitTime: 36.76743719999999
+  - id: snowprototypechart_drum_copy_0044
+    hitTime: 8.772222713170372
     laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0321
-    hitTime: 36.76743719999999
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0106
-    hitTime: 36.895437100000024
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0322
-    hitTime: 36.895437100000024
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0159
-    hitTime: 36.938103966666624
-    laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_synth_0107
-    hitTime: 37.01277043333336
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0323
-    hitTime: 37.01277043333336
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0160
-    hitTime: 37.076770533333324
+  - id: snowprototypechart_drum_copy_0045
+    hitTime: 8.887613653697581
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0108
-    hitTime: 37.076770533333324
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0324
-    hitTime: 37.076770533333324
+  - id: snowprototypechart_drum_copy_0046
+    hitTime: 9.00300459422479
     laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0109
-    hitTime: 37.20477043333336
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0325
-    hitTime: 37.20477043333336
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0161
-    hitTime: 37.21543719999999
-    laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_drum_0162
-    hitTime: 37.39677063333329
+  - id: snowprototypechart_drum_copy_0047
+    hitTime: 9.233786475279206
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0163
-    hitTime: 37.52477063333329
+  - id: snowprototypechart_drum_copy_0048
+    hitTime: 9.349177415806414
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_drum_0164
-    hitTime: 37.65277063333329
+  - id: snowprototypechart_drum_copy_0049
+    hitTime: 9.464568356333624
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_drum_0165
-    hitTime: 37.866103866666656
+  - id: snowprototypechart_drum_copy_0050
+    hitTime: 9.695350237388041
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0166
-    hitTime: 38.02610386666666
+  - id: snowprototypechart_drum_copy_0051
+    hitTime: 9.810741177915249
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0110
-    hitTime: 38.111437100000025
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0326
-    hitTime: 38.111437100000025
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0167
-    hitTime: 38.17543730000007
+  - id: snowprototypechart_drum_copy_0052
+    hitTime: 9.926132118442458
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0111
-    hitTime: 38.228770533333325
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0327
-    hitTime: 38.228770533333325
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0112
-    hitTime: 38.33543719999999
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0328
-    hitTime: 38.33543719999999
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0168
-    hitTime: 38.346103966666625
+  - id: snowprototypechart_drum_copy_0053
+    hitTime: 10.156913999496876
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_synth_0113
-    hitTime: 38.442103866666656
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0329
-    hitTime: 38.442103866666656
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0169
-    hitTime: 38.46343740000003
+  - id: snowprototypechart_drum_copy_0054
+    hitTime: 10.272304940024084
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0114
-    hitTime: 38.52743719999999
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0330
-    hitTime: 38.52743719999999
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0170
-    hitTime: 38.62343719999999
+  - id: snowprototypechart_drum_copy_0055
+    hitTime: 10.387695880551293
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0115
-    hitTime: 38.66610386666665
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0331
-    hitTime: 38.66610386666665
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0171
-    hitTime: 38.81543709999991
+  - id: snowprototypechart_drum_copy_0056
+    hitTime: 10.618477761605709
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_synth_0116
-    hitTime: 38.815437200000105
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0332
-    hitTime: 38.815437200000105
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0117
-    hitTime: 38.90077053333332
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0333
-    hitTime: 38.90077053333332
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0172
-    hitTime: 38.92210386666665
+  - id: snowprototypechart_drum_copy_0057
+    hitTime: 10.733868702132918
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0118
-    hitTime: 39.007436999999946
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0334
-    hitTime: 39.007436999999946
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0173
-    hitTime: 39.07143719999999
+  - id: snowprototypechart_drum_copy_0058
+    hitTime: 10.849259642660126
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_drum_0174
-    hitTime: 39.29543710000002
+  - id: snowprototypechart_drum_copy_0059
+    hitTime: 11.080041523714543
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0175
-    hitTime: 39.380770533333326
+  - id: snowprototypechart_drum_copy_0060
+    hitTime: 11.195432464241753
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_drum_0176
-    hitTime: 39.53010376666669
+  - id: snowprototypechart_drum_copy_0061
+    hitTime: 11.31082340476896
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_drum_0177
-    hitTime: 39.71143719999999
+  - id: snowprototypechart_drum_copy_0062
+    hitTime: 11.541605285823378
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0178
-    hitTime: 39.818103866666654
+  - id: snowprototypechart_drum_copy_0063
+    hitTime: 11.656996226350588
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0119
-    hitTime: 39.91410386666666
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0335
-    hitTime: 39.91410386666666
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0179
-    hitTime: 39.95677033333339
+  - id: snowprototypechart_drum_copy_0064
+    hitTime: 11.772387166877795
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0120
-    hitTime: 40.04210396666674
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0336
-    hitTime: 40.04210396666674
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0121
-    hitTime: 40.138103866666654
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0337
-    hitTime: 40.138103866666654
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0180
-    hitTime: 40.15943730000007
+  - id: snowprototypechart_drum_copy_0065
+    hitTime: 12.003169047932213
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_synth_0122
-    hitTime: 40.25543719999999
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0338
-    hitTime: 40.25543719999999
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0181
-    hitTime: 40.29810386666677
+  - id: snowprototypechart_drum_copy_0066
+    hitTime: 12.11855998845942
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0123
-    hitTime: 40.40477053333332
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0339
-    hitTime: 40.40477053333332
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0182
-    hitTime: 40.42610386666666
+  - id: snowprototypechart_drum_copy_0067
+    hitTime: 12.23395092898663
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0124
-    hitTime: 40.5327706333334
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0340
-    hitTime: 40.5327706333334
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0183
-    hitTime: 40.650103966666734
+  - id: snowprototypechart_drum_copy_0068
+    hitTime: 12.464732810041047
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_synth_0125
-    hitTime: 40.67143730000007
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0341
-    hitTime: 40.67143730000007
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0184
-    hitTime: 40.75677053333344
+  - id: snowprototypechart_drum_copy_0069
+    hitTime: 12.580123750568255
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0126
-    hitTime: 40.75677053333344
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0342
-    hitTime: 40.75677053333344
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0185
-    hitTime: 40.89543719999999
+  - id: snowprototypechart_drum_copy_0070
+    hitTime: 12.695514691095465
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0127
-    hitTime: 40.916770633333286
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0343
-    hitTime: 40.916770633333286
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0186
-    hitTime: 41.10877053333332
+  - id: snowprototypechart_drum_copy_0071
+    hitTime: 12.926296572149882
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0187
-    hitTime: 41.268770533333324
+  - id: snowprototypechart_drum_copy_0072
+    hitTime: 13.04168751267709
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_drum_0188
-    hitTime: 41.36477053333332
+  - id: snowprototypechart_drum_copy_0073
+    hitTime: 13.1570784532043
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_drum_0189
-    hitTime: 41.5674372000001
+  - id: snowprototypechart_drum_copy_0074
+    hitTime: 13.387860334258717
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0190
-    hitTime: 41.70610386666666
+  - id: snowprototypechart_drum_copy_0075
+    hitTime: 13.503251274785924
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0128
-    hitTime: 41.759437300000066
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0344
-    hitTime: 41.759437300000066
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0191
-    hitTime: 41.82343710000002
+  - id: snowprototypechart_drum_copy_0076
+    hitTime: 13.618642215313132
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0129
-    hitTime: 41.908770433333245
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0345
-    hitTime: 41.908770433333245
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0192
-    hitTime: 42.02610376666658
+  - id: snowprototypechart_drum_copy_0077
+    hitTime: 13.84942409636755
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_synth_0130
-    hitTime: 42.04743719999999
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0346
-    hitTime: 42.04743719999999
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0193
-    hitTime: 42.14343710000002
+  - id: snowprototypechart_drum_copy_0078
+    hitTime: 13.964815036894759
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0131
-    hitTime: 42.154103766666694
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0347
-    hitTime: 42.154103766666694
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0194
-    hitTime: 42.27143719999999
+  - id: snowprototypechart_drum_copy_0079
+    hitTime: 14.080205977421967
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_synth_0132
-    hitTime: 42.292770533333325
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0348
-    hitTime: 42.292770533333325
+  - id: snowprototypechart_drum_copy_0080
+    hitTime: 14.310987858476384
     laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0133
-    hitTime: 42.420770533333325
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0349
-    hitTime: 42.420770533333325
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0195
-    hitTime: 42.46343710000002
-    laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_synth_0134
-    hitTime: 42.53810366666672
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0350
-    hitTime: 42.53810366666672
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0196
-    hitTime: 42.58077053333332
+  - id: snowprototypechart_drum_copy_0081
+    hitTime: 14.426378799003594
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0135
-    hitTime: 42.634103866666656
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0351
-    hitTime: 42.634103866666656
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0136
-    hitTime: 42.71943729999995
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0352
-    hitTime: 42.71943729999995
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_drum_0197
-    hitTime: 42.78343719999999
+  - id: snowprototypechart_drum_copy_0082
+    hitTime: 14.541769739530801
     laneIndex: 0
     musicalPartId: drum
-  - id: snowprototypechart_drum_0198
-    hitTime: 43.21010376666669
+  - id: snowprototypechart_drum_copy_0083
+    hitTime: 14.772551620585219
     laneIndex: 3
     musicalPartId: drum
-  - id: snowprototypechart_drum_0199
-    hitTime: 43.252770533333326
+  - id: snowprototypechart_drum_copy_0084
+    hitTime: 14.887942561112428
     laneIndex: 4
     musicalPartId: drum
-  - id: snowprototypechart_synth_0137
-    hitTime: 43.58343719999999
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0353
-    hitTime: 43.58343719999999
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0138
-    hitTime: 43.70077053333332
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0354
-    hitTime: 43.70077053333332
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0139
-    hitTime: 43.80743709999991
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0355
-    hitTime: 43.80743709999991
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0140
-    hitTime: 43.95677053333332
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0356
-    hitTime: 43.95677053333332
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0141
-    hitTime: 44.08477053333332
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0357
-    hitTime: 44.08477053333332
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0142
-    hitTime: 44.22343719999999
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0358
-    hitTime: 44.22343719999999
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0143
-    hitTime: 44.36210396666662
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0359
-    hitTime: 44.36210396666662
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0144
-    hitTime: 44.44743719999999
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0360
-    hitTime: 44.44743719999999
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0001
-    hitTime: 44.55410386666666
-    laneIndex: 0
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0145
-    hitTime: 44.596770533333434
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0361
-    hitTime: 44.596770533333434
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0002
-    hitTime: 44.778103866666655
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0003
-    hitTime: 45.02343719999999
-    laneIndex: 0
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0004
-    hitTime: 45.25810386666666
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0146
-    hitTime: 45.47143700000006
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0362
-    hitTime: 45.47143700000006
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0005
-    hitTime: 45.47143719999999
-    laneIndex: 0
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0147
-    hitTime: 45.57810376666669
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0363
-    hitTime: 45.57810376666669
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0148
-    hitTime: 45.695437199999986
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0364
-    hitTime: 45.695437199999986
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0006
-    hitTime: 45.71677053333355
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0149
-    hitTime: 45.802103866666656
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0365
-    hitTime: 45.802103866666656
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0007
-    hitTime: 45.94077053333332
-    laneIndex: 0
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0150
-    hitTime: 45.94077063333329
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0366
-    hitTime: 45.94077063333329
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0151
-    hitTime: 46.09010386666666
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0367
-    hitTime: 46.09010386666666
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0008
-    hitTime: 46.15410376666681
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0152
-    hitTime: 46.20743719999999
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0368
-    hitTime: 46.20743719999999
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0153
-    hitTime: 46.292770533333325
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0369
-    hitTime: 46.292770533333325
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0154
-    hitTime: 46.38877053333332
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0370
-    hitTime: 46.38877053333332
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0009
-    hitTime: 46.41010376666657
-    laneIndex: 0
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0010
-    hitTime: 46.64477053333332
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0011
-    hitTime: 46.89010386666666
-    laneIndex: 0
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0012
-    hitTime: 47.13543719999999
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0155
-    hitTime: 47.26343729999996
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0371
-    hitTime: 47.26343729999996
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0013
-    hitTime: 47.34877053333332
-    laneIndex: 0
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0156
-    hitTime: 47.39143719999999
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0372
-    hitTime: 47.39143719999999
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0157
-    hitTime: 47.48743719999999
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0373
-    hitTime: 47.48743719999999
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0014
-    hitTime: 47.58343710000014
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0158
-    hitTime: 47.61543719999999
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0374
-    hitTime: 47.61543719999999
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0159
-    hitTime: 47.775437200000106
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0375
-    hitTime: 47.775437200000106
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0015
-    hitTime: 47.7967706333334
-    laneIndex: 0
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0160
-    hitTime: 47.91410386666666
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0376
-    hitTime: 47.91410386666666
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0016
-    hitTime: 48.03143719999999
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0161
-    hitTime: 48.074103766666575
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0377
-    hitTime: 48.074103766666575
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0162
-    hitTime: 48.15943719999999
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0378
-    hitTime: 48.15943719999999
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0017
-    hitTime: 48.266103666666496
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0163
-    hitTime: 48.27677053333332
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0379
-    hitTime: 48.27677053333332
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0018
-    hitTime: 48.49010386666666
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0019
-    hitTime: 48.714103866666655
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0020
-    hitTime: 48.948770533333324
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0164
-    hitTime: 49.15143700000006
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0380
-    hitTime: 49.15143700000006
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0021
-    hitTime: 49.19410386666666
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0165
-    hitTime: 49.300770333333276
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0381
-    hitTime: 49.300770333333276
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0022
-    hitTime: 49.40743719999999
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0166
-    hitTime: 49.4074372000001
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0382
-    hitTime: 49.4074372000001
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0167
-    hitTime: 49.546103866666655
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0383
-    hitTime: 49.546103866666655
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0023
-    hitTime: 49.64210386666666
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0168
-    hitTime: 49.70610386666666
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0384
-    hitTime: 49.70610386666666
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0169
-    hitTime: 49.83410386666666
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0385
-    hitTime: 49.83410386666666
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0024
-    hitTime: 49.866103766666576
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0170
-    hitTime: 49.94077053333332
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0386
-    hitTime: 49.94077053333332
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0171
-    hitTime: 50.02610386666666
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0387
-    hitTime: 50.02610386666666
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0025
-    hitTime: 50.09010386666666
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0172
-    hitTime: 50.122103966666735
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0388
-    hitTime: 50.122103966666735
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0026
-    hitTime: 50.335437000000056
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0027
-    hitTime: 50.570103866666656
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0028
-    hitTime: 50.82610386666666
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0173
-    hitTime: 50.97543719999999
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0389
-    hitTime: 50.97543719999999
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0029
-    hitTime: 51.05010386666665
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0174
-    hitTime: 51.09277053333332
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0390
-    hitTime: 51.09277053333332
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0175
-    hitTime: 51.19943729999996
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0391
-    hitTime: 51.19943729999996
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0030
-    hitTime: 51.274103966666736
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0176
-    hitTime: 51.34877053333332
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0392
-    hitTime: 51.34877053333332
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0177
-    hitTime: 51.46610396666662
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0393
-    hitTime: 51.46610396666662
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0031
-    hitTime: 51.530103966666736
-    laneIndex: 1
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0178
-    hitTime: 51.60477043333336
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0394
-    hitTime: 51.60477043333336
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0032
-    hitTime: 51.71143719999999
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0179
-    hitTime: 51.74343719999999
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0395
-    hitTime: 51.74343719999999
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0180
-    hitTime: 51.818103866666654
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0396
-    hitTime: 51.818103866666654
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0181
-    hitTime: 51.93543710000002
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0397
-    hitTime: 51.93543710000002
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0033
-    hitTime: 51.946103866666654
-    laneIndex: 4
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0034
-    hitTime: 52.202103866666654
-    laneIndex: 5
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0035
-    hitTime: 52.458103866666654
-    laneIndex: 4
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0036
-    hitTime: 52.66077053333332
-    laneIndex: 5
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0182
-    hitTime: 52.86343710000003
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0398
-    hitTime: 52.86343710000003
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0037
-    hitTime: 52.92743719999999
-    laneIndex: 4
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0183
-    hitTime: 52.980770433333355
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0399
-    hitTime: 52.980770433333355
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0184
-    hitTime: 53.119437199999986
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0400
-    hitTime: 53.119437199999986
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0038
-    hitTime: 53.15143710000014
-    laneIndex: 5
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0185
-    hitTime: 53.25810386666666
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0401
-    hitTime: 53.25810386666666
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0039
-    hitTime: 53.36477053333332
-    laneIndex: 4
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0186
-    hitTime: 53.407436999999945
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0402
-    hitTime: 53.407436999999945
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0187
-    hitTime: 53.524770533333324
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0403
-    hitTime: 53.524770533333324
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0040
-    hitTime: 53.588770433333245
-    laneIndex: 5
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0188
-    hitTime: 53.64210386666666
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0404
-    hitTime: 53.64210386666666
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0189
-    hitTime: 53.74877053333332
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0405
-    hitTime: 53.74877053333332
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0041
-    hitTime: 53.823437000000055
-    laneIndex: 4
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0190
-    hitTime: 53.844770533333325
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0406
-    hitTime: 53.844770533333325
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0042
-    hitTime: 54.04743719999999
-    laneIndex: 5
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0043
-    hitTime: 54.26077053333332
-    laneIndex: 4
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0044
-    hitTime: 54.51677053333332
-    laneIndex: 5
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0191
-    hitTime: 54.67677013333335
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0407
-    hitTime: 54.67677013333335
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0045
-    hitTime: 54.730103966666505
-    laneIndex: 4
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0192
-    hitTime: 54.82610386666677
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0408
-    hitTime: 54.82610386666677
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0193
-    hitTime: 54.92210376666669
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0409
-    hitTime: 54.92210376666669
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0046
-    hitTime: 54.95410386666666
-    laneIndex: 5
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0194
-    hitTime: 55.02877033333328
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0410
-    hitTime: 55.02877033333328
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0195
-    hitTime: 55.16743719999999
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0411
-    hitTime: 55.16743719999999
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0047
-    hitTime: 55.17810386666665
-    laneIndex: 4
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0196
-    hitTime: 55.316770533333326
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0412
-    hitTime: 55.316770533333326
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0048
-    hitTime: 55.39143730000007
-    laneIndex: 5
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0197
-    hitTime: 55.42343730000007
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0413
-    hitTime: 55.42343730000007
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0198
-    hitTime: 55.508770533333326
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0414
-    hitTime: 55.508770533333326
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0199
-    hitTime: 55.62610386666677
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0415
-    hitTime: 55.62610386666677
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0049
-    hitTime: 55.636770533333326
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0050
-    hitTime: 55.85010386666666
-    laneIndex: 3
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0051
-    hitTime: 56.09543719999999
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0052
-    hitTime: 56.35143719999999
-    laneIndex: 3
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0200
-    hitTime: 56.532770333333275
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0416
-    hitTime: 56.532770333333275
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0053
-    hitTime: 56.57543719999999
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0201
-    hitTime: 56.68210376666658
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0417
-    hitTime: 56.68210376666658
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0202
-    hitTime: 56.788770633333286
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0418
-    hitTime: 56.788770633333286
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0054
-    hitTime: 56.81010386666666
-    laneIndex: 3
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0203
-    hitTime: 56.92743719999999
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0419
-    hitTime: 56.92743719999999
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0055
-    hitTime: 57.034103866666655
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0204
-    hitTime: 57.07677043333336
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0420
-    hitTime: 57.07677043333336
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0205
-    hitTime: 57.19410386666666
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0421
-    hitTime: 57.19410386666666
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0056
-    hitTime: 57.25810386666666
-    laneIndex: 3
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0206
-    hitTime: 57.279437100000024
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0422
-    hitTime: 57.279437100000024
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0207
-    hitTime: 57.375437199999986
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0423
-    hitTime: 57.375437199999986
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0208
-    hitTime: 57.460770533333324
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0424
-    hitTime: 57.460770533333324
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0057
-    hitTime: 57.49277053333332
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0058
-    hitTime: 57.70610386666666
-    laneIndex: 3
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0059
-    hitTime: 57.95143729999984
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_bass_0060
-    hitTime: 58.186103866666656
-    laneIndex: 3
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0209
-    hitTime: 58.378103866666656
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0425
-    hitTime: 58.378103866666656
-    laneIndex: 7
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0061
-    hitTime: 58.420770533333325
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0210
-    hitTime: 58.52743730000007
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0426
-    hitTime: 58.52743730000007
-    laneIndex: 6
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0062
-    hitTime: 58.64477053333332
-    laneIndex: 3
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0211
-    hitTime: 58.644770533333435
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0427
-    hitTime: 58.644770533333435
-    laneIndex: 5
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0212
-    hitTime: 58.762103666666725
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0428
-    hitTime: 58.762103666666725
-    laneIndex: 4
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0063
-    hitTime: 58.868770533333326
-    laneIndex: 2
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0213
-    hitTime: 58.868770533333326
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0429
-    hitTime: 58.868770533333326
-    laneIndex: 3
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0214
-    hitTime: 59.00743719999999
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0430
-    hitTime: 59.00743719999999
-    laneIndex: 2
-    musicalPartId: synth
-  - id: snowprototypechart_bass_0064
-    hitTime: 59.08210386666666
-    laneIndex: 3
-    musicalPartId: bass
-  - id: snowprototypechart_synth_0215
-    hitTime: 59.09277033333339
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0431
-    hitTime: 59.09277033333339
-    laneIndex: 1
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0216
-    hitTime: 59.16743719999999
-    laneIndex: 0
-    musicalPartId: synth
-  - id: snowprototypechart_synth_0432
-    hitTime: 59.16743719999999
-    laneIndex: 0
-    musicalPartId: synth

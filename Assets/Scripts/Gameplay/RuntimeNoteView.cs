@@ -36,7 +36,7 @@ namespace IdiotTape.Gameplay
             spawnY = noteSpawnY;
             judgementBaseY = lineBaseY;
             judgementCurvature = lineCurvature;
-            visualLeadTime = leadTime;
+            SetVisualLeadTime(leadTime);
             baseScale = scale;
 
             Sprite simpleCircleSprite = GameplayVisualAssets.CircleSprite != null
@@ -89,6 +89,13 @@ namespace IdiotTape.Gameplay
 
             transform.position = new Vector3(targetX, worldY, 0f);
             transform.localScale = Vector3.one * scale;
+
+        }
+
+        public void SetVisualLeadTime(float leadTime)
+        {
+
+            visualLeadTime = Mathf.Max(0.0001f, leadTime);
 
         }
 

@@ -30,6 +30,22 @@ namespace IdiotTape.Gameplay
 
         }
 
+        private sealed class ActiveTimingGuide
+        {
+
+            public ActiveTimingGuide(double beatTime, RuntimeTimingGuideView view)
+            {
+
+                BeatTime = beatTime;
+                View = view;
+
+            }
+
+            public double BeatTime { get; }
+            public RuntimeTimingGuideView View { get; }
+
+        }
+
         [SerializeField] private PrototypeChart chart;
         [SerializeField] private FmodSongPlayback songPlayback;
         [SerializeField] private GameplayInputRouter inputRouter;
@@ -38,10 +54,13 @@ namespace IdiotTape.Gameplay
         [SerializeField] private JudgementSettings judgementSettings = new();
 
         private readonly List<ActiveNote> activeNotes = new();
+        private readonly List<ActiveTimingGuide> activeTimingGuides = new();
         private readonly List<JudgementCandidate> judgementCandidates = new();
         private readonly Dictionary<int, int> activeContactLanes = new();
+        private readonly HashSet<int> speedSliderContacts = new();
         private int[] activeLanePressCounts;
         private int nextNoteIndex;
+        private double nextTimingGuideTime;
         private int score;
         private int combo;
         private bool isReady;
@@ -50,6 +69,7 @@ namespace IdiotTape.Gameplay
         {
 
             inputRouter.ContactPressed += HandleContactPressed;
+            inputRouter.ContactMoved += HandleContactMoved;
             inputRouter.ContactReleased += HandleContactReleased;
             inputRouter.LanePressed += HandleLanePressed;
             inputRouter.LaneReleased += HandleLaneReleased;
@@ -62,6 +82,7 @@ namespace IdiotTape.Gameplay
         {
 
             inputRouter.ContactPressed -= HandleContactPressed;
+            inputRouter.ContactMoved -= HandleContactMoved;
             inputRouter.ContactReleased -= HandleContactReleased;
             inputRouter.LanePressed -= HandleLanePressed;
             inputRouter.LaneReleased -= HandleLaneReleased;
@@ -126,8 +147,13 @@ namespace IdiotTape.Gameplay
             }
 
             double songTime = songPlayback.SongTime;
-            SpawnUpcomingNotes(songTime);
-            UpdateActiveNotes(songTime);
+            float visualLeadTime = NoteSpeedMath.GetVisualLeadTime(
+                chart.VisualLeadTime,
+                hud.NoteSpeedMultiplier);
+            SpawnUpcomingNotes(songTime, visualLeadTime);
+            SpawnUpcomingTimingGuides(songTime, visualLeadTime);
+            UpdateActiveNotes(songTime, visualLeadTime);
+            UpdateActiveTimingGuides(songTime, visualLeadTime);
             double duration = songPlayback.DurationSeconds > 0d
                 ? songPlayback.DurationSeconds
                 : chart.Duration;
@@ -153,8 +179,20 @@ namespace IdiotTape.Gameplay
             }
 
             activeNotes.Clear();
+
+            for (int index = activeTimingGuides.Count - 1; index >= 0; index--)
+            {
+
+                activeTimingGuides[index].View.Remove();
+
+            }
+
+            activeTimingGuides.Clear();
             judgementCandidates.Clear();
             nextNoteIndex = 0;
+            nextTimingGuideTime = chart.TempoSections.Count > 0
+                ? ChartTempoMap.GetBeatTimeAtOrBefore(chart.TempoSections, 0d)
+                : 0d;
             score = 0;
             combo = 0;
             hud.SetScore(score);
@@ -167,11 +205,11 @@ namespace IdiotTape.Gameplay
 
         }
 
-        private void SpawnUpcomingNotes(double songTime)
+        private void SpawnUpcomingNotes(double songTime, float visualLeadTime)
         {
 
             while (nextNoteIndex < chart.Notes.Count &&
-                   chart.Notes[nextNoteIndex].HitTime - songTime <= chart.VisualLeadTime)
+                   chart.Notes[nextNoteIndex].HitTime - songTime <= visualLeadTime)
             {
 
                 ChartNote note = chart.Notes[nextNoteIndex];
@@ -181,7 +219,7 @@ namespace IdiotTape.Gameplay
                     note,
                     color,
                     chart.LaneCount,
-                    chart.VisualLeadTime,
+                    visualLeadTime,
                     isPlayable);
                 activeNotes.Add(new ActiveNote(note, view, isPlayable));
                 nextNoteIndex++;
@@ -190,13 +228,14 @@ namespace IdiotTape.Gameplay
 
         }
 
-        private void UpdateActiveNotes(double songTime)
+        private void UpdateActiveNotes(double songTime, float visualLeadTime)
         {
 
             for (int index = activeNotes.Count - 1; index >= 0; index--)
             {
 
                 ActiveNote activeNote = activeNotes[index];
+                activeNote.View.SetVisualLeadTime(visualLeadTime);
                 activeNote.View.UpdatePresentation(songTime);
 
                 if (songTime - activeNote.Note.HitTime <= judgementSettings.GoodWindowSeconds)
@@ -224,6 +263,73 @@ namespace IdiotTape.Gameplay
 
         }
 
+        private void SpawnUpcomingTimingGuides(double songTime, float visualLeadTime)
+        {
+
+            if (chart.TempoSections.Count == 0)
+            {
+
+                return;
+
+            }
+
+            int guard = 0;
+
+            while (nextTimingGuideTime - songTime <= visualLeadTime && guard++ < 128)
+            {
+
+                double beatTime = nextTimingGuideTime;
+                nextTimingGuideTime = ChartTempoMap.GetBeatTimeAfter(
+                    chart.TempoSections,
+                    beatTime + 0.000001d);
+
+                if (beatTime <= songTime)
+                {
+
+                    continue;
+
+                }
+
+                ChartBeatPosition position = ChartTempoMap.GetBeatPosition(
+                    chart.TempoSections,
+                    beatTime);
+                RuntimeTimingGuideView view = presenter.CreateTimingGuide(
+                    beatTime,
+                    position.Bar,
+                    position.Beat,
+                    position.Beat == 1,
+                    visualLeadTime);
+                view.UpdatePresentation(songTime);
+                activeTimingGuides.Add(new ActiveTimingGuide(beatTime, view));
+
+            }
+
+        }
+
+        private void UpdateActiveTimingGuides(double songTime, float visualLeadTime)
+        {
+
+            for (int index = activeTimingGuides.Count - 1; index >= 0; index--)
+            {
+
+                ActiveTimingGuide guide = activeTimingGuides[index];
+
+                if (songTime >= guide.BeatTime)
+                {
+
+                    guide.View.Remove();
+                    activeTimingGuides.RemoveAt(index);
+                    continue;
+
+                }
+
+                guide.View.SetVisualLeadTime(visualLeadTime);
+                guide.View.UpdatePresentation(songTime);
+
+            }
+
+        }
+
         private void HandleContactPressed(int contactId, Vector2 screenPosition, double eventTimestamp)
         {
 
@@ -238,6 +344,14 @@ namespace IdiotTape.Gameplay
             {
 
                 TogglePause();
+                return;
+
+            }
+
+            if (hud.TrySetNoteSpeedFromScreenPosition(screenPosition))
+            {
+
+                speedSliderContacts.Add(contactId);
                 return;
 
             }
@@ -263,8 +377,29 @@ namespace IdiotTape.Gameplay
 
         }
 
+        private void HandleContactMoved(int contactId, Vector2 screenPosition)
+        {
+
+            if (!speedSliderContacts.Contains(contactId))
+            {
+
+                return;
+
+            }
+
+            hud.TrySetNoteSpeedFromScreenPosition(screenPosition, false);
+
+        }
+
         private void HandleContactReleased(int contactId)
         {
+
+            if (speedSliderContacts.Remove(contactId))
+            {
+
+                return;
+
+            }
 
             if (!activeContactLanes.Remove(contactId, out int laneIndex))
             {
@@ -452,6 +587,7 @@ namespace IdiotTape.Gameplay
         {
 
             activeContactLanes.Clear();
+            speedSliderContacts.Clear();
 
             if (activeLanePressCounts == null)
             {

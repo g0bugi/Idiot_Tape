@@ -72,6 +72,11 @@ namespace IdiotTape.Gameplay.Tests
             Assert.That(songPlayback.IsRunning, Is.True, "FMOD song playback did not become ready.");
             yield return null;
             Assert.That(Object.FindObjectsByType<RuntimeNoteView>(FindObjectsSortMode.None).Length, Is.GreaterThan(0));
+            RuntimeTimingGuideView[] timingGuides = Object.FindObjectsByType<RuntimeTimingGuideView>(
+                FindObjectsSortMode.None);
+            Assert.That(timingGuides.Length, Is.GreaterThan(0));
+            Assert.That(System.Array.Exists(timingGuides, guide => guide.IsBar), Is.True);
+            Assert.That(System.Array.Exists(timingGuides, guide => !guide.IsBar), Is.True);
 
             float playbackDeadline = Time.realtimeSinceStartup + 5f;
 
@@ -83,17 +88,27 @@ namespace IdiotTape.Gameplay.Tests
             }
 
             Assert.That(songPlayback.SongTime, Is.GreaterThanOrEqualTo(1.47d));
+            Assert.That(GameObject.Find("BarGuide_001"), Is.Null);
 
             GameplayInputRouter inputRouter = Object.FindAnyObjectByType<GameplayInputRouter>();
             Assert.That(inputRouter, Is.Not.Null);
             inputRouter.SubmitLaneInput(0, InputState.currentTime);
             yield return null;
             Text comboText = GameObject.Find("Combo").GetComponent<Text>();
+            Text judgementText = GameObject.Find("Judgement").GetComponent<Text>();
             Text instrumentText = GameObject.Find("Instrument").GetComponent<Text>();
-            Assert.That(comboText.text, Is.EqualTo("1"));
+            Assert.That(comboText.text, Does.Contain("1"));
+            Assert.That(comboText.text, Does.Contain("COMBO"));
+            Assert.That(comboText.fontSize, Is.GreaterThanOrEqualTo(80));
+            Assert.That(comboText.rectTransform.anchorMin.y, Is.GreaterThanOrEqualTo(0.5f));
+            Assert.That(comboText.GetComponent<Outline>(), Is.Not.Null);
+            Assert.That(judgementText.text, Is.EqualTo("PERFECT").Or.EqualTo("GOOD"));
+            Assert.That(judgementText.fontSize, Is.GreaterThanOrEqualTo(64));
+            Assert.That(judgementText.rectTransform.anchorMin.y, Is.GreaterThanOrEqualTo(0.35f));
+            Assert.That(judgementText.GetComponent<Outline>(), Is.Not.Null);
             Assert.That(instrumentText.text, Is.EqualTo("Drum"));
-            Assert.That(GameObject.Find("HitEffect_prototype_001"), Is.Not.Null);
-            Assert.That(GameObject.Find("LineReaction_prototype_001"), Is.Not.Null);
+            Assert.That(HasObjectWithNamePrefix<HitEffectView>("HitEffect_"), Is.True);
+            Assert.That(HasObjectWithNamePrefix<JudgementLineReaction>("LineReaction_"), Is.True);
 
             yield return new WaitForSecondsRealtime(0.12f);
             CaptureGameplayCamera(Path.GetFullPath("Logs/GameplayPreview.png"));
@@ -136,6 +151,30 @@ namespace IdiotTape.Gameplay.Tests
             RenderTexture.active = previousActive;
             Object.Destroy(renderTexture);
             Object.Destroy(screenshot);
+
+        }
+
+        private static bool HasObjectWithNamePrefix<T>(string namePrefix)
+            where T : Component
+        {
+
+            T[] objects = Object.FindObjectsByType<T>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+
+            for (int index = 0; index < objects.Length; index++)
+            {
+
+                if (objects[index].name.StartsWith(namePrefix, System.StringComparison.Ordinal))
+                {
+
+                    return true;
+
+                }
+
+            }
+
+            return false;
 
         }
 

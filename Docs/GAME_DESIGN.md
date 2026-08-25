@@ -1,5 +1,10 @@
 # Idiot_Tape — Game Design
 
+> Status: Current
+> Last reviewed: 2026-08-25
+> Applies to: The current prototype and durable game-design direction
+> Authority: Player experience, design principles, and player-visible rules
+
 ## Document Purpose
 
 This document describes the intended gameplay and design direction of `Idiot_Tape`.
@@ -137,6 +142,10 @@ The prototype should focus attention on:
 - touch response
 - visual rhythm
 
+The current executable validation scope and pass conditions are defined in
+`PROTOTYPE_MILESTONE.md`. That milestone may narrow current work, but it must not silently redefine
+the design principles in this document.
+
 
 ## Input and Platform
 
@@ -176,6 +185,9 @@ The first playable prototype uses a landscape screen and an eight-position hidde
 The hidden grid is an authoring and input structure, not a requirement that the final game always
 display or use eight conventional lanes. Lane count should remain data-driven so later charts can
 test other layouts without replacing the timing or judgement architecture.
+
+The scope and reconsideration conditions for this prototype choice are recorded in
+`ADR/0003-hidden-lane-prototype-layout.md`.
 
 For Editor playtesting, the number keys `1` through `8` trigger the corresponding hidden positions
 from left to right. This is a development input path and does not replace mobile touch input.
@@ -324,20 +336,22 @@ Unless explicitly requested, the prototype does not currently need:
 
 The following should remain open until intentionally decided:
 
-- final note types
-- scoring formula
-- combo rules
-- health / failure system
-- judgement window values
-- difficulty naming
-- chart coordinate system
-- exact chart serialization format
-- calibration UI
-- final audio backend
-- final chart editor UI
-- song-select flow
-- pause behavior details
-- production content pipeline
+| ID | Open decision | Status |
+|---|---|---|
+| `GD-OPEN-001` | Final note types | Open |
+| `GD-OPEN-002` | Production scoring formula | Open |
+| `GD-OPEN-003` | Production combo rules | Open |
+| `GD-OPEN-004` | Health and failure system | Open |
+| `GD-OPEN-005` | Final judgement-window values | Open |
+| `GD-OPEN-006` | Difficulty naming | Open |
+| `GD-OPEN-007` | Final chart coordinate system | Open |
+| `GD-OPEN-008` | Permanent chart serialization format | Open |
+| `GD-OPEN-009` | User-facing calibration UI | Open |
+| `GD-OPEN-010` | Final production audio backend | Open |
+| `GD-OPEN-011` | Final chart-editor UI and interaction model | Open |
+| `GD-OPEN-012` | Song-selection flow | Open |
+| `GD-OPEN-013` | Detailed pause UX | Open |
+| `GD-OPEN-014` | Production content pipeline | Open |
 
 Do not silently convert an unresolved design question into a permanent architectural assumption.
 

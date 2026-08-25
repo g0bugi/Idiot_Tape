@@ -67,6 +67,14 @@ namespace IdiotTape.EditorTools
 
         }
 
+        private enum AppliedQuantizationRange
+        {
+
+            WholeChart,
+            CurrentLoop
+
+        }
+
         private enum RecordingStartMode
         {
 
@@ -143,6 +151,13 @@ namespace IdiotTape.EditorTools
         [SerializeField] private bool showTempoCalibration = true;
         [SerializeField] private bool showAdvancedNavigation;
         [SerializeField] private bool showQuantizationSettings;
+        [SerializeField] private bool showAppliedNoteQuantization;
+        [SerializeField] private AppliedQuantizationRange appliedQuantizationRange;
+        [SerializeField] private bool showPatternDuplication;
+        [SerializeField, Min(1)] private int patternTargetStartBar = 2;
+        [SerializeField, Min(1)] private int patternRepeatCount = 1;
+        [SerializeField] private ChartPatternConflictMode patternConflictMode;
+        [SerializeField] private bool patternAddActivationWindow = true;
         [SerializeField] private bool showStemMixer;
         [SerializeField, Min(1f)] private float noteNudgeMilliseconds = 5f;
         [SerializeField, Min(1)] private int tempoAnchorABar = 17;
@@ -185,6 +200,7 @@ namespace IdiotTape.EditorTools
         private double lastTempoTapInputTimestamp = double.NegativeInfinity;
         private bool tempoAnchorsFromTapCapture;
         private ChartTempoCalibrationResult tempoTapResult;
+        private ChartPatternDuplicationPreview patternDuplicationPreview;
         private string statusMessage = "차트를 선택하세요.";
 
         [MenuItem("Tools/Idiot Tape/채보 제작 도구")]
@@ -1837,6 +1853,8 @@ namespace IdiotTape.EditorTools
 
             }
 
+            RefreshPatternDuplicationPreview();
+
             timelineViewMode = (TimelineViewMode)GUILayout.Toolbar(
                 (int)timelineViewMode,
                 new[] { "가로 타임라인", "세로 채보 시트" });
@@ -1934,7 +1952,9 @@ namespace IdiotTape.EditorTools
 
             }
 
+            DrawPatternDuplicationControls();
             DrawAppliedNoteDeletionControls();
+            DrawAppliedNoteQuantizationControls();
 
             EditorGUILayout.HelpBox(
                 "진한 선은 마디, 옅은 선은 박입니다. 빈 곳을 클릭하면 이동하고 임시 노트를 클릭하면 선택합니다. " +
@@ -2079,6 +2099,8 @@ namespace IdiotTape.EditorTools
                 EditorGUI.DrawRect(new Rect(x - 3f, y - 3f, 7f, 7f), chart.GetPartColor(note.MusicalPartId));
 
             }
+
+            DrawPatternPreviewNotesVertical(contentRect, partWidth, visibleEnd);
 
             for (int index = 0; index < recordedNotes.Count; index++)
             {
@@ -2454,6 +2476,7 @@ namespace IdiotTape.EditorTools
                     EditorStyles.miniLabel);
                 DrawActivationWindows(rowRect, part.Id, part.Color, visibleEnd);
                 DrawChartNotes(rowRect, part.Id, part.Color, visibleEnd);
+                DrawPatternPreviewNotesHorizontal(rowRect, part.Id, visibleEnd);
                 DrawRecordedNotesOnTimeline(rowRect, part.Id, visibleEnd);
 
             }
@@ -2566,6 +2589,93 @@ namespace IdiotTape.EditorTools
                 EditorGUI.DrawRect(new Rect(outer.x + 2f, outer.y + 2f, 5f, 5f), new Color(0.1f, 0.1f, 0.11f, 1f));
 
             }
+
+        }
+
+        private void DrawPatternPreviewNotesHorizontal(Rect rowRect, string partId, double visibleEnd)
+        {
+
+            if (patternDuplicationPreview == null || !patternDuplicationPreview.IsValid)
+            {
+
+                return;
+
+            }
+
+            for (int index = 0; index < patternDuplicationPreview.GeneratedNotes.Count; index++)
+            {
+
+                ChartPatternPreviewNote note = patternDuplicationPreview.GeneratedNotes[index];
+
+                if (note.MusicalPartId != partId ||
+                    note.HitTime < timelineStartTime ||
+                    note.HitTime > visibleEnd)
+                {
+
+                    continue;
+
+                }
+
+                float x = TimeToTimelineX(rowRect, note.HitTime);
+                float y = GetLaneTimelineY(rowRect, note.LaneIndex);
+                DrawPatternPreviewMarker(x, y, note);
+
+            }
+
+        }
+
+        private void DrawPatternPreviewNotesVertical(
+            Rect contentRect,
+            float partWidth,
+            double visibleEnd)
+        {
+
+            if (patternDuplicationPreview == null || !patternDuplicationPreview.IsValid)
+            {
+
+                return;
+
+            }
+
+            for (int index = 0; index < patternDuplicationPreview.GeneratedNotes.Count; index++)
+            {
+
+                ChartPatternPreviewNote note = patternDuplicationPreview.GeneratedNotes[index];
+
+                if (note.HitTime < timelineStartTime || note.HitTime > visibleEnd)
+                {
+
+                    continue;
+
+                }
+
+                int partIndex = FindPartIndex(note.MusicalPartId);
+                Rect columnRect = new(
+                    contentRect.x + partIndex * partWidth,
+                    contentRect.y,
+                    partWidth,
+                    contentRect.height);
+                float x = GetVerticalLaneTimelineX(columnRect, note.LaneIndex);
+                float y = TimeToVerticalTimelineY(contentRect, note.HitTime);
+                DrawPatternPreviewMarker(x, y, note);
+
+            }
+
+        }
+
+        private void DrawPatternPreviewMarker(float x, float y, ChartPatternPreviewNote note)
+        {
+
+            bool inactive = !chart.IsPartActive(note.MusicalPartId, note.HitTime) &&
+                            !patternAddActivationWindow;
+            Color borderColor = inactive
+                ? new Color(1f, 0.35f, 0.25f, 0.95f)
+                : new Color(0.25f, 0.95f, 1f, 0.95f);
+            Rect outer = new(x - 4f, y - 4f, 9f, 9f);
+            EditorGUI.DrawRect(outer, borderColor);
+            EditorGUI.DrawRect(
+                new Rect(outer.x + 2f, outer.y + 2f, 5f, 5f),
+                new Color(0.08f, 0.09f, 0.11f, 0.8f));
 
         }
 
@@ -4078,6 +4188,256 @@ namespace IdiotTape.EditorTools
 
         }
 
+        private void DrawPatternDuplicationControls()
+        {
+
+            if (chart.MusicalParts.Count == 0)
+            {
+
+                return;
+
+            }
+
+            EditorGUILayout.Space(4f);
+            bool nextShowPatternDuplication = EditorGUILayout.Foldout(
+                showPatternDuplication,
+                "선택 파트 패턴 복제",
+                true);
+
+            if (nextShowPatternDuplication && !showPatternDuplication)
+            {
+
+                ChartBeatPosition loopEndPosition = ChartTempoMap.GetBeatPosition(
+                    chart.TempoSections,
+                    loopEnd);
+                patternTargetStartBar = Math.Max(1, loopEndPosition.Bar);
+
+            }
+
+            showPatternDuplication = nextShowPatternDuplication;
+
+            if (!showPatternDuplication)
+            {
+
+                patternDuplicationPreview = null;
+                return;
+
+            }
+
+            selectedPartIndex = EditorGUILayout.Popup(
+                "복제할 음악 파트",
+                selectedPartIndex,
+                GetPartNames());
+            ChartBeatPosition sourceStartPosition = ChartTempoMap.GetBeatPosition(
+                chart.TempoSections,
+                loopStart);
+            ChartBeatPosition sourceEndPosition = ChartTempoMap.GetBeatPosition(
+                chart.TempoSections,
+                loopEnd);
+            EditorGUILayout.LabelField(
+                "원본 반복 구간",
+                $"{sourceStartPosition.Bar}마디 → {sourceEndPosition.Bar}마디 직전");
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+
+                patternTargetStartBar = Math.Max(
+                    1,
+                    EditorGUILayout.IntField("붙여넣기 시작 마디", patternTargetStartBar));
+
+                if (GUILayout.Button("원본 다음 마디", GUILayout.Width(104f)))
+                {
+
+                    patternTargetStartBar = Math.Max(1, sourceEndPosition.Bar);
+
+                }
+
+            }
+
+            patternRepeatCount = Math.Max(
+                1,
+                EditorGUILayout.IntField("반복 횟수", patternRepeatCount));
+            patternConflictMode = (ChartPatternConflictMode)EditorGUILayout.Popup(
+                "대상 구간 처리",
+                (int)patternConflictMode,
+                new[]
+                {
+
+                    "같은 파트 노트가 있으면 중단",
+                    "대상 구간의 같은 파트 교체",
+                    "기존 노트를 유지하고 추가"
+
+                });
+            patternAddActivationWindow = EditorGUILayout.Toggle(
+                "대상 파트 활성 구간 자동 추가",
+                patternAddActivationWindow);
+            RefreshPatternDuplicationPreview();
+
+            if (patternDuplicationPreview == null || !patternDuplicationPreview.IsValid)
+            {
+
+                string error = patternDuplicationPreview == null
+                    ? "복제 미리보기를 계산할 수 없습니다."
+                    : patternDuplicationPreview.Error;
+                EditorGUILayout.HelpBox(error, MessageType.Error);
+                return;
+
+            }
+
+            EditorGUILayout.HelpBox(
+                $"미리보기 · 원본 {patternDuplicationPreview.SourceNoteCount}개 · " +
+                $"생성 {patternDuplicationPreview.GeneratedNoteCount}개 · " +
+                $"대상 {patternDuplicationPreview.TargetStartBar}~" +
+                $"{patternDuplicationPreview.TargetEndBar - 1}마디 · " +
+                $"기존 같은 파트 노트 {patternDuplicationPreview.ExistingTargetNoteCount}개",
+                MessageType.Info);
+
+            if (patternDuplicationPreview.InactiveGeneratedNoteCount > 0)
+            {
+
+                EditorGUILayout.HelpBox(
+                    patternAddActivationWindow
+                        ? $"활성 구간 밖 노트 {patternDuplicationPreview.InactiveGeneratedNoteCount}개를 위해 " +
+                          "대상 구간을 선택 파트 활성 구간에 추가합니다."
+                        : $"활성 구간 밖에 생성될 노트 {patternDuplicationPreview.InactiveGeneratedNoteCount}개는 " +
+                          "게임에서 비활성 노트가 됩니다.",
+                    patternAddActivationWindow ? MessageType.None : MessageType.Warning);
+
+            }
+
+            bool blockedByConflict =
+                patternConflictMode == ChartPatternConflictMode.AbortIfOccupied &&
+                patternDuplicationPreview.ExistingTargetNoteCount > 0;
+
+            if (blockedByConflict)
+            {
+
+                EditorGUILayout.HelpBox(
+                    "대상 구간에 같은 파트 노트가 있습니다. 다른 시작 마디를 선택하거나 대상 구간 처리 방식을 바꾸세요.",
+                    MessageType.Warning);
+
+            }
+
+            if (songPlayback != null &&
+                songPlayback.DurationSeconds > 0d &&
+                patternDuplicationPreview.TargetEndTime > songPlayback.DurationSeconds + 0.000001d)
+            {
+
+                EditorGUILayout.HelpBox(
+                    "복제 대상이 현재 오디오 길이를 넘어갑니다.",
+                    MessageType.Warning);
+
+            }
+
+            EditorGUILayout.HelpBox(
+                "청록색 테두리는 생성 예정 노트입니다. 적용하면 새 고유 ID를 만들고 전체 차트를 시간순으로 정렬합니다.",
+                MessageType.None);
+            GUI.enabled = patternDuplicationPreview.CanApply(patternConflictMode);
+
+            if (GUILayout.Button(
+                    $"{patternDuplicationPreview.TargetStartBar}~" +
+                    $"{patternDuplicationPreview.TargetEndBar - 1}마디에 패턴 복제"))
+            {
+
+                string partId = chart.MusicalParts[selectedPartIndex].Id;
+                string partName = chart.MusicalParts[selectedPartIndex].DisplayName;
+
+                if (EditorUtility.DisplayDialog(
+                        "선택 파트 패턴 복제",
+                        $"{partName} [{partId}] 패턴을 " +
+                        $"{patternDuplicationPreview.TargetStartBar}~" +
+                        $"{patternDuplicationPreview.TargetEndBar - 1}마디에 복제할까요?\n\n" +
+                        $"생성 노트: {patternDuplicationPreview.GeneratedNoteCount}개\n" +
+                        $"기존 같은 파트 노트: {patternDuplicationPreview.ExistingTargetNoteCount}개\n" +
+                        "적용 후에는 에셋 저장이 필요하며 Unity Undo로 되돌릴 수 있습니다.",
+                        "복제 적용",
+                        "취소"))
+                {
+
+                    ApplyPatternDuplication(partId);
+
+                }
+
+            }
+
+            GUI.enabled = true;
+
+        }
+
+        private void RefreshPatternDuplicationPreview()
+        {
+
+            if (!showPatternDuplication ||
+                chart == null ||
+                chart.TempoSections.Count == 0 ||
+                chart.MusicalParts.Count == 0)
+            {
+
+                patternDuplicationPreview = null;
+                return;
+
+            }
+
+            ClampSelections();
+            string partId = chart.MusicalParts[selectedPartIndex].Id;
+            patternDuplicationPreview = ChartPatternDuplication.CreatePreview(
+                chart,
+                partId,
+                loopStart,
+                loopEnd,
+                patternTargetStartBar,
+                patternRepeatCount);
+
+        }
+
+        private void ApplyPatternDuplication(string partId)
+        {
+
+            bool applied = ChartPatternDuplication.TryApply(
+                chart,
+                partId,
+                loopStart,
+                loopEnd,
+                patternTargetStartBar,
+                patternRepeatCount,
+                patternConflictMode,
+                patternAddActivationWindow,
+                out ChartPatternDuplicationPreview result);
+
+            if (!applied)
+            {
+
+                statusMessage = result.IsValid
+                    ? "대상 구간 충돌 때문에 패턴을 복제하지 않았습니다."
+                    : $"패턴을 복제하지 못했습니다: {result.Error}";
+                patternDuplicationPreview = result;
+                return;
+
+            }
+
+            selectedChartNoteId = string.Empty;
+            patternTargetStartBar = result.TargetEndBar;
+
+            if (chart.TryValidate(out string error))
+            {
+
+                statusMessage =
+                    $"{partId} 패턴 노트 {result.GeneratedNoteCount}개를 " +
+                    $"{result.TargetStartBar}~{result.TargetEndBar - 1}마디에 복제했습니다. 에셋을 저장하세요.";
+
+            }
+            else
+            {
+
+                statusMessage = $"패턴을 복제했지만 차트 검사에 실패했습니다: {error}. 실행 취소하세요.";
+                Debug.LogError(statusMessage, chart);
+
+            }
+
+            RefreshPatternDuplicationPreview();
+
+        }
+
         private void DrawAppliedNoteDeletionControls()
         {
 
@@ -4143,6 +4503,150 @@ namespace IdiotTape.EditorTools
                 "삭제는 차트 에셋에 즉시 반영되며 Unity Undo로 되돌릴 수 있습니다. " +
                 "영구 저장하려면 아래의 에셋 저장을 누르세요.",
                 MessageType.None);
+
+        }
+
+        private void DrawAppliedNoteQuantizationControls()
+        {
+
+            if (chart.MusicalParts.Count == 0)
+            {
+
+                return;
+
+            }
+
+            EditorGUILayout.Space(4f);
+            showAppliedNoteQuantization = EditorGUILayout.Foldout(
+                showAppliedNoteQuantization,
+                "저장된 파트 채보 박자 보정",
+                true);
+
+            if (!showAppliedNoteQuantization)
+            {
+
+                return;
+
+            }
+
+            selectedPartIndex = EditorGUILayout.Popup(
+                "보정할 음악 파트",
+                selectedPartIndex,
+                GetPartNames());
+            appliedQuantizationRange = (AppliedQuantizationRange)EditorGUILayout.Popup(
+                "보정 범위",
+                (int)appliedQuantizationRange,
+                new[] { "선택 파트 전체", "현재 반복 구간" });
+
+            string partId = chart.MusicalParts[selectedPartIndex].Id;
+            string partName = chart.MusicalParts[selectedPartIndex].DisplayName;
+            double rangeStart = appliedQuantizationRange == AppliedQuantizationRange.WholeChart
+                ? 0d
+                : loopStart;
+            double rangeEnd = appliedQuantizationRange == AppliedQuantizationRange.WholeChart
+                ? double.PositiveInfinity
+                : loopEnd;
+            bool hasValidRange = rangeEnd > rangeStart;
+            AppliedNoteQuantizationSummary preview = hasValidRange
+                ? ChartAuthoringNoteUtility.PreviewQuantization(
+                    chart,
+                    partId,
+                    rangeStart,
+                    rangeEnd,
+                    (int)quantizationGrid,
+                    maximumQuantizationMilliseconds / 1000d,
+                    quantizationStrength,
+                    inputAdvanceMilliseconds / 1000d,
+                    chordGroupingMilliseconds / 1000d)
+                : new AppliedNoteQuantizationSummary();
+
+            if (!hasValidRange)
+            {
+
+                EditorGUILayout.HelpBox("현재 반복 구간이 올바르지 않습니다.", MessageType.Error);
+
+            }
+            else if (preview.CandidateCount == 0)
+            {
+
+                EditorGUILayout.HelpBox($"선택 범위에 {partName} 노트가 없습니다.", MessageType.None);
+
+            }
+            else
+            {
+
+                EditorGUILayout.HelpBox(
+                    $"미리보기 · 대상 {preview.CandidateCount}개 · 격자 보정 {preview.QuantizedCount}개 · " +
+                    $"허용 범위 밖 {preview.OutsideWindowCount}개 · 시간 변경 {preview.ChangedCount}개\n" +
+                    $"변경 범위 {preview.MinimumCorrectionSeconds * 1000d:+0.0;-0.0;0.0}ms ~ " +
+                    $"{preview.MaximumCorrectionSeconds * 1000d:+0.0;-0.0;0.0}ms",
+                    MessageType.Info);
+
+            }
+
+            EditorGUILayout.HelpBox(
+                "위의 입력 박자 보정 설정을 사용합니다. 적용 시 선택한 파트의 저장된 노트 시간만 " +
+                "변경하며, 노트 ID·위치·파트는 유지됩니다. Unity Undo로 되돌릴 수 있습니다.",
+                MessageType.None);
+
+            GUI.enabled = hasValidRange && preview.CandidateCount > 0 && preview.ChangedCount > 0;
+
+            if (GUILayout.Button("미리보기대로 저장된 노트 보정 적용"))
+            {
+
+                string rangeDescription = appliedQuantizationRange == AppliedQuantizationRange.WholeChart
+                    ? "차트 전체"
+                    : $"{loopStart:0.000}초 이상 {loopEnd:0.000}초 미만";
+
+                if (EditorUtility.DisplayDialog(
+                        "저장된 파트 채보 박자 보정",
+                        $"{partName} [{partId}]의 저장된 노트 {preview.ChangedCount}개 시간을 변경할까요?\n\n" +
+                        $"범위: {rangeDescription}\n" +
+                        "적용 후에는 에셋 저장이 필요하며, 저장 전에는 Unity Undo로 되돌릴 수 있습니다.",
+                        "보정 적용",
+                        "취소"))
+                {
+
+                    ApplyQuantizationToStoredPart(partId, rangeStart, rangeEnd);
+
+                }
+
+            }
+
+            GUI.enabled = true;
+
+        }
+
+        private void ApplyQuantizationToStoredPart(string partId, double startTime, double endTime)
+        {
+
+            AppliedNoteQuantizationSummary result = ChartAuthoringNoteUtility.QuantizeNotes(
+                chart,
+                partId,
+                startTime,
+                endTime,
+                (int)quantizationGrid,
+                maximumQuantizationMilliseconds / 1000d,
+                quantizationStrength,
+                inputAdvanceMilliseconds / 1000d,
+                chordGroupingMilliseconds / 1000d);
+            selectedChartNoteId = string.Empty;
+
+            if (chart.TryValidate(out string error))
+            {
+
+                statusMessage =
+                    $"{partId} 저장 노트 {result.ChangedCount}개를 보정했습니다. " +
+                    $"허용 범위 밖 {result.OutsideWindowCount}개에는 입력 오프셋만 적용했습니다. 에셋을 저장하세요.";
+
+            }
+            else
+            {
+
+                statusMessage = $"노트를 보정했지만 차트 검사에 실패했습니다: {error}. 실행 취소하세요.";
+                Debug.LogError(statusMessage, chart);
+
+            }
 
         }
 

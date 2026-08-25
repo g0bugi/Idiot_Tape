@@ -35,6 +35,22 @@ namespace IdiotTape.Gameplay
 
         }
 
+        public static float GetTimingGuideY(
+            float normalizedX,
+            float spawnY,
+            float judgementBaseY,
+            float judgementCurvature,
+            float progress)
+        {
+
+            float clampedProgress = Mathf.Clamp01(progress);
+            float shapeProgress = Mathf.SmoothStep(0f, 1f, clampedProgress);
+            float centeredX = normalizedX * 2f - 1f;
+            float guideBaseY = Mathf.Lerp(spawnY, judgementBaseY, clampedProgress);
+            return guideBaseY + judgementCurvature * centeredX * centeredX * shapeProgress;
+
+        }
+
     }
 
 }

@@ -233,19 +233,22 @@ namespace IdiotTape.EditorTools
                 "Combo",
                 canvasObject.transform,
                 string.Empty,
-                38,
+                88,
                 TextAnchor.MiddleCenter,
-                new Vector2(0.38f, 0.14f),
-                new Vector2(0.62f, 0.23f));
+                new Vector2(0.32f, 0.52f),
+                new Vector2(0.68f, 0.74f));
+            comboText.fontStyle = FontStyle.Bold;
+            AddOutline(comboText, new Vector2(3f, -3f));
             Text judgementText = CreateText(
                 "Judgement",
                 canvasObject.transform,
                 string.Empty,
-                42,
+                72,
                 TextAnchor.MiddleCenter,
-                new Vector2(0.35f, 0.22f),
-                new Vector2(0.65f, 0.32f));
+                new Vector2(0.28f, 0.38f),
+                new Vector2(0.72f, 0.53f));
             judgementText.fontStyle = FontStyle.Bold;
+            AddOutline(judgementText, new Vector2(3f, -3f));
 
             Image pauseButtonBackground = CreateImage(
                 "PauseButton",
@@ -379,6 +382,16 @@ namespace IdiotTape.EditorTools
             text.alignment = alignment;
             text.color = new Color(0.92f, 0.91f, 0.88f, 0.9f);
             return text;
+
+        }
+
+        private static void AddOutline(Text text, Vector2 effectDistance)
+        {
+
+            Outline outline = text.gameObject.AddComponent<Outline>();
+            outline.effectColor = new Color(0f, 0f, 0f, 0.82f);
+            outline.effectDistance = effectDistance;
+            outline.useGraphicAlpha = true;
 
         }
 

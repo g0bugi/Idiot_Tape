@@ -13,6 +13,7 @@ namespace IdiotTape.Gameplay
         private const int MouseContactId = -1;
 
         public event Action<int, Vector2, double> ContactPressed;
+        public event Action<int, Vector2> ContactMoved;
         public event Action<int> ContactReleased;
         public event Action<int, double> LanePressed;
         public event Action<int> LaneReleased;
@@ -88,6 +89,14 @@ namespace IdiotTape.Gameplay
 
                 }
 
+                if (touch.phase == UnityEngine.InputSystem.TouchPhase.Moved)
+                {
+
+                    ContactMoved?.Invoke(touch.touchId, touch.screenPosition);
+                    continue;
+
+                }
+
                 if (touch.phase == UnityEngine.InputSystem.TouchPhase.Ended ||
                     touch.phase == UnityEngine.InputSystem.TouchPhase.Canceled)
                 {
@@ -105,6 +114,13 @@ namespace IdiotTape.Gameplay
                     MouseContactId,
                     Mouse.current.position.ReadValue(),
                     Mouse.current.lastUpdateTime);
+
+            }
+
+            if (!handledTouch && Mouse.current != null && Mouse.current.leftButton.isPressed)
+            {
+
+                ContactMoved?.Invoke(MouseContactId, Mouse.current.position.ReadValue());
 
             }
 

@@ -358,7 +358,7 @@ MonoBehaviour:
   spawnY: 4.45
   judgementBaseY: -2.75
   judgementCurvature: 0.18
-  noteScale: 0.92
+  noteScale: 0.86
 --- !u!4 &485154750
 Transform:
   m_ObjectHideFlags: 0

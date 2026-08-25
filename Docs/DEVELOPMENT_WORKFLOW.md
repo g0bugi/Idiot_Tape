@@ -1,5 +1,10 @@
 # Idiot_Tape — Development Workflow
 
+> Status: Current
+> Last reviewed: 2026-08-25
+> Applies to: All repository changes
+> Authority: Engineering workflow, verification, Unity safety, and completion reporting
+
 ## Document Purpose
 
 This document defines the expected workflow for repository changes.
@@ -24,6 +29,7 @@ Before implementation:
 4. search for related implementations and references
 5. read the relevant project documentation
 6. determine the smallest reasonable change scope
+7. when the work belongs to the current milestone, identify the owning `BACKLOG.md` item and required evidence
 
 Do not assume a clean working tree.
 
@@ -311,7 +317,33 @@ Examples:
 Do not rewrite documentation to legitimize an accidental implementation discrepancy.
 
 
-# 19. Required Completion Report
+# 19. Task Briefs and Evidence
+
+For milestone work, prefer referencing an existing `BACKLOG.md` item instead of repeating its full
+scope in every request. The user's current instruction remains authoritative and may intentionally
+change that scope.
+
+When a new task is large enough to require planning, define:
+
+- player or chart-author goal
+- included and excluded behavior
+- relevant design, timing, chart, and architecture contracts
+- dependencies and blocking open-decision IDs
+- expected data input and output
+- normal and failure behavior
+- serialized asset or package impact
+- automated verification
+- manual verification, including physical device requirements
+- observable completion conditions
+
+Use the work-item template in `BACKLOG.md` for recurring milestone work.
+
+Manual validation evidence belongs under `Playtests/`. A backlog checkbox, implementation diff, or
+successful compilation does not replace a playtest record when the acceptance condition depends on
+feel, readability, synchronization, authoring speed, or physical-device behavior.
+
+
+# 20. Required Completion Report
 
 At the end of the task, report:
 
@@ -349,7 +381,7 @@ Describe known limitations, risks, TODOs, or follow-up work.
 Do not invent remaining issues merely to populate this section.
 
 
-# 20. Definition of Done
+# 21. Definition of Done
 
 A task is done when:
 

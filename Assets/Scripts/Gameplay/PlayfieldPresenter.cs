@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace IdiotTape.Gameplay
@@ -13,6 +14,8 @@ namespace IdiotTape.Gameplay
 
         private static readonly Color MainLineColor = new(0.92f, 0.91f, 0.88f, 0.9f);
         private static readonly Color EchoLineColor = new(0.75f, 0.72f, 0.7f, 0.28f);
+        private static readonly Color BarGuideColor = new(0.88f, 0.86f, 0.82f, 0.34f);
+        private static readonly Color BeatGuideColor = new(0.82f, 0.81f, 0.79f, 0.14f);
 
         [SerializeField] private Camera gameplayCamera;
         [SerializeField] private Transform noteRoot;
@@ -21,7 +24,7 @@ namespace IdiotTape.Gameplay
         [SerializeField] private float spawnY = 4.45f;
         [SerializeField] private float judgementBaseY = -2.75f;
         [SerializeField] private float judgementCurvature = 0.18f;
-        [SerializeField] private float noteScale = 0.92f;
+        [SerializeField] private float noteScale = 0.86f;
 
         private LineRenderer mainLine;
         private LineRenderer echoLine;
@@ -30,6 +33,7 @@ namespace IdiotTape.Gameplay
         private HitEffectView[] hitEffectPool;
         private JudgementLineReaction[] lineReactionPool;
         private LanePressFeedbackView[] laneFeedbackViews;
+        private readonly List<RuntimeTimingGuideView> timingGuidePool = new();
         private int nextHitEffectIndex;
         private int nextLineReactionIndex;
         private float lineFlashRemaining;
@@ -115,6 +119,56 @@ namespace IdiotTape.Gameplay
                 noteScale,
                 additiveMaterial,
                 isPlayable);
+            return view;
+
+        }
+
+        public RuntimeTimingGuideView CreateTimingGuide(
+            double beatTime,
+            int bar,
+            int beat,
+            bool isBar,
+            float visualLeadTime)
+        {
+
+            RuntimeTimingGuideView view = GetAvailableTimingGuide();
+            view.gameObject.name = isBar
+                ? $"BarGuide_{bar:000}"
+                : $"BeatGuide_{bar:000}_{beat:00}";
+            view.Initialize(
+                beatTime,
+                isBar,
+                halfWidth,
+                spawnY,
+                judgementBaseY,
+                judgementCurvature,
+                visualLeadTime,
+                lineMaterial,
+                isBar ? BarGuideColor : BeatGuideColor,
+                isBar ? 0.018f : 0.008f);
+            return view;
+
+        }
+
+        private RuntimeTimingGuideView GetAvailableTimingGuide()
+        {
+
+            for (int index = 0; index < timingGuidePool.Count; index++)
+            {
+
+                if (!timingGuidePool[index].gameObject.activeSelf)
+                {
+
+                    return timingGuidePool[index];
+
+                }
+
+            }
+
+            GameObject guideObject = new("TimingGuidePool");
+            guideObject.transform.SetParent(transform, false);
+            RuntimeTimingGuideView view = guideObject.AddComponent<RuntimeTimingGuideView>();
+            timingGuidePool.Add(view);
             return view;
 
         }
