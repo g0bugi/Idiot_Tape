@@ -35,7 +35,9 @@ namespace IdiotTape.Gameplay.Tests
             yield return null;
             Canvas.ForceUpdateCanvases();
 
-            RectTransform sliderArea = GameObject.Find("NoteSpeedSlider").GetComponent<RectTransform>();
+            RectTransform sliderArea = canvasObject.transform
+                .Find("NoteSpeedControl/NoteSpeedSlider")
+                .GetComponent<RectTransform>();
             Vector3[] corners = new Vector3[4];
             sliderArea.GetWorldCorners(corners);
             Vector2 left = RectTransformUtility.WorldToScreenPoint(
@@ -44,13 +46,25 @@ namespace IdiotTape.Gameplay.Tests
             Vector2 right = RectTransformUtility.WorldToScreenPoint(
                 null,
                 Vector3.Lerp(corners[3], corners[2], 0.5f));
+            bool convertedRight = RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                sliderArea,
+                right,
+                null,
+                out Vector2 rightLocalPosition);
 
             Assert.That(hud.NoteSpeedMultiplier, Is.EqualTo(1f));
-            Assert.That(hud.TrySetNoteSpeedFromScreenPosition(right), Is.True);
+            Assert.That(convertedRight, Is.True);
+            Assert.That(
+                hud.TrySetNoteSpeedFromScreenPosition(right),
+                Is.True,
+                $"Right endpoint {right} converted to {rightLocalPosition} for rect {sliderArea.rect}.");
             Assert.That(hud.NoteSpeedMultiplier, Is.EqualTo(4f).Within(0.01f));
             Assert.That(hud.TrySetNoteSpeedFromScreenPosition(left), Is.True);
             Assert.That(hud.NoteSpeedMultiplier, Is.EqualTo(1f).Within(0.01f));
-            Assert.That(GameObject.Find("NoteSpeedValue").GetComponent<Text>().text, Is.EqualTo("x1.0"));
+            Text valueText = canvasObject.transform
+                .Find("NoteSpeedControl/NoteSpeedValue")
+                .GetComponent<Text>();
+            Assert.That(valueText.text, Is.EqualTo("x1.0"));
             Object.Destroy(canvasObject);
 
         }

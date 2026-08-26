@@ -13,7 +13,6 @@ namespace IdiotTape.Audio.Editor
         public const string TestScenePath = "Assets/Scenes/FmodPlaybackTest.unity";
         private const string PlutoEventPath = "event:/Music/Idiotape/Pluto";
 
-        [MenuItem("Idiot_Tape/Audio/Create or Refresh FMOD Playback Test Scene")]
         public static void CreateOrRefreshTestScene()
         {
 
@@ -46,15 +45,6 @@ namespace IdiotTape.Audio.Editor
             AssetDatabase.SaveAssets();
             Selection.activeGameObject = harnessObject;
             Debug.Log($"Created FMOD playback test scene at {TestScenePath}.");
-
-        }
-
-        [MenuItem("Idiot_Tape/Audio/Run FMOD Playback Smoke Test")]
-        public static void RunFromMenu()
-        {
-
-            CreateOrRefreshTestScene();
-            EditorApplication.EnterPlaymode();
 
         }
 

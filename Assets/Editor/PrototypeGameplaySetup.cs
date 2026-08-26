@@ -19,7 +19,6 @@ namespace IdiotTape.EditorTools
         private const string NoteSpritePath = "Assets/Art/Gameplay/SketchTapNote.png";
         private const string ScenePath = "Assets/Scenes/Gameplay.unity";
 
-        [MenuItem("Tools/Idiot Tape/Rebuild Prototype Gameplay")]
         public static void Run()
         {
 

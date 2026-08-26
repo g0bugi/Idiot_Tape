@@ -47,7 +47,7 @@ A checkbox or existing implementation alone is not sufficient evidence for `Done
 
 ### IT-P0-001 — Establish the Verification Baseline
 
-Status: `Ready`
+Status: `Done`
 
 Goal:
 
@@ -68,7 +68,9 @@ Acceptance:
 
 Evidence:
 
-- create a record from `Playtests/TEMPLATE.md`
+- `Playtests/2026-08-26-verification-baseline.md`
+- current baseline passes 64 EditMode tests and 4 PlayMode tests after resolving `IT-P0-011` and
+  `IT-P0-012`
 
 ### IT-P0-002 — Verify Full-Song Timeline Stability
 
@@ -252,6 +254,60 @@ Acceptance:
 - blockers and accepted limitations are separated
 - the next milestone contains only work justified by the decision
 - any newly finalized design or technical decisions are updated in their owning document or ADR
+
+### IT-P0-011 — Make the Gameplay Smoke Test Target a Playable Note
+
+Status: `Done`
+
+Depends on: None
+
+Goal:
+
+- restore a chart-valid gameplay-scene smoke hit without relying on a stale hard-coded song position
+
+Includes:
+
+- selecting or deriving a note whose musical part is active at its hit time
+- submitting the matching development-lane input inside its judgement window
+- preserving the existing runtime-note, timing-guide, HUD, feedback, pause, and resume assertions
+
+Acceptance:
+
+- the smoke test produces one valid hit with the current representative chart
+- changing inactive opening notes does not silently invalidate the target selection
+- the complete PlayMode suite passes this test in batch mode
+
+Evidence:
+
+- failure recorded in `Playtests/2026-08-26-verification-baseline.md`
+- updated smoke test passed alone, and the complete PlayMode suite passed this test on 2026-08-26
+
+### IT-P0-012 — Make the Note-Speed Slider Maximum Reachable
+
+Status: `Done`
+
+Depends on: None
+
+Goal:
+
+- allow pointer or touch input at the slider's right endpoint to select the documented `x4` maximum
+
+Includes:
+
+- resolving the endpoint containment and coordinate-mapping mismatch
+- preserving the `x1` minimum, continuous values, and immediate song-time-derived presentation update
+
+Acceptance:
+
+- the left and right slider endpoints map to `x1` and `x4`
+- the current `NoteSpeedSliderTests` PlayMode test passes in batch mode
+- note timing and judgement windows remain unchanged
+
+Evidence:
+
+- failure recorded in `Playtests/2026-08-26-verification-baseline.md`
+- targeted slider verification passed, followed by 4/4 complete PlayMode and 64/64 complete
+  EditMode results on 2026-08-26
 
 ## P1 Parking Lot
 

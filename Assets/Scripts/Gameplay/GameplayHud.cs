@@ -158,6 +158,8 @@ namespace IdiotTape.Gameplay
         private RisingTextAnimation judgementAnimation;
         private RisingTextAnimation instrumentAnimation;
 
+        private const float SliderInputBoundaryTolerance = 0.01f;
+
         private void Awake()
         {
 
@@ -253,17 +255,6 @@ namespace IdiotTape.Gameplay
                 ? hudCanvas.worldCamera
                 : null;
 
-            if (requireInside &&
-                !RectTransformUtility.RectangleContainsScreenPoint(
-                    noteSpeedSliderArea,
-                    screenPosition,
-                    eventCamera))
-            {
-
-                return false;
-
-            }
-
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
                     noteSpeedSliderArea,
                     screenPosition,
@@ -275,10 +266,24 @@ namespace IdiotTape.Gameplay
 
             }
 
+            Rect sliderRect = noteSpeedSliderArea.rect;
+
+            if (requireInside &&
+                (localPosition.x < sliderRect.xMin - SliderInputBoundaryTolerance ||
+                 localPosition.x > sliderRect.xMax + SliderInputBoundaryTolerance ||
+                 localPosition.y < sliderRect.yMin - SliderInputBoundaryTolerance ||
+                 localPosition.y > sliderRect.yMax + SliderInputBoundaryTolerance))
+            {
+
+                return false;
+
+            }
+
+            float clampedX = Mathf.Clamp(localPosition.x, sliderRect.xMin, sliderRect.xMax);
             float normalized = Mathf.InverseLerp(
-                noteSpeedSliderArea.rect.xMin,
-                noteSpeedSliderArea.rect.xMax,
-                localPosition.x);
+                sliderRect.xMin,
+                sliderRect.xMax,
+                clampedX);
             SetNoteSpeedMultiplier(NoteSpeedMath.GetMultiplierFromNormalized(normalized));
             return true;
 

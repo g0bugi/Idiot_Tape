@@ -45,7 +45,7 @@ MonoBehaviour:
     color: {r: 0.52, g: 0.42, b: 0.95, a: 1}
   activationWindows:
   - musicalPartId: drum
-    startTime: 2.079548162592274
+    startTime: 0.2332931141569361
     endTime: 15.003333501639636
   notes:
   - id: snowprototypechart_drum_0001

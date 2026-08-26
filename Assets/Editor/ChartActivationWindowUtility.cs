@@ -194,18 +194,6 @@ namespace IdiotTape.EditorTools
 
         }
 
-        [MenuItem("Tools/Idiot Tape/Snow 활성 구간 중복 정리")]
-        public static void NormalizeSnowChart()
-        {
-
-            PrototypeChart chart = AssetDatabase.LoadAssetAtPath<PrototypeChart>(
-                SnowPrototypeChartSetup.ChartPath);
-            int removedCount = Normalize(chart);
-            AssetDatabase.SaveAssetIfDirty(chart);
-            Debug.Log($"Snow 활성 구간에서 중복·겹침 {removedCount}개를 정리했습니다.", chart);
-
-        }
-
     }
 
 }
