@@ -182,6 +182,72 @@ namespace IdiotTape.Gameplay.Tests
 
         }
 
+        [Test]
+        public void DuplicationPreservesSustainedTypeAndOffsetsItsEnd()
+        {
+
+            PrototypeChart chart = CreateChart(
+                new[] { ("hold_source", 0.5d, 2, "drum") },
+                false);
+            SerializedObject serializedChart = new(chart);
+            SerializedProperty hold = serializedChart.FindProperty("notes").GetArrayElementAtIndex(0);
+            hold.FindPropertyRelative("noteType").enumValueIndex = (int)ChartNoteType.Hold;
+            hold.FindPropertyRelative("endTime").doubleValue = 1.5d;
+            serializedChart.ApplyModifiedPropertiesWithoutUndo();
+
+            bool applied = ChartPatternDuplication.TryApply(
+                chart,
+                "drum",
+                0d,
+                2d,
+                2,
+                1,
+                ChartPatternConflictMode.KeepExisting,
+                false,
+                out ChartPatternDuplicationPreview preview);
+
+            Assert.That(applied, Is.True, preview.Error);
+            Assert.That(chart.Notes.Count, Is.EqualTo(2));
+            ChartNote duplicate = chart.Notes[1];
+            Assert.That(duplicate.NoteType, Is.EqualTo(ChartNoteType.Hold));
+            Assert.That(duplicate.HitTime, Is.EqualTo(2.5d).Within(0.0000001d));
+            Assert.That(duplicate.EndTime, Is.EqualTo(3.5d).Within(0.0000001d));
+            Object.DestroyImmediate(chart);
+
+        }
+
+        [Test]
+        public void SustainedCopyKeepsMusicalDurationAcrossBpmChange()
+        {
+
+            PrototypeChart chart = CreateChart(
+                new[] { ("hold_source", 0.5d, 2, "drum") },
+                false);
+            AddTempoSection(chart, 2, 2d, 60d, 4, 4);
+            SerializedObject serializedChart = new(chart);
+            SerializedProperty hold = serializedChart.FindProperty("notes").GetArrayElementAtIndex(0);
+            hold.FindPropertyRelative("noteType").enumValueIndex = (int)ChartNoteType.Hold;
+            hold.FindPropertyRelative("endTime").doubleValue = 1.5d;
+            serializedChart.ApplyModifiedPropertiesWithoutUndo();
+
+            bool applied = ChartPatternDuplication.TryApply(
+                chart,
+                "drum",
+                0d,
+                2d,
+                2,
+                1,
+                ChartPatternConflictMode.KeepExisting,
+                false,
+                out ChartPatternDuplicationPreview preview);
+
+            Assert.That(applied, Is.True, preview.Error);
+            Assert.That(chart.Notes[1].HitTime, Is.EqualTo(3d).Within(0.0000001d));
+            Assert.That(chart.Notes[1].EndTime, Is.EqualTo(5d).Within(0.0000001d));
+            Object.DestroyImmediate(chart);
+
+        }
+
         private static PrototypeChart CreateChart(
             (string id, double hitTime, int laneIndex, string partId)[] noteValues,
             bool addActivationWindows)

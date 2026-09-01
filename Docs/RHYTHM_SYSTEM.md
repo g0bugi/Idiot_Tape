@@ -1,7 +1,7 @@
 # Idiot_Tape — Rhythm System
 
 > Status: Current
-> Last reviewed: 2026-08-25
+> Last reviewed: 2026-08-27
 > Applies to: All rhythm-sensitive runtime and chart-authoring behavior
 > Authority: Song time, synchronization, input timing, and judgement timing contracts
 
@@ -245,6 +245,91 @@ and centralized.
 
 Do not duplicate latency compensation logic across individual note components.
 
+
+## Accepted Sustained and Gesture Timing
+
+The accepted hold, slide, flick, and banana rules are defined in `NOTE_INTERACTIONS.md`. Their
+implementation must follow the timing contract below.
+
+This section describes the implemented interaction-timing contract. Deterministic math and current
+Play Mode regression checks pass; representative interaction and physical-device timing still
+require the evidence listed in `BACKLOG.md`.
+
+### Global Musical Check Grid
+
+Hold and slide do not calculate their internal cadence by repeatedly adding a fixed number of
+seconds from note start.
+
+- validity checks occur on the chart's global quarter-beat grid
+- combo and score reward ticks occur on the chart's global half-beat grid
+- the grid uses the same tempo-map origin that drives authoring navigation and runtime timing
+  guides
+- tempo changes alter the corresponding absolute intervals without creating a second clock
+- only grid points strictly inside the interaction's start/end interval count as internal events
+- an authored slide node and a half-beat reward at the same absolute time may both award results
+
+All resolved check and reward times must be deterministic absolute chart times before judgement.
+
+### Inherited Hold and Slide Grade
+
+Hold and slide establish Perfect or Good from their starting input. Later successful checks, nodes,
+and completion inherit that grade rather than manufacturing new timing errors from render frames.
+
+Hold completion is automatic while the required lane contact remains valid. Slide completion is
+automatic while a valid contact occupies its end lane, except when the slide has an authored
+terminal flick. Neither normal completion requires a release timestamp.
+
+A slide terminal flick uses flick motion conditions to decide success, but its one end result still
+inherits the slide start grade. It is not an additional independently graded flick reward.
+
+### Hold Early-Release Grace
+
+For holds at least two musical beats long, the final one musical beat is an accepted provisional
+early-release grace interval. Its boundary must be resolved through the tempo map rather than by
+subtracting one fixed-duration second value.
+
+Release inside that interval completes the hold without Miss. Reward ticks after release are not
+awarded, while the authored end result remains awarded with the start grade. Release before the
+grace boundary fails immediately.
+
+### Slide Sampling and Contact Handoff
+
+Slide validity uses its authored linear path plus required quarter-beat and node times. Contact
+handoff may occur between those checks. At each required check, at least one eligible contact must
+occupy the valid path corridor. A contact may not satisfy two sustained interactions at once.
+
+A failed required check ends the entire slide. Later check times must not generate repeated Misses
+or rewards after termination.
+
+### Flick Timestamp
+
+Flick input retains timestamped position samples. The judgement time is the first timestamp at
+which the motion satisfies the authored direction, distance, speed, and end-lane conditions.
+
+For the accepted prototype, every such completion inside the ordinary Good window becomes Perfect.
+Touch jitter inside a configurable dead zone is ignored. Moving beyond that dead zone in the wrong
+horizontal direction or passing the late boundary without completion produces Miss.
+
+### Banana Checkpoints
+
+Every applied banana checkpoint has an explicit deterministic chart time and normalized target
+position. Default checkpoint generation uses the tempo map, but runtime judgement must not
+regenerate edited checkpoints from render frames or elapsed `deltaTime`.
+
+Checkpoint success adds charge and fractional score. An unsuccessful checkpoint does not emit
+Miss. Banana start and end remain ordinary timestamped lane judgements, and a missed end breaks
+combo according to `NOTE_INTERACTIONS.md`.
+
+### Frame Hitches and Input History
+
+If one render frame crosses multiple required checks, the runtime must process every crossed check
+exactly once in chronological order. It must use timestamped contact state or an equivalent
+deterministic input history sufficient to evaluate the relevant interval, rather than applying the
+latest frame position retroactively to every missed check.
+
+A frame hitch may reduce visible smoothness. It must not skip reward ticks, duplicate results, or
+change a path outcome solely because fewer `Update()` calls occurred.
+
 ### Authoring Metronome
 
 The chart authoring tool may schedule quiet Editor-only metronome clicks from chart tempo data.
@@ -307,6 +392,9 @@ This includes, where applicable:
 - judgement state
 - score / combo state
 - scheduler indices
+- active contact ownership
+- sustained-note check cursors and termination state
+- pending banana charge and unclaimed bonus combo
 
 Seeking, if later implemented, must rebuild runtime note state from chart time instead of trying
 to replay every missed frame.

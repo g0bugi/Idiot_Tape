@@ -1,7 +1,7 @@
 # Idiot_Tape — Chart Format
 
 > Status: Current
-> Last reviewed: 2026-08-25
+> Last reviewed: 2026-08-27
 > Applies to: Current prototype chart data and future-compatible chart contracts
 > Authority: Chart data semantics, validation, and runtime interpretation
 
@@ -205,15 +205,55 @@ The current `PrototypeChart` ScriptableObject persists the following authoring d
 | Visual lead time | Seconds before hit time | Positive presentation value; does not change hit time |
 | Musical parts | Stable part ID, display name, presentation color | IDs must be non-empty and unique |
 | Activation windows | Part ID with inclusive start and exclusive end time in seconds | Must reference a part and not overlap another window for that part |
-| Notes | Stable ID, absolute hit time in seconds, zero-based lane index, part ID | Ordered by time with valid unique IDs and references |
+| Notes | Stable ID, type-specific interaction data, absolute hit time in seconds, start lane, part ID | Ordered by start time with valid unique IDs and references |
 
 This table describes the current implementation. It does not finalize the permanent production
 serialization format, coordinate system, or note-type model.
 
 
+### Implemented Interaction Contract
+
+The current prototype preserves existing tap data while storing the data required by the accepted
+interactions in `NOTE_INTERACTIONS.md`.
+
+The following table is a conceptual data contract, not a mandate for exact C# field names or one
+inheritance hierarchy:
+
+| Interaction | Required authored data |
+|---|---|
+| Tap | Stable ID, absolute hit time, lane, musical-part ID |
+| Hold | Stable ID, absolute start and end times, one lane, musical-part ID |
+| Slide | Stable ID, ordered absolute-time lane nodes, normal or flick terminal behavior, musical-part ID |
+| Flick | Stable ID, absolute judgement time, different start and end lanes, musical-part ID |
+| Banana | Stable ID, absolute start and end times, start and end lanes, one or two curve handles in normalized playfield space, deterministic checkpoints, maximum bonus combo, musical-part ID |
+
+Hold and slide quarter-beat checks and half-beat rewards are derived from the chart tempo map and
+the interaction interval. They do not need to be persisted as duplicate authored events unless a
+later measured workflow requires it. Their resolved runtime times must nevertheless be
+deterministic.
+
+Banana checkpoints differ: the author may change their count, subdivision, time, or position, so
+the applied chart must preserve enough information to reproduce those explicit checkpoints. The
+number of checkpoints must remain independent from the authored maximum bonus-combo value.
+
+Authoring data may store curve handles and checkpoint-generation settings while runtime data stores
+resolved sample times and positions. This difference is permitted by the authoring/runtime
+separation below.
+
+
 ## Note Types
 
-The final note type set is unresolved.
+Tap, hold, slide, horizontal flick, and banana are implemented for the current prototype target.
+
+Their player-visible semantics are owned by `NOTE_INTERACTIONS.md`. Chart code must not silently
+reinterpret one interaction as another merely because they can share lower-level timing or contact
+logic. In particular:
+
+- a hold stays in one lane
+- a slide is an ordered lane-based linear path
+- a curved non-lane middle path is a banana
+- a flick has different start and end lanes and may cross multiple lanes
+- a slide terminal flick reuses the final slide transition rather than adding a second flick note
 
 The chart model should support identifying note behavior without requiring the whole chart
 format to be rewritten whenever a new supported note type is added.
@@ -231,6 +271,10 @@ A duration must not be inferred solely from a visual object's scale.
 
 Duration semantics must be defined by the note type that uses them.
 
+For the accepted target, hold, slide, and banana have explicit ordered start and end times. A flick
+has one judgement time and a gesture window; its duration must not be inferred from the distance
+between its lane markers.
+
 
 ## Movement and Presentation
 
@@ -247,6 +291,14 @@ Possible requirements include:
 Do not assume all of these are required immediately.
 
 Keep musical timing independent from visual movement representation.
+
+For the accepted prototype target:
+
+- tap and hold use lane positions
+- slide nodes use lanes and interpolate linearly between adjacent authored nodes in time
+- flick uses lane-anchored start and end markers
+- banana start and end use lanes while its curve handles and internal checkpoints use normalized
+  playfield coordinates independent of physical pixels and current device resolution
 
 
 ## Suggested Conceptual Runtime Model
@@ -375,6 +427,21 @@ A chart validator should eventually be able to identify issues such as:
 - unsorted data when ordering is required
 - unsupported schema version
 
+For the accepted interaction target, validation must also identify:
+
+- end times that do not follow start times
+- hold endpoints that do not share one lane
+- slide nodes that are not strictly ordered by time or use invalid lanes
+- a slide terminal flick without a preceding transition
+- flicks whose start and end lanes are equal
+- banana handles or checkpoints outside their supported normalized coordinate domain
+- banana checkpoints outside the open interval between start and end
+- a negative banana maximum bonus-combo value
+
+Different interactions sharing a lane and time are not invalid solely for that reason. The current
+authoring workflow does not auto-merge or auto-resolve those conflicts; the chart author owns their
+playability until a future composed-slide workflow is intentionally implemented.
+
 Validation errors should identify the affected chart item clearly enough for the chart author
 to fix the problem.
 
@@ -438,7 +505,7 @@ The following remain open:
 |---|---|---|
 | `CF-OPEN-001` | Permanent chart serialization format | Open |
 | `CF-OPEN-002` | Final chart coordinate system | Open |
-| `CF-OPEN-003` | Final note-type model | Open |
+| `CF-OPEN-003` | Final production note-type model beyond the accepted prototype contract | Open |
 | `CF-OPEN-004` | Variable-tempo authoring UX beyond direct tempo-section data | Open |
 | `CF-OPEN-005` | Chart difficulty metadata | Open |
 | `CF-OPEN-006` | Pattern and group representation | Open |

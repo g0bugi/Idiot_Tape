@@ -1,7 +1,7 @@
 # Idiot_Tape — Current Prototype Milestone
 
 > Status: Current
-> Last reviewed: 2026-08-25
+> Last reviewed: 2026-08-27
 > Applies to: The current full-song mobile rhythm prototype
 > Authority: Current validation scope and exit criteria
 
@@ -28,10 +28,11 @@ The repository currently contains:
 - ScriptableObject prototype charts with tempo sections, musical parts, activation windows, and notes
 - chart-driven lane count for runtime presentation and touch judgement
 - touch, mouse, and eight-position keyboard development input
-- time-and-horizontal-position judgement for the current tap-style prototype
+- timestamped tap, hold, lane-slide, horizontal-flick, and banana judgement
 - score, combo, judgement, instrument, progress, and pause presentation
 - look-ahead note activation and song-time-derived note positions
-- Play Mode chart authoring with looping, quantization, part activation, and tempo calibration tools
+- Play Mode chart authoring with per-type recording, interaction correction, looping,
+  quantization, part activation, and tempo calibration tools
 - EditMode tests for timing math, judgement, geometry, tempo, quantization, and chart utilities
 - PlayMode smoke tests for the gameplay scene and lane feedback
 
@@ -57,12 +58,15 @@ The current milestone includes:
 
 - one representative full-song chart
 - authoritative playback, scheduling, presentation, input conversion, and judgement
-- current tap-style interaction using chart-driven horizontal positions
+- tap, hold, lane-based slide, horizontal flick, and banana interactions using the accepted rules
+  in `NOTE_INTERACTIONS.md`
 - overlapping musical-part activation windows and inactive-note presentation
 - score, combo, miss, progress, pause, restart, and a clear end-of-song state
 - authoring, validation, saving, and replaying the chart
 - automated checks for deterministic timing and isolated chart logic
 - Play Mode verification of the complete gameplay path
+- interaction recording, correction, validation, saving, and replay through the normal authoring
+  workflow
 - at least one representative physical mobile-device validation pass
 - documented playtest evidence and a written milestone decision
 
@@ -75,7 +79,8 @@ P1 work may start only when it directly improves a failed P0 hypothesis or after
 - variable-tempo authoring UX beyond direct tempo-section data
 - user-facing calibration UI
 - additional reversible spatial-layout experiments
-- additional note interactions whose gameplay purpose is documented
+- additional interaction types beyond the accepted tap, hold, slide, horizontal flick, and banana
+  set
 
 ## Explicitly Outside This Milestone
 

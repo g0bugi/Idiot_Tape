@@ -22,10 +22,16 @@ namespace IdiotTape.Gameplay
         [SerializeField, Min(0.001f)] private float perfectWindowSeconds = 0.055f;
         [SerializeField, Min(0.001f)] private float goodWindowSeconds = 0.14f;
         [SerializeField, Min(0.1f)] private float positionToleranceInLaneWidths = 0.75f;
+        [SerializeField, Min(0.05f)] private float slideToleranceInLaneWidths = 0.8f;
+        [SerializeField, Min(0.01f)] private float flickDeadZoneInLaneWidths = 0.2f;
+        [SerializeField, Min(0.01f)] private float flickMinimumSpeedInLaneWidthsPerSecond = 3f;
 
         public double PerfectWindowSeconds => perfectWindowSeconds;
         public double GoodWindowSeconds => goodWindowSeconds;
         public float PositionToleranceInLaneWidths => positionToleranceInLaneWidths;
+        public float SlideToleranceInLaneWidths => slideToleranceInLaneWidths;
+        public float FlickDeadZoneInLaneWidths => flickDeadZoneInLaneWidths;
+        public float FlickMinimumSpeedInLaneWidthsPerSecond => flickMinimumSpeedInLaneWidthsPerSecond;
 
     }
 

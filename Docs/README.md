@@ -1,7 +1,7 @@
 # Idiot_Tape — Documentation Guide
 
 > Status: Current
-> Last reviewed: 2026-08-25
+> Last reviewed: 2026-08-27
 > Applies to: The current Unity prototype
 > Authority: Documentation routing and precedence
 
@@ -30,6 +30,7 @@ If these disagree, report the discrepancy and make the smallest change required 
 | Document | Responsibility | Read when |
 |---|---|---|
 | `GAME_DESIGN.md` | Player experience, design pillars, non-goals, open design decisions | Changing player-visible gameplay |
+| `NOTE_INTERACTIONS.md` | Accepted prototype rules for tap, hold, slide, flick, and banana notes | Changing note behavior, rewards, failure, or contact rules |
 | `PROTOTYPE_MILESTONE.md` | Current validation target, scope, gates, exit criteria | Choosing or evaluating current work |
 | `RHYTHM_SYSTEM.md` | Authoritative timing and synchronization contract | Changing any rhythm-sensitive behavior |
 | `CHART_FORMAT.md` | Chart data contract and runtime interpretation | Changing chart data or validation |

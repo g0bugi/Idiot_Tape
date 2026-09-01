@@ -1,7 +1,7 @@
 # Idiot_Tape — Architecture
 
 > Status: Current
-> Last reviewed: 2026-08-25
+> Last reviewed: 2026-08-27
 > Applies to: The current Unity prototype
 > Authority: Runtime ownership, dependency, and data-flow contracts
 
@@ -123,6 +123,81 @@ final scoring, failure, reward, or progression systems.
 
 New failure handling should remain explicit and testable. Do not hide essential data or playback
 failures by silently substituting unrelated charts, songs, or clocks.
+
+
+## Accepted Interaction Expansion Boundaries
+
+This section defines responsibility boundaries for the implemented prototype interactions in
+`NOTE_INTERACTIONS.md`. It does not require creating one class per bullet.
+
+### Shared Interaction State
+
+Tap, hold, slide, flick, and banana should share focused timing, input, and result concepts where
+their accepted behavior actually overlaps. They must not be forced through one generic framework
+that hides interaction-specific rules.
+
+Runtime interaction state may need to own:
+
+- the chart interaction identity and resolved timing events
+- its active, completed, or failed lifecycle
+- the established start grade for hold and slide
+- the next unprocessed check, reward, or authored-node index
+- eligible contact ownership or slide handoff state
+- banana checkpoint success and pending bonus charge
+
+That state must not own the song clock, global score, chart loading, or unrelated active notes.
+
+### Timestamped Contact State
+
+Input collection must retain enough timestamped press, move, and release information to evaluate
+path state across required musical checks, including when one render frame crosses multiple checks.
+
+Contact ownership belongs to gameplay interaction state, not presentation. One contact may own at
+most one sustained interaction. Slide may transfer between eligible contacts; that exception must
+not become implicit global handoff behavior for hold.
+
+### Interaction Evaluation
+
+Judgement responsibilities expand beyond one tap candidate while retaining focused, testable
+logic:
+
+- tap start and banana endpoints compare lane and timestamp
+- hold checks lane continuity on resolved musical times
+- slide checks a time-resolved linear path and authored nodes
+- flick checks timestamped direction, distance, speed, and end-lane entry
+- banana checks a normalized curve corridor at explicit checkpoints
+
+Evaluation must emit discrete outcomes and reward events. Presentation objects must not decide
+whether a checkpoint, tick, node, or gesture succeeded.
+
+### Score and Combo Aggregation
+
+The session-level score/combo owner consumes interaction results, including inherited-grade hold
+and slide events and banana bonus settlement. Individual view objects must not mutate global score
+or combo.
+
+The accepted prototype reward units do not finalize a production scoring service or results
+architecture. Implement the smallest owner that prevents formulas from being duplicated across
+note views.
+
+### Failure Presentation
+
+Hold and slide failure state remains gameplay state until their authored end time. Presentation
+observes that state to render the remaining object black and suppress further hit feedback. The
+black material or tint is not itself the authoritative termination flag.
+
+Banana fill and flick direction visuals similarly observe resolved interaction state and chart
+data without becoming judgement inputs.
+
+### Authoring Boundary
+
+Live recording may create temporary interaction drafts that are not yet valid chart data. For
+example, an open slide is discarded when recording stops. Only completed, validated interactions
+may cross the apply boundary into the chart asset.
+
+The Editor assembly owns recording modes, node/curve manipulation, checkpoint generation, Undo,
+and save flow. Runtime assemblies consume the applied chart representation and must not depend on
+Editor-only draft types.
 
 
 ## Core Responsibility Boundaries

@@ -136,6 +136,43 @@ namespace IdiotTape.Gameplay.Tests
 
         }
 
+        [Test]
+        public void QuantizeSustainedNoteShiftsAllAbsoluteInteractionTimes()
+        {
+
+            PrototypeChart chart = CreateChart(("slide", 1.04d, 1, "drum"));
+            AddTempoSection(chart, 120d);
+            SerializedObject serializedChart = new(chart);
+            SerializedProperty slide = serializedChart.FindProperty("notes").GetArrayElementAtIndex(0);
+            slide.FindPropertyRelative("noteType").enumValueIndex = (int)ChartNoteType.Slide;
+            SerializedProperty nodes = slide.FindPropertyRelative("slideNodes");
+            nodes.arraySize = 2;
+            nodes.GetArrayElementAtIndex(0).FindPropertyRelative("time").doubleValue = 1.54d;
+            nodes.GetArrayElementAtIndex(0).FindPropertyRelative("laneIndex").intValue = 3;
+            nodes.GetArrayElementAtIndex(1).FindPropertyRelative("time").doubleValue = 2.04d;
+            nodes.GetArrayElementAtIndex(1).FindPropertyRelative("laneIndex").intValue = 3;
+            serializedChart.ApplyModifiedPropertiesWithoutUndo();
+
+            ChartAuthoringNoteUtility.QuantizeNotes(
+                chart,
+                "drum",
+                0d,
+                3d,
+                4,
+                0.06d,
+                1d,
+                0d,
+                0d);
+
+            Assert.That(chart.Notes[0].NoteType, Is.EqualTo(ChartNoteType.Slide));
+            Assert.That(chart.Notes[0].HitTime, Is.EqualTo(1d).Within(0.0000001d));
+            Assert.That(chart.Notes[0].SlideNodes[0].Time, Is.EqualTo(1.5d).Within(0.0000001d));
+            Assert.That(chart.Notes[0].SlideNodes[1].Time, Is.EqualTo(2d).Within(0.0000001d));
+            Assert.That(chart.Notes[0].SlideNodes[0].LaneIndex, Is.EqualTo(3));
+            Object.DestroyImmediate(chart);
+
+        }
+
         private static PrototypeChart CreateChart(
             params (string id, double hitTime, int laneIndex, string partId)[] noteValues)
         {

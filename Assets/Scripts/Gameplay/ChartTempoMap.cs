@@ -131,6 +131,65 @@ namespace IdiotTape.Gameplay
 
         }
 
+        public static double GetSubdivisionTimeAtOrAfter(
+            IReadOnlyList<ChartTempoSection> sections,
+            double songTime,
+            int subdivisionsPerBeat)
+        {
+
+            EnsureSections(sections);
+            int subdivisions = Math.Max(1, subdivisionsPerBeat);
+            double safeSongTime = Math.Max(0d, songTime);
+            ChartTempoSection section = FindSectionForTime(sections, safeSongTime);
+            double subdivisionSeconds = section.SecondsPerBeat / subdivisions;
+            double elapsed = safeSongTime - section.StartTime;
+            double subdivisionIndex = Math.Ceiling(
+                elapsed / subdivisionSeconds - BoundaryTolerance);
+            double candidate = section.StartTime + subdivisionIndex * subdivisionSeconds;
+            int sectionIndex = IndexOfSection(sections, section);
+
+            if (sectionIndex + 1 < sections.Count &&
+                candidate >= sections[sectionIndex + 1].StartTime - BoundaryTolerance)
+            {
+
+                return GetSubdivisionTimeAtOrAfter(
+                    sections,
+                    sections[sectionIndex + 1].StartTime,
+                    subdivisions);
+
+            }
+
+            return Math.Max(0d, candidate);
+
+        }
+
+        public static double GetSubdivisionTimeAfter(
+            IReadOnlyList<ChartTempoSection> sections,
+            double songTime,
+            int subdivisionsPerBeat)
+        {
+
+            double candidate = GetSubdivisionTimeAtOrAfter(
+                sections,
+                songTime,
+                subdivisionsPerBeat);
+
+            if (candidate > songTime + BoundaryTolerance)
+            {
+
+                return candidate;
+
+            }
+
+            ChartTempoSection section = FindSectionForTime(sections, candidate);
+            double step = section.SecondsPerBeat / Math.Max(1, subdivisionsPerBeat);
+            return GetSubdivisionTimeAtOrAfter(
+                sections,
+                candidate + step * 0.5d,
+                subdivisionsPerBeat);
+
+        }
+
         public static double GetBarStartAtOrBefore(
             IReadOnlyList<ChartTempoSection> sections,
             double songTime)
@@ -221,6 +280,27 @@ namespace IdiotTape.Gameplay
                 throw new ArgumentException("A chart needs at least one tempo section.", nameof(sections));
 
             }
+
+        }
+
+        private static int IndexOfSection(
+            IReadOnlyList<ChartTempoSection> sections,
+            ChartTempoSection target)
+        {
+
+            for (int index = 0; index < sections.Count; index++)
+            {
+
+                if (ReferenceEquals(sections[index], target))
+                {
+
+                    return index;
+
+                }
+
+            }
+
+            return 0;
 
         }
 

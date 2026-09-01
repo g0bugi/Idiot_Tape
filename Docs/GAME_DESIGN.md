@@ -1,7 +1,7 @@
 # Idiot_Tape — Game Design
 
 > Status: Current
-> Last reviewed: 2026-08-25
+> Last reviewed: 2026-08-27
 > Applies to: The current prototype and durable game-design direction
 > Authority: Player experience, design principles, and player-visible rules
 
@@ -13,6 +13,7 @@ It defines what the game is trying to achieve.
 
 Implementation details belong in:
 
+- `NOTE_INTERACTIONS.md`
 - `RHYTHM_SYSTEM.md`
 - `CHART_FORMAT.md`
 - `ARCHITECTURE.md`
@@ -236,18 +237,24 @@ look ahead to upcoming activation-window boundaries without changing note timing
 
 ## Notes and Interaction Types
 
-The final set of note types has not yet been decided.
+The current runtime and authoring tool implement the following prototype interaction set:
 
-Do not assume that the final game must contain a specific conventional set such as:
+- tap for discrete lane-and-time input
+- hold for sustained input inside one lane
+- slide for sustained piecewise-linear movement through authored lanes
+- horizontal flick for a directed gesture between lane-anchored endpoints
+- banana for free curved tracking whose middle is not lane-constrained
 
-- tap
-- hold
-- flick
-- slide
+Banana notes are intended to become a distinctive expression of the project's central idea: a
+curved path may communicate melodic or instrumental motion directly rather than reducing that
+motion to a fixed sequence of lanes. Slide remains deliberately lane-based so the two interactions
+have different reading and execution purposes.
 
-unless explicitly specified.
+The accepted player rules, prototype score and combo behavior, contact ownership, and failure
+semantics are defined in `NOTE_INTERACTIONS.md`.
 
-New note mechanics should be added only when their gameplay purpose is clear.
+This accepted prototype set does not finalize the production note taxonomy. New note mechanics
+should still be added only when their musical and gameplay purpose is clear.
 
 
 ## Prototype Questions
@@ -338,7 +345,7 @@ The following should remain open until intentionally decided:
 
 | ID | Open decision | Status |
 |---|---|---|
-| `GD-OPEN-001` | Final note types | Open |
+| `GD-OPEN-001` | Final production note-type taxonomy beyond the accepted prototype interactions | Open |
 | `GD-OPEN-002` | Production scoring formula | Open |
 | `GD-OPEN-003` | Production combo rules | Open |
 | `GD-OPEN-004` | Health and failure system | Open |

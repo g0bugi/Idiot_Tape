@@ -90,6 +90,22 @@ namespace IdiotTape.Gameplay.Tests
 
         }
 
+        [Test]
+        public void GlobalSubdivisionSearchDoesNotRestartAtNoteTime()
+        {
+
+            double beat = snowTempo[0].SecondsPerBeat;
+            double noteStart = beat * 1.13d;
+
+            Assert.That(
+                ChartTempoMap.GetSubdivisionTimeAfter(snowTempo, noteStart, 4),
+                Is.EqualTo(beat * 1.25d).Within(0.000001d));
+            Assert.That(
+                ChartTempoMap.GetSubdivisionTimeAfter(snowTempo, beat * 1.25d, 4),
+                Is.EqualTo(beat * 1.5d).Within(0.000001d));
+
+        }
+
     }
 
 }

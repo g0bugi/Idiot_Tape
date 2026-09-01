@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
+using UnityEngine.InputSystem.LowLevel;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace IdiotTape.Gameplay
@@ -13,10 +14,11 @@ namespace IdiotTape.Gameplay
         private const int MouseContactId = -1;
 
         public event Action<int, Vector2, double> ContactPressed;
-        public event Action<int, Vector2> ContactMoved;
-        public event Action<int> ContactReleased;
+        public event Action<int, Vector2, double> ContactMoved;
+        public event Action<int, double> ContactReleased;
         public event Action<int, double> LanePressed;
-        public event Action<int> LaneReleased;
+        public event Action<int, double> LaneReleased;
+        public event Action<double> FlickAssistRequested;
         public event Action RestartRequested;
         public event Action PauseRequested;
 
@@ -37,6 +39,13 @@ namespace IdiotTape.Gameplay
         public void SubmitLaneRelease(int laneIndex)
         {
 
+            SubmitLaneRelease(laneIndex, InputState.currentTime);
+
+        }
+
+        public void SubmitLaneRelease(int laneIndex, double eventTimestamp)
+        {
+
             if (laneIndex < 0 || laneIndex >= 8)
             {
 
@@ -44,7 +53,14 @@ namespace IdiotTape.Gameplay
 
             }
 
-            LaneReleased?.Invoke(laneIndex);
+            LaneReleased?.Invoke(laneIndex, eventTimestamp);
+
+        }
+
+        public void SubmitFlickAssist(double eventTimestamp)
+        {
+
+            FlickAssistRequested?.Invoke(eventTimestamp);
 
         }
 
@@ -92,7 +108,7 @@ namespace IdiotTape.Gameplay
                 if (touch.phase == UnityEngine.InputSystem.TouchPhase.Moved)
                 {
 
-                    ContactMoved?.Invoke(touch.touchId, touch.screenPosition);
+                    ContactMoved?.Invoke(touch.touchId, touch.screenPosition, touch.time);
                     continue;
 
                 }
@@ -101,7 +117,7 @@ namespace IdiotTape.Gameplay
                     touch.phase == UnityEngine.InputSystem.TouchPhase.Canceled)
                 {
 
-                    ContactReleased?.Invoke(touch.touchId);
+                    ContactReleased?.Invoke(touch.touchId, touch.time);
 
                 }
 
@@ -120,14 +136,17 @@ namespace IdiotTape.Gameplay
             if (!handledTouch && Mouse.current != null && Mouse.current.leftButton.isPressed)
             {
 
-                ContactMoved?.Invoke(MouseContactId, Mouse.current.position.ReadValue());
+                ContactMoved?.Invoke(
+                    MouseContactId,
+                    Mouse.current.position.ReadValue(),
+                    Mouse.current.lastUpdateTime);
 
             }
 
             if (Mouse.current != null && Mouse.current.leftButton.wasReleasedThisFrame)
             {
 
-                ContactReleased?.Invoke(MouseContactId);
+                ContactReleased?.Invoke(MouseContactId, Mouse.current.lastUpdateTime);
 
             }
 
@@ -158,7 +177,7 @@ namespace IdiotTape.Gameplay
                 else if (WasLaneKeyReleased(keyboard, laneIndex))
                 {
 
-                    SubmitLaneRelease(laneIndex);
+                    SubmitLaneRelease(laneIndex, keyboard.lastUpdateTime);
 
                 }
 
@@ -168,6 +187,13 @@ namespace IdiotTape.Gameplay
             {
 
                 RestartRequested?.Invoke();
+
+            }
+
+            if (keyboard.fKey.wasPressedThisFrame)
+            {
+
+                SubmitFlickAssist(keyboard.lastUpdateTime);
 
             }
 

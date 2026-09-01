@@ -176,11 +176,7 @@ namespace IdiotTape.Gameplay
         public bool TryGetInputPosition(Vector2 screenPosition, out float normalizedX)
         {
 
-            Vector3 screenPoint = new(screenPosition.x, screenPosition.y, -gameplayCamera.transform.position.z);
-            Vector3 worldPosition = gameplayCamera.ScreenToWorldPoint(screenPoint);
-            normalizedX = Mathf.InverseLerp(-halfWidth, halfWidth, worldPosition.x);
-
-            if (worldPosition.x < -halfWidth || worldPosition.x > halfWidth)
+            if (!TryGetPlayfieldPosition(screenPosition, out Vector3 worldPosition, out normalizedX))
             {
 
                 return false;
@@ -192,6 +188,37 @@ namespace IdiotTape.Gameplay
 
         }
 
+        public bool TryGetPlayfieldNormalizedX(Vector2 screenPosition, out float normalizedX)
+        {
+
+            return TryGetPlayfieldPosition(screenPosition, out _, out normalizedX);
+
+        }
+
+        private bool TryGetPlayfieldPosition(
+            Vector2 screenPosition,
+            out Vector3 worldPosition,
+            out float normalizedX)
+        {
+
+            Vector3 screenPoint = new(
+                screenPosition.x,
+                screenPosition.y,
+                -gameplayCamera.transform.position.z);
+            worldPosition = gameplayCamera.ScreenToWorldPoint(screenPoint);
+            normalizedX = Mathf.InverseLerp(-halfWidth, halfWidth, worldPosition.x);
+
+            if (worldPosition.x < -halfWidth || worldPosition.x > halfWidth)
+            {
+
+                return false;
+
+            }
+
+            return true;
+
+        }
+
         public void PlayHitFeedback(
             ChartNote note,
             int laneCount,
@@ -199,22 +226,33 @@ namespace IdiotTape.Gameplay
             JudgementGrade grade)
         {
 
+            float normalizedX = PlayfieldGeometry.GetLaneCenterNormalized(note.LaneIndex, laneCount);
+            PlayHitFeedbackAtNormalizedX(note.Id, normalizedX, partColor, grade);
+
+        }
+
+        public void PlayHitFeedbackAtNormalizedX(
+            string noteId,
+            float normalizedX,
+            Color partColor,
+            JudgementGrade grade)
+        {
+
             lineFlashRemaining = LineFlashDuration;
             lineFlashColor = Color.Lerp(partColor, Color.white, 0.62f);
 
-            float normalizedX = PlayfieldGeometry.GetLaneCenterNormalized(note.LaneIndex, laneCount);
             float worldX = PlayfieldGeometry.GetWorldX(normalizedX, halfWidth);
             float worldY = PlayfieldGeometry.GetJudgementLineY(normalizedX, judgementBaseY, judgementCurvature);
             HitEffectView hitEffect = GetNextHitEffect();
             hitEffect.Play(
-                note.Id,
+                noteId,
                 new Vector3(worldX, worldY, 0f),
                 partColor,
                 noteScale,
                 grade);
 
             JudgementLineReaction lineReaction = GetNextLineReaction();
-            lineReaction.Play(note.Id, normalizedX, partColor, grade);
+            lineReaction.Play(noteId, normalizedX, partColor, grade);
 
         }
 

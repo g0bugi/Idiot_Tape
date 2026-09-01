@@ -42,6 +42,11 @@ Read the relevant documents before working on the corresponding system.
   - Gameplay design principles
   - Current design decisions and unresolved questions
 
+- `Docs/NOTE_INTERACTIONS.md`
+  - Accepted prototype tap, hold, slide, flick, and banana-note rules
+  - Score, combo, failure, contact ownership, and interaction-specific presentation
+  - Current implementation versus accepted future behavior
+
 - `Docs/PROTOTYPE_MILESTONE.md`
   - Current validation hypotheses
   - P0/P1 scope

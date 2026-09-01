@@ -333,6 +333,15 @@ namespace IdiotTape.EditorTools
             note.FindPropertyRelative("hitTime").doubleValue = hitTime;
             note.FindPropertyRelative("laneIndex").intValue = laneIndex;
             note.FindPropertyRelative("musicalPartId").stringValue = partId;
+            note.FindPropertyRelative("noteType").enumValueIndex = (int)ChartNoteType.Tap;
+            note.FindPropertyRelative("endTime").doubleValue = hitTime;
+            note.FindPropertyRelative("endLaneIndex").intValue = laneIndex;
+            note.FindPropertyRelative("slideEndBehavior").enumValueIndex =
+                (int)SlideEndBehavior.Normal;
+            note.FindPropertyRelative("slideNodes").arraySize = 0;
+            note.FindPropertyRelative("bananaCurveHandles").arraySize = 0;
+            note.FindPropertyRelative("bananaCheckpoints").arraySize = 0;
+            note.FindPropertyRelative("bananaMaximumBonusCombo").intValue = 4;
 
         }
 

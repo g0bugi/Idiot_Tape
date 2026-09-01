@@ -19,6 +19,7 @@ namespace IdiotTape.EditorTools
         private const int SupportedKeyboardLaneCount = 8;
         private const double DuplicateInputThresholdSeconds = 0.010d;
         private const double DuplicateTempoTapThresholdSeconds = 0.050d;
+        private const double ScheduleToleranceSeconds = 0.000001d;
         private const double MetronomeScheduleLeadSeconds = 0.4d;
         private const float TimelineRulerHeight = 26f;
         private const float TimelinePartHeight = 42f;
@@ -94,6 +95,24 @@ namespace IdiotTape.EditorTools
 
         }
 
+        private enum RecordingNoteMode
+        {
+
+            Tap,
+            SlideAndHold,
+            Flick,
+            Banana
+
+        }
+
+        private enum FlickDefaultDirection
+        {
+
+            Left = -1,
+            Right = 1
+
+        }
+
         [Serializable]
         private sealed class RecordedNote
         {
@@ -104,6 +123,7 @@ namespace IdiotTape.EditorTools
             public string musicalPartId;
             public bool hasOriginalHitTime;
             public bool pendingAutomaticQuantization;
+            public ChartNoteAuthoringData noteData;
 
         }
 
@@ -114,11 +134,17 @@ namespace IdiotTape.EditorTools
             public double hitTime;
             public int laneIndex;
             public string musicalPartId;
+            public ChartNoteAuthoringData fullData;
 
         }
 
         [SerializeField] private PrototypeChart chart;
         [SerializeField] private List<RecordedNote> recordedNotes = new();
+        [SerializeField] private RecordingNoteMode recordingNoteMode;
+        [SerializeField] private FlickDefaultDirection flickDefaultDirection =
+            FlickDefaultDirection.Right;
+        [SerializeField] private ChartNoteAuthoringData pendingInteraction;
+        [SerializeField] private int draggedSlidePointIndex = int.MinValue;
         [SerializeField] private int selectedPartIndex;
         [SerializeField] private int selectedRecordedNoteIndex = -1;
         [SerializeField] private string selectedChartNoteId = string.Empty;
@@ -175,6 +201,7 @@ namespace IdiotTape.EditorTools
         private readonly double[] lastRecordedInputTimestamps = new double[SupportedKeyboardLaneCount];
         private readonly List<ChartTempoAnchor> tempoTapAnchors = new();
         private InputAction[] recordingInputActions;
+        private InputAction terminalFlickInputAction;
         private InputAction tempoTapInputAction;
         private Vector2 windowScrollPosition;
         private Vector2 scrollPosition;
@@ -239,6 +266,7 @@ namespace IdiotTape.EditorTools
             isRecording = false;
             isLoopRecording = false;
             recordingPhase = RecordingPhase.Idle;
+            pendingInteraction = null;
             tempoCalibrationPreview = false;
             tempoTapCapture = false;
             DestroyMetronome();
@@ -315,6 +343,14 @@ namespace IdiotTape.EditorTools
             EditorGUILayout.Space(6f);
             EditorGUILayout.HelpBox(statusMessage, MessageType.None);
             EditorGUILayout.EndScrollView();
+
+            if (selectedRecordedNoteIndex >= 0 &&
+                selectedRecordedNoteIndex < recordedNotes.Count)
+            {
+
+                DrawSelectedRecordedInteractionDetails(recordedNotes[selectedRecordedNoteIndex]);
+
+            }
 
         }
 
@@ -1189,6 +1225,32 @@ namespace IdiotTape.EditorTools
             EditorGUILayout.LabelField("녹화", EditorStyles.boldLabel);
             string[] partNames = GetPartNames();
             selectedPartIndex = EditorGUILayout.Popup("음악 파트", selectedPartIndex, partNames);
+            GUI.enabled = recordingPhase == RecordingPhase.Idle && pendingInteraction == null;
+            recordingNoteMode = (RecordingNoteMode)EditorGUILayout.EnumPopup(
+                "노트 녹화 모드",
+                recordingNoteMode);
+
+            if (recordingNoteMode == RecordingNoteMode.Flick)
+            {
+
+                flickDefaultDirection = (FlickDefaultDirection)EditorGUILayout.EnumPopup(
+                    "플릭 기본 방향",
+                    flickDefaultDirection);
+
+            }
+            GUI.enabled = true;
+
+            if (pendingInteraction != null)
+            {
+
+                string pendingDescription = pendingInteraction.NoteType == ChartNoteType.Banana
+                    ? "바나나 끝 레인을 기다리는 중"
+                    : $"지속 노트 진행 중 · 현재 {pendingInteraction.EndLaneIndex + 1}번 레인";
+                EditorGUILayout.HelpBox(
+                    pendingDescription + " (녹화를 중지하면 이 미완성 노트는 버려집니다.)",
+                    MessageType.Warning);
+
+            }
             countInBars = Mathf.Max(1, EditorGUILayout.IntField("카운트인 마디", countInBars));
             metronomeVolume = EditorGUILayout.Slider("메트로놈 음량(2배 출력)", metronomeVolume, 0f, 1f);
             metronomeOutputOffsetMilliseconds = EditorGUILayout.Slider(
@@ -1500,6 +1562,10 @@ namespace IdiotTape.EditorTools
 
                     }
 
+                    GUILayout.Label(
+                        note.noteData == null ? "Tap" : note.noteData.NoteType.ToString(),
+                        GUILayout.Width(58f));
+
                     double nextHitTime = Math.Max(
                         0d,
                         EditorGUILayout.DoubleField(note.hitTime, GUILayout.Width(92f)));
@@ -1521,12 +1587,13 @@ namespace IdiotTape.EditorTools
                     {
 
                         Undo.RecordObject(this, "임시 채보 노트 수정");
-                        note.hitTime = nextHitTime;
+                        SetRecordedNoteHitTime(note, nextHitTime);
                         note.originalHitTime = nextHitTime;
                         note.hasOriginalHitTime = true;
                         note.pendingAutomaticQuantization = false;
                         note.laneIndex = nextLaneIndex;
                         note.musicalPartId = nextPartId;
+                        SynchronizeRecordedNoteIdentity(note);
                         bufferWasApplied = false;
 
                     }
@@ -1812,6 +1879,8 @@ namespace IdiotTape.EditorTools
         private void StopRecording()
         {
 
+            bool discardedPendingInteraction = pendingInteraction != null;
+            pendingInteraction = null;
             isRecording = false;
             isLoopRecording = false;
             recordingPhase = RecordingPhase.Idle;
@@ -1827,7 +1896,9 @@ namespace IdiotTape.EditorTools
             else
             {
 
-                statusMessage = $"녹화를 중지했습니다. 임시 기록에 노트 {recordedNotes.Count}개가 있습니다.";
+                statusMessage =
+                    $"녹화를 중지했습니다. 임시 기록에 노트 {recordedNotes.Count}개가 있습니다." +
+                    (discardedPendingInteraction ? " 미완성 지속 노트는 버렸습니다." : string.Empty);
 
             }
 
@@ -2956,6 +3027,7 @@ namespace IdiotTape.EditorTools
         private void RestartLoopCycle()
         {
 
+            pendingInteraction = null;
             isRecording = false;
             DisableRecordingInputActions();
 
@@ -3172,15 +3244,753 @@ namespace IdiotTape.EditorTools
 
             }
 
+            hitTime = Math.Max(0d, hitTime);
+
+            switch (recordingNoteMode)
+            {
+
+                case RecordingNoteMode.SlideAndHold:
+                    RecordSlideOrHoldLane(laneIndex, hitTime);
+                    return;
+                case RecordingNoteMode.Flick:
+                    RecordFlickLane(laneIndex, hitTime);
+                    return;
+                case RecordingNoteMode.Banana:
+                    RecordBananaLane(laneIndex, hitTime);
+                    return;
+
+            }
+
+            ChartNoteAuthoringData tap = ChartNoteAuthoringData.CreateTap(
+                string.Empty,
+                hitTime,
+                laneIndex,
+                chart.MusicalParts[selectedPartIndex].Id);
+            AddRecordedInteraction(tap);
+
+        }
+
+        private void DrawSelectedRecordedInteractionDetails(RecordedNote recordedNote)
+        {
+
+            if (recordedNote.noteData == null || recordedNote.noteData.NoteType == ChartNoteType.Tap)
+            {
+
+                return;
+
+            }
+
+            ChartNoteAuthoringData data = recordedNote.noteData;
+
+            using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+
+                EditorGUILayout.LabelField($"선택한 {data.NoteType} 상세", EditorStyles.boldLabel);
+                Undo.RecordObject(this, "임시 상호작용 노트 수정");
+                EditorGUI.BeginChangeCheck();
+
+                if (data.NoteType == ChartNoteType.Hold || data.NoteType == ChartNoteType.Banana)
+                {
+
+                    data.EndTime = Math.Max(
+                        data.HitTime + DuplicateInputThresholdSeconds,
+                        EditorGUILayout.DoubleField("끝 시간", data.EndTime));
+
+                }
+
+                if (data.NoteType == ChartNoteType.Flick)
+                {
+
+                    int nextEndLane = Mathf.Clamp(
+                        EditorGUILayout.IntField("끝 레인", data.EndLaneIndex + 1) - 1,
+                        0,
+                        chart.LaneCount - 1);
+
+                    if (nextEndLane != data.LaneIndex)
+                    {
+
+                        data.EndLaneIndex = nextEndLane;
+
+                    }
+
+                }
+
+                if (data.NoteType == ChartNoteType.Banana)
+                {
+
+                    data.EndLaneIndex = Mathf.Clamp(
+                        EditorGUILayout.IntField("끝 레인", data.EndLaneIndex + 1) - 1,
+                        0,
+                        chart.LaneCount - 1);
+
+                }
+
+                if (data.NoteType == ChartNoteType.Slide)
+                {
+
+                    data.SlideEndBehavior = (SlideEndBehavior)EditorGUILayout.EnumPopup(
+                        "끝 동작",
+                        data.SlideEndBehavior);
+                    DrawSlideNodeFields(data);
+                    DrawSlidePathEditor(data);
+
+                }
+
+                if (data.NoteType == ChartNoteType.Banana)
+                {
+
+                    data.BananaMaximumBonusCombo = Mathf.Max(
+                        0,
+                        EditorGUILayout.IntField(
+                            "최대 보너스 콤보",
+                            data.BananaMaximumBonusCombo));
+                    DrawBananaHandleFields(data);
+                    DrawBananaCheckpointFields(data);
+
+                }
+
+                if (EditorGUI.EndChangeCheck())
+                {
+
+                    data.BananaCurveHandles.Sort(
+                        (left, right) => left.NormalizedTime.CompareTo(right.NormalizedTime));
+                    data.BananaCheckpoints.Sort((left, right) => left.Time.CompareTo(right.Time));
+                    recordedNote.pendingAutomaticQuantization = false;
+                    bufferWasApplied = false;
+
+                }
+
+            }
+
+        }
+
+        private void DrawSlidePathEditor(ChartNoteAuthoringData data)
+        {
+
+            EditorGUILayout.LabelField(
+                "경로 편집 · 점을 세로로 드래그해 레인 변경 · 선을 클릭해 노드 추가",
+                EditorStyles.miniLabel);
+            Rect rect = GUILayoutUtility.GetRect(120f, 170f, GUILayout.ExpandWidth(true));
+            EditorGUI.DrawRect(rect, new Color(0.075f, 0.08f, 0.095f, 1f));
+
+            for (int laneIndex = 0; laneIndex < chart.LaneCount; laneIndex++)
+            {
+
+                float y = GetSlideEditorY(rect, laneIndex);
+                EditorGUI.DrawRect(
+                    new Rect(rect.x, y, rect.width, 1f),
+                    new Color(1f, 1f, 1f, 0.08f));
+
+            }
+
+            Vector3[] points = new Vector3[data.SlideNodes.Count + 1];
+            points[0] = new Vector3(rect.x, GetSlideEditorY(rect, data.LaneIndex), 0f);
+
+            for (int index = 0; index < data.SlideNodes.Count; index++)
+            {
+
+                float normalizedTime = (float)((data.SlideNodes[index].Time - data.HitTime) /
+                                               Math.Max(
+                                                   ScheduleToleranceSeconds,
+                                                   data.EndTime - data.HitTime));
+                points[index + 1] = new Vector3(
+                    Mathf.Lerp(rect.x, rect.xMax, Mathf.Clamp01(normalizedTime)),
+                    GetSlideEditorY(rect, data.SlideNodes[index].LaneIndex),
+                    0f);
+
+            }
+
+            Handles.BeginGUI();
+            Handles.color = new Color(0.95f, 0.82f, 0.25f, 0.92f);
+            Handles.DrawAAPolyLine(4f, points);
+            Handles.EndGUI();
+
+            for (int index = 0; index < points.Length; index++)
+            {
+
+                Rect pointRect = new(points[index].x - 6f, points[index].y - 6f, 12f, 12f);
+                EditorGUI.DrawRect(
+                    pointRect,
+                    index == 0 || index == points.Length - 1
+                        ? new Color(1f, 0.95f, 0.72f, 1f)
+                        : new Color(0.95f, 0.62f, 0.18f, 1f));
+
+            }
+
+            HandleSlidePathEditorInput(rect, data, points);
+
+        }
+
+        private void HandleSlidePathEditorInput(
+            Rect rect,
+            ChartNoteAuthoringData data,
+            Vector3[] points)
+        {
+
+            Event currentEvent = Event.current;
+
+            if (currentEvent.type == EventType.MouseDown &&
+                currentEvent.button == 0 &&
+                rect.Contains(currentEvent.mousePosition))
+            {
+
+                for (int index = 0; index < points.Length; index++)
+                {
+
+                    if (Vector2.Distance(currentEvent.mousePosition, points[index]) <= 9f)
+                    {
+
+                        draggedSlidePointIndex = index - 1;
+                        currentEvent.Use();
+                        return;
+
+                    }
+
+                }
+
+                float normalizedTime = Mathf.InverseLerp(
+                    rect.x,
+                    rect.xMax,
+                    currentEvent.mousePosition.x);
+                double nodeTime = Mathf.Lerp(
+                    (float)data.HitTime,
+                    (float)data.EndTime,
+                    normalizedTime);
+
+                for (int index = 0; index < data.SlideNodes.Count; index++)
+                {
+
+                    double segmentStartTime = index == 0
+                        ? data.HitTime
+                        : data.SlideNodes[index - 1].Time;
+                    double segmentEndTime = data.SlideNodes[index].Time;
+
+                    if (nodeTime <= segmentStartTime + ScheduleToleranceSeconds ||
+                        nodeTime >= segmentEndTime - ScheduleToleranceSeconds)
+                    {
+
+                        continue;
+
+                    }
+
+                    int startLane = index == 0
+                        ? data.LaneIndex
+                        : data.SlideNodes[index - 1].LaneIndex;
+                    float segmentProgress = (float)((nodeTime - segmentStartTime) /
+                                                    (segmentEndTime - segmentStartTime));
+                    float expectedY = Mathf.Lerp(
+                        GetSlideEditorY(rect, startLane),
+                        GetSlideEditorY(rect, data.SlideNodes[index].LaneIndex),
+                        segmentProgress);
+
+                    if (Mathf.Abs(currentEvent.mousePosition.y - expectedY) > 10f)
+                    {
+
+                        return;
+
+                    }
+
+                    int interpolatedLane = Mathf.Clamp(
+                        Mathf.RoundToInt(Mathf.Lerp(
+                            startLane,
+                            data.SlideNodes[index].LaneIndex,
+                            segmentProgress)),
+                        0,
+                        chart.LaneCount - 1);
+                    Undo.RecordObject(this, "슬라이드 노드 추가");
+                    data.SlideNodes.Insert(index, new ChartNoteAuthoringData.PathNodeData
+                    {
+
+                        Time = nodeTime,
+                        LaneIndex = interpolatedLane
+
+                    });
+                    bufferWasApplied = false;
+                    currentEvent.Use();
+                    return;
+
+                }
+
+            }
+
+            if (currentEvent.type == EventType.MouseDrag &&
+                draggedSlidePointIndex != int.MinValue)
+            {
+
+                int laneIndex = GetSlideEditorLane(rect, currentEvent.mousePosition.y);
+                Undo.RecordObject(this, "슬라이드 레인 드래그");
+
+                if (draggedSlidePointIndex < 0)
+                {
+
+                    data.LaneIndex = laneIndex;
+
+                }
+                else if (draggedSlidePointIndex < data.SlideNodes.Count)
+                {
+
+                    data.SlideNodes[draggedSlidePointIndex].LaneIndex = laneIndex;
+
+                }
+
+                data.EndLaneIndex = data.SlideNodes[^1].LaneIndex;
+                bufferWasApplied = false;
+                currentEvent.Use();
+                Repaint();
+
+            }
+
+            if (currentEvent.rawType == EventType.MouseUp)
+            {
+
+                draggedSlidePointIndex = int.MinValue;
+
+            }
+
+        }
+
+        private float GetSlideEditorY(Rect rect, int laneIndex)
+        {
+
+            float normalizedLane = (laneIndex + 0.5f) / chart.LaneCount;
+            return Mathf.Lerp(rect.yMax, rect.y, normalizedLane);
+
+        }
+
+        private int GetSlideEditorLane(Rect rect, float y)
+        {
+
+            float normalizedLane = Mathf.InverseLerp(rect.yMax, rect.y, y);
+            return Mathf.Clamp(
+                Mathf.FloorToInt(normalizedLane * chart.LaneCount),
+                0,
+                chart.LaneCount - 1);
+
+        }
+
+        private void DrawSlideNodeFields(ChartNoteAuthoringData data)
+        {
+
+            EditorGUILayout.LabelField("슬라이드 노드", EditorStyles.miniBoldLabel);
+            int removeIndex = -1;
+
+            for (int index = 0; index < data.SlideNodes.Count; index++)
+            {
+
+                ChartNoteAuthoringData.PathNodeData node = data.SlideNodes[index];
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+
+                    GUILayout.Label((index + 1).ToString("00"), GUILayout.Width(24f));
+                    double minimumTime = index == 0
+                        ? data.HitTime + DuplicateInputThresholdSeconds
+                        : data.SlideNodes[index - 1].Time + DuplicateInputThresholdSeconds;
+                    node.Time = Math.Max(
+                        minimumTime,
+                        EditorGUILayout.DoubleField(node.Time, GUILayout.Width(92f)));
+                    node.LaneIndex = Mathf.Clamp(
+                        EditorGUILayout.IntField(node.LaneIndex + 1, GUILayout.Width(42f)) - 1,
+                        0,
+                        chart.LaneCount - 1);
+
+                    GUI.enabled = data.SlideNodes.Count > 1;
+
+                    if (GUILayout.Button("삭제", GUILayout.Width(44f)))
+                    {
+
+                        removeIndex = index;
+
+                    }
+
+                    GUI.enabled = true;
+
+                }
+
+            }
+
+            if (removeIndex >= 0)
+            {
+
+                data.SlideNodes.RemoveAt(removeIndex);
+
+            }
+
+            if (GUILayout.Button("중간 노드 추가"))
+            {
+
+                ChartNoteAuthoringData.PathNodeData final = data.SlideNodes[^1];
+                data.SlideNodes.Insert(
+                    data.SlideNodes.Count - 1,
+                    new ChartNoteAuthoringData.PathNodeData
+                    {
+
+                        Time = Math.Max(
+                            data.HitTime + DuplicateInputThresholdSeconds,
+                            final.Time - 0.25d),
+                        LaneIndex = final.LaneIndex
+
+                    });
+
+            }
+
+            if (data.SlideNodes.Count > 0)
+            {
+
+                data.EndTime = data.SlideNodes[^1].Time;
+                data.EndLaneIndex = data.SlideNodes[^1].LaneIndex;
+
+            }
+
+        }
+
+        private static void DrawBananaHandleFields(ChartNoteAuthoringData data)
+        {
+
+            EditorGUILayout.LabelField("곡선 핸들 (1~2개)", EditorStyles.miniBoldLabel);
+
+            for (int index = 0; index < data.BananaCurveHandles.Count; index++)
+            {
+
+                ChartNoteAuthoringData.CurveHandleData handle = data.BananaCurveHandles[index];
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+
+                    GUILayout.Label((index + 1).ToString("00"), GUILayout.Width(24f));
+                    handle.NormalizedTime = EditorGUILayout.Slider(
+                        handle.NormalizedTime,
+                        0.01f,
+                        0.99f);
+                    handle.NormalizedX = EditorGUILayout.Slider(handle.NormalizedX, 0f, 1f);
+
+                    GUI.enabled = data.BananaCurveHandles.Count > 1;
+
+                    if (GUILayout.Button("삭제", GUILayout.Width(44f)))
+                    {
+
+                        data.BananaCurveHandles.RemoveAt(index);
+                        GUI.enabled = true;
+                        break;
+
+                    }
+
+                    GUI.enabled = true;
+
+                }
+
+            }
+
+            GUI.enabled = data.BananaCurveHandles.Count < 2;
+
+            if (GUILayout.Button("곡선 핸들 추가"))
+            {
+
+                data.BananaCurveHandles.Add(new ChartNoteAuthoringData.CurveHandleData
+                {
+
+                    NormalizedTime = 0.66f,
+                    NormalizedX = 0.5f
+
+                });
+                data.BananaCurveHandles.Sort(
+                    (left, right) => left.NormalizedTime.CompareTo(right.NormalizedTime));
+
+            }
+
+            GUI.enabled = true;
+
+        }
+
+        private void DrawBananaCheckpointFields(ChartNoteAuthoringData data)
+        {
+
+            EditorGUILayout.LabelField("체크포인트", EditorStyles.miniBoldLabel);
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+
+                if (GUILayout.Button("1/4박 재생성"))
+                {
+
+                    data.BananaCheckpoints.Clear();
+                    GenerateBananaCheckpoints(data, 4);
+
+                }
+
+                if (GUILayout.Button("1/8박 재생성"))
+                {
+
+                    data.BananaCheckpoints.Clear();
+                    GenerateBananaCheckpoints(data, 8);
+
+                }
+
+            }
+
+            int removeIndex = -1;
+
+            for (int index = 0; index < data.BananaCheckpoints.Count; index++)
+            {
+
+                ChartNoteAuthoringData.CheckpointData checkpoint = data.BananaCheckpoints[index];
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+
+                    GUILayout.Label((index + 1).ToString("00"), GUILayout.Width(24f));
+                    checkpoint.Time = Math.Clamp(
+                        EditorGUILayout.DoubleField(checkpoint.Time, GUILayout.Width(92f)),
+                        data.HitTime + ScheduleToleranceSeconds,
+                        data.EndTime - ScheduleToleranceSeconds);
+                    checkpoint.NormalizedX = EditorGUILayout.Slider(
+                        checkpoint.NormalizedX,
+                        0f,
+                        1f);
+
+                    if (GUILayout.Button("삭제", GUILayout.Width(44f)))
+                    {
+
+                        removeIndex = index;
+
+                    }
+
+                }
+
+            }
+
+            if (removeIndex >= 0 && data.BananaCheckpoints.Count > 1)
+            {
+
+                data.BananaCheckpoints.RemoveAt(removeIndex);
+
+            }
+
+            if (GUILayout.Button("체크포인트 추가"))
+            {
+
+                data.BananaCheckpoints.Add(new ChartNoteAuthoringData.CheckpointData
+                {
+
+                    Time = (data.HitTime + data.EndTime) * 0.5d,
+                    NormalizedX = 0.5f
+
+                });
+                data.BananaCheckpoints.Sort((left, right) => left.Time.CompareTo(right.Time));
+
+            }
+
+        }
+
+        private void RecordSlideOrHoldLane(int laneIndex, double hitTime)
+        {
+
+            if (pendingInteraction == null)
+            {
+
+                pendingInteraction = ChartNoteAuthoringData.CreateTap(
+                    string.Empty,
+                    hitTime,
+                    laneIndex,
+                    chart.MusicalParts[selectedPartIndex].Id);
+                pendingInteraction.NoteType = ChartNoteType.Hold;
+                pendingInteraction.EndTime = hitTime;
+                pendingInteraction.EndLaneIndex = laneIndex;
+                statusMessage =
+                    $"{hitTime:0.000}초 {laneIndex + 1}번에서 홀드/슬라이드를 시작했습니다.";
+                return;
+
+            }
+
+            if (hitTime <= pendingInteraction.HitTime + DuplicateInputThresholdSeconds)
+            {
+
+                return;
+
+            }
+
+            int currentLane = pendingInteraction.EndLaneIndex;
+
+            if (pendingInteraction.NoteType == ChartNoteType.Hold && laneIndex == currentLane)
+            {
+
+                pendingInteraction.EndTime = hitTime;
+                AddRecordedInteraction(pendingInteraction);
+                pendingInteraction = null;
+                return;
+
+            }
+
+            pendingInteraction.NoteType = ChartNoteType.Slide;
+            pendingInteraction.EndTime = hitTime;
+            pendingInteraction.EndLaneIndex = laneIndex;
+            pendingInteraction.SlideNodes.Add(new ChartNoteAuthoringData.PathNodeData
+            {
+
+                Time = hitTime,
+                LaneIndex = laneIndex
+
+            });
+
+            if (laneIndex == currentLane)
+            {
+
+                AddRecordedInteraction(pendingInteraction);
+                pendingInteraction = null;
+
+            }
+            else
+            {
+
+                statusMessage =
+                    $"{hitTime:0.000}초에 {laneIndex + 1}번 슬라이드 노드를 추가했습니다.";
+
+            }
+
+        }
+
+        private void RecordFlickLane(int laneIndex, double hitTime)
+        {
+
+            int endLane = laneIndex + (int)flickDefaultDirection;
+
+            if (endLane < 0 || endLane >= chart.LaneCount)
+            {
+
+                statusMessage =
+                    $"{laneIndex + 1}번 레인에서는 선택한 방향의 인접 플릭을 만들 수 없습니다.";
+                return;
+
+            }
+
+            ChartNoteAuthoringData flick = ChartNoteAuthoringData.CreateTap(
+                string.Empty,
+                hitTime,
+                laneIndex,
+                chart.MusicalParts[selectedPartIndex].Id);
+            flick.NoteType = ChartNoteType.Flick;
+            flick.EndLaneIndex = endLane;
+            AddRecordedInteraction(flick);
+
+        }
+
+        private void RecordBananaLane(int laneIndex, double hitTime)
+        {
+
+            if (pendingInteraction == null)
+            {
+
+                pendingInteraction = ChartNoteAuthoringData.CreateTap(
+                    string.Empty,
+                    hitTime,
+                    laneIndex,
+                    chart.MusicalParts[selectedPartIndex].Id);
+                pendingInteraction.NoteType = ChartNoteType.Banana;
+                pendingInteraction.EndTime = hitTime;
+                pendingInteraction.EndLaneIndex = laneIndex;
+                statusMessage =
+                    $"{hitTime:0.000}초 {laneIndex + 1}번에서 바나나 노트를 시작했습니다.";
+                return;
+
+            }
+
+            if (hitTime <= pendingInteraction.HitTime + DuplicateInputThresholdSeconds)
+            {
+
+                return;
+
+            }
+
+            pendingInteraction.EndTime = hitTime;
+            pendingInteraction.EndLaneIndex = laneIndex;
+            float startX = PlayfieldGeometry.GetLaneCenterNormalized(
+                pendingInteraction.LaneIndex,
+                chart.LaneCount);
+            float endX = PlayfieldGeometry.GetLaneCenterNormalized(laneIndex, chart.LaneCount);
+            float curveDirection = endX >= startX ? 1f : -1f;
+            pendingInteraction.BananaCurveHandles.Add(
+                new ChartNoteAuthoringData.CurveHandleData
+                {
+
+                    NormalizedTime = 0.5f,
+                    NormalizedX = Mathf.Clamp01((startX + endX) * 0.5f + curveDirection * 0.16f)
+
+                });
+            GenerateBananaCheckpoints(pendingInteraction, 4);
+            AddRecordedInteraction(pendingInteraction);
+            pendingInteraction = null;
+
+        }
+
+        private void GenerateBananaCheckpoints(
+            ChartNoteAuthoringData banana,
+            int subdivisionsPerBeat)
+        {
+
+            double checkpointTime = ChartTempoMap.GetSubdivisionTimeAfter(
+                chart.TempoSections,
+                banana.HitTime,
+                subdivisionsPerBeat);
+
+            while (checkpointTime < banana.EndTime - ScheduleToleranceSeconds)
+            {
+
+                double normalizedTime = (checkpointTime - banana.HitTime) /
+                                        (banana.EndTime - banana.HitTime);
+                float startX = PlayfieldGeometry.GetLaneCenterNormalized(
+                    banana.LaneIndex,
+                    chart.LaneCount);
+                float endX = PlayfieldGeometry.GetLaneCenterNormalized(
+                    banana.EndLaneIndex,
+                    chart.LaneCount);
+                float handleX = banana.BananaCurveHandles[0].NormalizedX;
+                float inverse = 1f - (float)normalizedTime;
+                float curveX = inverse * inverse * startX +
+                               2f * inverse * (float)normalizedTime * handleX +
+                               (float)normalizedTime * (float)normalizedTime * endX;
+                banana.BananaCheckpoints.Add(new ChartNoteAuthoringData.CheckpointData
+                {
+
+                    Time = checkpointTime,
+                    NormalizedX = curveX
+
+                });
+                checkpointTime = ChartTempoMap.GetSubdivisionTimeAfter(
+                    chart.TempoSections,
+                    checkpointTime,
+                    subdivisionsPerBeat);
+
+            }
+
+            if (banana.BananaCheckpoints.Count == 0)
+            {
+
+                double middleTime = (banana.HitTime + banana.EndTime) * 0.5d;
+                banana.BananaCheckpoints.Add(new ChartNoteAuthoringData.CheckpointData
+                {
+
+                    Time = middleTime,
+                    NormalizedX = banana.BananaCurveHandles[0].NormalizedX
+
+                });
+
+            }
+
+        }
+
+        private void AddRecordedInteraction(ChartNoteAuthoringData data)
+        {
+
             RecordedNote recordedNote = new RecordedNote
             {
 
-                hitTime = Math.Max(0d, hitTime),
-                originalHitTime = Math.Max(0d, hitTime),
-                laneIndex = laneIndex,
-                musicalPartId = chart.MusicalParts[selectedPartIndex].Id,
+                hitTime = data.HitTime,
+                originalHitTime = data.HitTime,
+                laneIndex = data.LaneIndex,
+                musicalPartId = data.MusicalPartId,
                 hasOriginalHitTime = true,
-                pendingAutomaticQuantization = true
+                pendingAutomaticQuantization = true,
+                noteData = data
 
             };
             Undo.RecordObject(this, "채보 입력 기록");
@@ -3188,7 +3998,8 @@ namespace IdiotTape.EditorTools
             bufferWasApplied = false;
             SortRecordedNotes();
             selectedRecordedNoteIndex = recordedNotes.IndexOf(recordedNote);
-            statusMessage = $"{hitTime:0.000}초에 {laneIndex + 1}번 위치를 기록했습니다.";
+            statusMessage =
+                $"{data.HitTime:0.000}초에 {data.NoteType} 노트를 기록했습니다.";
 
         }
 
@@ -3299,6 +4110,14 @@ namespace IdiotTape.EditorTools
 
             }
 
+            terminalFlickInputAction = new InputAction(
+                "슬라이드 종단 플릭",
+                InputActionType.Button);
+            terminalFlickInputAction.AddBinding("<Keyboard>/digit0");
+            terminalFlickInputAction.AddBinding("<Keyboard>/numpad0");
+            terminalFlickInputAction.performed += context =>
+                RecordTerminalFlickFromInputEvent(context.time);
+
         }
 
         private void EnableRecordingInputActions()
@@ -3331,6 +4150,8 @@ namespace IdiotTape.EditorTools
 
             }
 
+            terminalFlickInputAction?.Enable();
+
         }
 
         private void DisableRecordingInputActions()
@@ -3349,6 +4170,8 @@ namespace IdiotTape.EditorTools
                 recordingInputActions[laneIndex].Disable();
 
             }
+
+            terminalFlickInputAction?.Disable();
 
         }
 
@@ -3370,6 +4193,49 @@ namespace IdiotTape.EditorTools
             }
 
             recordingInputActions = null;
+            terminalFlickInputAction?.Dispose();
+            terminalFlickInputAction = null;
+
+        }
+
+        private void RecordTerminalFlickFromInputEvent(double eventTimestamp)
+        {
+
+            if (!isRecording || recordingNoteMode != RecordingNoteMode.SlideAndHold)
+            {
+
+                return;
+
+            }
+
+            if (pendingInteraction == null ||
+                pendingInteraction.NoteType != ChartNoteType.Slide ||
+                pendingInteraction.SlideNodes.Count == 0)
+            {
+
+                statusMessage = "종단 플릭으로 바꿀 마지막 레인 이동이 없습니다.";
+                return;
+
+            }
+
+            int previousLane = pendingInteraction.SlideNodes.Count > 1
+                ? pendingInteraction.SlideNodes[^2].LaneIndex
+                : pendingInteraction.LaneIndex;
+
+            if (previousLane == pendingInteraction.EndLaneIndex)
+            {
+
+                statusMessage = "종단 플릭은 마지막 구간에 레인 이동이 있어야 합니다.";
+                return;
+
+            }
+
+            pendingInteraction.SlideEndBehavior = SlideEndBehavior.Flick;
+            AddRecordedInteraction(pendingInteraction);
+            pendingInteraction = null;
+            statusMessage =
+                "마지막 레인 이동을 종단 플릭으로 바꾸고 슬라이드를 마쳤습니다.";
+            Repaint();
 
         }
 
@@ -3502,6 +4368,16 @@ namespace IdiotTape.EditorTools
 
             }
 
+            if (editorEvent.keyCode == KeyCode.Alpha0 ||
+                editorEvent.keyCode == KeyCode.Keypad0)
+            {
+
+                RecordTerminalFlickFromInputEvent(InputState.currentTime);
+                editorEvent.Use();
+                return;
+
+            }
+
             int laneIndex = GetLaneIndex(editorEvent.keyCode);
 
             if (laneIndex < 0)
@@ -3589,7 +4465,8 @@ namespace IdiotTape.EditorTools
                     id = note.Id,
                     hitTime = note.HitTime,
                     laneIndex = note.LaneIndex,
-                    musicalPartId = note.MusicalPartId
+                    musicalPartId = note.MusicalPartId,
+                    fullData = ChartNoteAuthoringData.FromChartNote(note)
 
                 });
 
@@ -3608,13 +4485,23 @@ namespace IdiotTape.EditorTools
             {
 
                 RecordedNote recordedNote = recordedNotes[index];
+                string noteId = GenerateNoteId(recordedNote.musicalPartId, usedIds);
                 combinedNotes.Add(new EditableNote
                 {
 
-                    id = GenerateNoteId(recordedNote.musicalPartId, usedIds),
+                    id = noteId,
                     hitTime = recordedNote.hitTime,
                     laneIndex = recordedNote.laneIndex,
-                    musicalPartId = recordedNote.musicalPartId
+                    musicalPartId = recordedNote.musicalPartId,
+                    fullData = recordedNote.noteData == null
+                        ? ChartNoteAuthoringData.CreateTap(
+                            noteId,
+                            recordedNote.hitTime,
+                            recordedNote.laneIndex,
+                            recordedNote.musicalPartId)
+                        : recordedNote.noteData.CloneWithOffset(
+                            recordedNote.hitTime - recordedNote.noteData.HitTime,
+                            noteId)
 
                 });
 
@@ -3643,10 +4530,7 @@ namespace IdiotTape.EditorTools
 
                 EditableNote note = combinedNotes[index];
                 SerializedProperty noteProperty = notesProperty.GetArrayElementAtIndex(index);
-                noteProperty.FindPropertyRelative("id").stringValue = note.id;
-                noteProperty.FindPropertyRelative("hitTime").doubleValue = note.hitTime;
-                noteProperty.FindPropertyRelative("laneIndex").intValue = note.laneIndex;
-                noteProperty.FindPropertyRelative("musicalPartId").stringValue = note.musicalPartId;
+                note.fullData.WriteTo(noteProperty);
 
             }
 
@@ -4013,6 +4897,7 @@ namespace IdiotTape.EditorTools
 
             Undo.RecordObject(this, "임시 기록 지우기");
             recordedNotes.Clear();
+            pendingInteraction = null;
             selectedRecordedNoteIndex = -1;
             selectedChartNoteId = string.Empty;
             bufferWasApplied = false;
@@ -4041,7 +4926,8 @@ namespace IdiotTape.EditorTools
 
             EditorGUILayout.LabelField(
                 "단축키: Space 재생/일시정지(연속 측정 중에는 다운비트 입력) · " +
-                "R 현재 위치 녹화 · Esc 녹화 중지 · Delete 선택 노트 삭제",
+                "R 현재 위치 녹화 · 0 슬라이드 종단 플릭 · Esc 녹화 중지 · " +
+                "F 게임 플레이 플릭 보조 · Delete 선택 노트 삭제",
                 EditorStyles.miniLabel);
 
         }
@@ -4080,6 +4966,7 @@ namespace IdiotTape.EditorTools
             ClearTempoTapCapture();
             configuredEventPath = string.Empty;
             recordedNotes.Clear();
+            pendingInteraction = null;
             selectedRecordedNoteIndex = -1;
             bufferWasApplied = false;
             timelineStartTime = 0d;
@@ -4979,7 +5866,7 @@ namespace IdiotTape.EditorTools
                 for (int index = candidateIndex; index < groupEnd; index++)
                 {
 
-                    candidates[index].hitTime = result.CorrectedTime;
+                    SetRecordedNoteHitTime(candidates[index], result.CorrectedTime);
                     candidates[index].pendingAutomaticQuantization = false;
 
                 }
@@ -5013,7 +5900,7 @@ namespace IdiotTape.EditorTools
 
                 }
 
-                note.hitTime = note.originalHitTime;
+                SetRecordedNoteHitTime(note, note.originalHitTime);
                 note.pendingAutomaticQuantization = false;
                 restoredCount++;
 
@@ -5038,12 +5925,64 @@ namespace IdiotTape.EditorTools
             Undo.RecordObject(this, "임시 채보 노트 시간 이동");
             RecordedNote note = recordedNotes[selectedRecordedNoteIndex];
             double nextTime = Math.Max(0d, note.hitTime + deltaSeconds);
-            note.hitTime = nextTime;
+            SetRecordedNoteHitTime(note, nextTime);
             note.originalHitTime = nextTime;
             note.hasOriginalHitTime = true;
             note.pendingAutomaticQuantization = false;
             bufferWasApplied = false;
             SortRecordedNotes();
+
+        }
+
+        private static void SetRecordedNoteHitTime(RecordedNote note, double hitTime)
+        {
+
+            double clampedTime = Math.Max(0d, hitTime);
+
+            if (note.noteData != null)
+            {
+
+                note.noteData.ShiftTimes(clampedTime - note.noteData.HitTime);
+
+            }
+
+            note.hitTime = clampedTime;
+
+        }
+
+        private static void SynchronizeRecordedNoteIdentity(RecordedNote note)
+        {
+
+            if (note.noteData == null)
+            {
+
+                note.noteData = ChartNoteAuthoringData.CreateTap(
+                    string.Empty,
+                    note.hitTime,
+                    note.laneIndex,
+                    note.musicalPartId);
+                return;
+
+            }
+
+            int previousStartLane = note.noteData.LaneIndex;
+            note.noteData.LaneIndex = note.laneIndex;
+            note.noteData.MusicalPartId = note.musicalPartId;
+
+            if (note.noteData.NoteType == ChartNoteType.Tap ||
+                note.noteData.NoteType == ChartNoteType.Hold)
+            {
+
+                note.noteData.EndLaneIndex = note.laneIndex;
+
+            }
+            else if (note.noteData.NoteType == ChartNoteType.Flick &&
+                     note.noteData.EndLaneIndex == previousStartLane)
+            {
+
+                note.noteData.EndLaneIndex = note.laneIndex;
+
+            }
 
         }
 

@@ -1,7 +1,7 @@
 # Idiot_Tape — Chart Authoring
 
 > Status: Current
-> Last reviewed: 2026-08-25
+> Last reviewed: 2026-08-27
 > Applies to: The current Play Mode prototype authoring tool
 > Authority: Current authoring workflow and tool limitations
 
@@ -141,15 +141,110 @@ This rebuilds runtime notes and scheduler state from the edited chart.
 When replacing notes inside a loop, keep the operation scoped to the selected musical part and
 selected time range. Do not delete unrelated chart data.
 
+
+## Current Interaction Authoring
+
+This section defines the implemented workflow for `NOTE_INTERACTIONS.md`. Its deterministic data
+and preservation paths have automated coverage; authoring speed and physical play feel still need
+the manual evidence listed in `BACKLOG.md`.
+
+### Recording Modes
+
+The tool provides explicit tap, slide/hold, flick, and banana recording modes. Hold is produced by
+slide recording without a lane change rather than by a separate live-recording mode.
+
+#### Tap Recording
+
+- number keys `1` through `8` record the corresponding lane at the converted FMOD-backed song time
+- the existing temporary-buffer, quantization, part, apply, Undo, validation, and save rules remain
+  in force
+
+#### Slide and Hold Recording
+
+Slide recording is a sequence of discrete lane-key presses. The author does not need to keep a
+physical key held down.
+
+- the first `1` through `8` press opens a pending slide at that lane and time
+- pressing a different lane key adds a path node at the new lane and input time
+- pressing the current lane key a second time closes the slide normally at that time
+- starting and closing on the same lane without any movement node produces a hold
+- stopping recording, ending the loop, changing chart, or otherwise leaving recording with an open
+  slide discards that incomplete slide rather than guessing an end time
+
+Examples:
+
+```text
+3 -> 3           = hold in lane 3
+3 -> 1 -> 1      = slide from lane 3 to lane 1, then normal completion
+3 -> 1 -> 3 -> 3 = slide through lanes 3, 1, and 3, then normal completion
+```
+
+Pressing `0` closes a pending slide with a terminal flick, but it does not record its own time or
+add another node. Instead, it retroactively changes the final lane transition into the terminal
+flick:
+
+```text
+3 -> 1 -> 0 = hold lane 3, then flick from lane 3 to lane 1 at the recorded lane-1 time
+```
+
+The temporary hold at the last lane is discarded. A `0` input is valid only after at least one
+transition between different lanes exists. Ordinary and slide-terminal flicks may cross multiple
+lanes.
+
+#### Flick Recording
+
+- number keys `1` through `8` record the start lane and judgement time
+- the author selects a default left or right direction before recording
+- the tool initially creates the end marker in the adjacent lane in that direction
+- an impossible outward direction at a boundary lane must be rejected clearly rather than creating
+  invalid data
+- after recording, the end marker may be dragged to any different lane, including a non-adjacent
+  lane
+- a separate development helper key may directly succeed flicks during PC gameplay testing; it is
+  not an authoring timestamp source and does not validate the gesture
+
+### Post-Recording Slide Editing
+
+- start, middle, and end nodes can be selected and dragged to another lane or time
+- clicking a line segment creates a new middle node at the clicked absolute time
+- the new node time uses the active quantization/snap rules
+- its initial lane is the nearest lane to the linearly interpolated segment position
+- start/end time collisions and non-increasing node times are rejected
+- quarter-beat validity checks, half-beat reward ticks, and authored middle-node rewards are visible
+  in preview
+- a middle node and half-beat tick at the same time remain separate rewards even if the preview
+  shares one positional marker
+
+### Banana Authoring
+
+- in banana recording mode, the first lane key places the start and the second places the end
+- closing a banana creates one editable curve handle and explicit global quarter-beat checkpoints
+- place tap-style start and end points at authored lanes and absolute times
+- adjust one or two curve handles in normalized playfield space
+- generate checkpoints from the chart tempo map at a quarter-beat default or an eighth-beat option
+- allow generated subdivision or count to be changed without changing the maximum bonus combo
+- allow individual checkpoint addition, deletion, timing correction, and position correction
+- preview the curve corridor, checkpoints, missed/successful fill appearance, tracking ratio, and
+  resulting integer bonus tier
+- report contextual validation errors after apply when endpoints, curve data, checkpoint ordering,
+  or reward limits are invalid; the author can correct the fields or Undo the apply
+
+### Overlap and Future Composition
+
+The tool does not reject notes solely because they share a lane and time. It also does not yet
+merge them automatically.
+
+A future workflow may combine a flick ending at one lane/time with a slide beginning there to form
+a slide that starts with a flick. This is a future possibility only; the current interaction work
+must not add speculative merge UI or a generic composition system.
+
 ## Current Limitations
 
 The current tool does not provide:
 
 - waveforms
-- hold or slide editing
 - automatic beat analysis
 - multi-note selection
-- drag editing of notes
 - drag editing of activation-window handles
 - keyboard recording beyond the first eight development positions
 - a proven variable-tempo workflow beyond direct tempo-section data

@@ -48,16 +48,6 @@ namespace IdiotTape.EditorTools
 
         }
 
-        private sealed class EditableNote
-        {
-
-            public string Id;
-            public double HitTime;
-            public int LaneIndex;
-            public string MusicalPartId;
-
-        }
-
         public static int CountNotesInRange(
             PrototypeChart chart,
             string partId,
@@ -239,23 +229,22 @@ namespace IdiotTape.EditorTools
 
             }
 
-            List<EditableNote> editedNotes = new(chart.Notes.Count);
+            List<ChartNoteAuthoringData> editedNotes = new(chart.Notes.Count);
 
             for (int index = 0; index < chart.Notes.Count; index++)
             {
 
                 ChartNote note = chart.Notes[index];
-                editedNotes.Add(new EditableNote
+                ChartNoteAuthoringData data = ChartNoteAuthoringData.FromChartNote(note);
+
+                if (correctedTimes.TryGetValue(index, out double correctedTime))
                 {
 
-                    Id = note.Id,
-                    HitTime = correctedTimes.TryGetValue(index, out double correctedTime)
-                        ? correctedTime
-                        : note.HitTime,
-                    LaneIndex = note.LaneIndex,
-                    MusicalPartId = note.MusicalPartId
+                    data.ShiftTimes(correctedTime - note.HitTime);
 
-                });
+                }
+
+                editedNotes.Add(data);
 
             }
 
@@ -277,12 +266,9 @@ namespace IdiotTape.EditorTools
             for (int index = 0; index < editedNotes.Count; index++)
             {
 
-                EditableNote note = editedNotes[index];
+                ChartNoteAuthoringData note = editedNotes[index];
                 SerializedProperty noteProperty = notesProperty.GetArrayElementAtIndex(index);
-                noteProperty.FindPropertyRelative("id").stringValue = note.Id;
-                noteProperty.FindPropertyRelative("hitTime").doubleValue = note.HitTime;
-                noteProperty.FindPropertyRelative("laneIndex").intValue = note.LaneIndex;
-                noteProperty.FindPropertyRelative("musicalPartId").stringValue = note.MusicalPartId;
+                note.WriteTo(noteProperty);
 
             }
 

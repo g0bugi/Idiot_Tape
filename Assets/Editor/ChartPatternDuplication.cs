@@ -19,18 +19,27 @@ namespace IdiotTape.EditorTools
     public readonly struct ChartPatternPreviewNote
     {
 
-        public ChartPatternPreviewNote(double hitTime, int laneIndex, string musicalPartId)
+        internal ChartPatternPreviewNote(
+            double hitTime,
+            int laneIndex,
+            string musicalPartId,
+            ChartNote sourceNote,
+            int barOffset)
         {
 
             HitTime = hitTime;
             LaneIndex = laneIndex;
             MusicalPartId = musicalPartId;
+            SourceNote = sourceNote;
+            BarOffset = barOffset;
 
         }
 
         public double HitTime { get; }
         public int LaneIndex { get; }
         public string MusicalPartId { get; }
+        internal ChartNote SourceNote { get; }
+        internal int BarOffset { get; }
 
     }
 
@@ -71,26 +80,6 @@ namespace IdiotTape.EditorTools
     {
 
         private const double BoundaryTolerance = 0.000001d;
-
-        private readonly struct EditableNote
-        {
-
-            public EditableNote(string id, double hitTime, int laneIndex, string musicalPartId)
-            {
-
-                Id = id;
-                HitTime = hitTime;
-                LaneIndex = laneIndex;
-                MusicalPartId = musicalPartId;
-
-            }
-
-            public string Id { get; }
-            public double HitTime { get; }
-            public int LaneIndex { get; }
-            public string MusicalPartId { get; }
-
-        }
 
         private readonly struct EditableWindow
         {
@@ -295,7 +284,9 @@ namespace IdiotTape.EditorTools
                     ChartPatternPreviewNote generatedNote = new(
                         targetTime,
                         sourceNote.LaneIndex,
-                        sourceNote.MusicalPartId);
+                        sourceNote.MusicalPartId,
+                        sourceNote,
+                        targetBar - sourcePosition.Bar);
                     preview.EditableGeneratedNotes.Add(generatedNote);
 
                     if (!chart.IsPartActive(partId, targetTime))
@@ -341,7 +332,7 @@ namespace IdiotTape.EditorTools
 
             }
 
-            List<EditableNote> notes = new(
+            List<ChartNoteAuthoringData> notes = new(
                 chart.Notes.Count + preview.GeneratedNoteCount);
             HashSet<string> usedIds = new();
 
@@ -361,11 +352,7 @@ namespace IdiotTape.EditorTools
 
                 }
 
-                notes.Add(new EditableNote(
-                    note.Id,
-                    note.HitTime,
-                    note.LaneIndex,
-                    note.MusicalPartId));
+                notes.Add(ChartNoteAuthoringData.FromChartNote(note));
 
             }
 
@@ -377,7 +364,8 @@ namespace IdiotTape.EditorTools
 
                 ChartPatternPreviewNote note = preview.GeneratedNotes[index];
                 string id = GenerateUniqueId(idPrefix, usedIds, ref nextIdNumber);
-                notes.Add(new EditableNote(id, note.HitTime, note.LaneIndex, note.MusicalPartId));
+                ChartNoteAuthoringData source = ChartNoteAuthoringData.FromChartNote(note.SourceNote);
+                notes.Add(CloneAtMusicalBarOffset(chart, source, note.BarOffset, id));
 
             }
 
@@ -419,6 +407,64 @@ namespace IdiotTape.EditorTools
         {
 
             return left.BeatsPerBar == right.BeatsPerBar && left.BeatUnit == right.BeatUnit;
+
+        }
+
+        private static ChartNoteAuthoringData CloneAtMusicalBarOffset(
+            PrototypeChart chart,
+            ChartNoteAuthoringData source,
+            int barOffset,
+            string id)
+        {
+
+            ChartNoteAuthoringData clone = source.CloneWithOffset(0d, id);
+            clone.HitTime = MapTimeByBarOffset(chart, source.HitTime, barOffset);
+
+            if (source.NoteType == ChartNoteType.Hold || source.NoteType == ChartNoteType.Banana)
+            {
+
+                clone.EndTime = MapTimeByBarOffset(chart, source.EndTime, barOffset);
+
+            }
+
+            for (int index = 0; index < clone.SlideNodes.Count; index++)
+            {
+
+                clone.SlideNodes[index].Time = MapTimeByBarOffset(
+                    chart,
+                    source.SlideNodes[index].Time,
+                    barOffset);
+
+            }
+
+            for (int index = 0; index < clone.BananaCheckpoints.Count; index++)
+            {
+
+                clone.BananaCheckpoints[index].Time = MapTimeByBarOffset(
+                    chart,
+                    source.BananaCheckpoints[index].Time,
+                    barOffset);
+
+            }
+
+            return clone;
+
+        }
+
+        private static double MapTimeByBarOffset(
+            PrototypeChart chart,
+            double sourceTime,
+            int barOffset)
+        {
+
+            ChartBeatPosition position = ChartTempoMap.GetBeatPosition(
+                chart.TempoSections,
+                sourceTime);
+            return ChartTempoMap.GetSongTime(
+                chart.TempoSections,
+                position.Bar + barOffset,
+                position.Beat,
+                position.BeatFraction);
 
         }
 
@@ -578,7 +624,9 @@ namespace IdiotTape.EditorTools
 
         }
 
-        private static void WriteNotes(SerializedProperty notesProperty, List<EditableNote> notes)
+        private static void WriteNotes(
+            SerializedProperty notesProperty,
+            List<ChartNoteAuthoringData> notes)
         {
 
             notesProperty.arraySize = notes.Count;
@@ -586,12 +634,9 @@ namespace IdiotTape.EditorTools
             for (int index = 0; index < notes.Count; index++)
             {
 
-                EditableNote note = notes[index];
+                ChartNoteAuthoringData note = notes[index];
                 SerializedProperty property = notesProperty.GetArrayElementAtIndex(index);
-                property.FindPropertyRelative("id").stringValue = note.Id;
-                property.FindPropertyRelative("hitTime").doubleValue = note.HitTime;
-                property.FindPropertyRelative("laneIndex").intValue = note.LaneIndex;
-                property.FindPropertyRelative("musicalPartId").stringValue = note.MusicalPartId;
+                note.WriteTo(property);
 
             }
 
