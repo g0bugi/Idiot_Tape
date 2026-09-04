@@ -44,9 +44,12 @@ MonoBehaviour:
     displayName: Etc
     color: {r: 0.52, g: 0.42, b: 0.95, a: 1}
   activationWindows:
+  - musicalPartId: bass
+    startTime: 44.543414276605034
+    endTime: 59.313454664087736
   - musicalPartId: synth
     startTime: 15.003333501639636
-    endTime: 29.773373889122336
+    endTime: 44.543414276605034
   - musicalPartId: drum
     startTime: 0.2332931141569361
     endTime: 15.003333501639636
@@ -1215,6 +1218,18 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_0009
+    hitTime: 15.003333501639636
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 1
+    endTime: 15.494232568306304
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
   - id: snowprototypechart_drum_copy_0086
     hitTime: 15.234115382694053
     laneIndex: 3
@@ -1450,6 +1465,18 @@ MonoBehaviour:
     noteType: 0
     endTime: 1
     endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_0010
+    hitTime: 16.849588550074973
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 1
+    endTime: 17.340255316741636
+    endLaneIndex: 3
     slideEndBehavior: 0
     slideNodes: []
     bananaCurveHandles: []
@@ -1695,6 +1722,18 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_0011
+    hitTime: 18.69584359851031
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 1
+    endTime: 19.165177131843635
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
   - id: snowprototypechart_drum_copy_0110
     hitTime: 18.926625479564727
     laneIndex: 3
@@ -1930,6 +1969,18 @@ MonoBehaviour:
     noteType: 0
     endTime: 1
     endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_0012
+    hitTime: 20.54209864694565
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 1
+    endTime: 20.990098546945642
+    endLaneIndex: 3
     slideEndBehavior: 0
     slideNodes: []
     bananaCurveHandles: []
@@ -2175,6 +2226,18 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0057
+    hitTime: 22.388353695380985
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 1
+    endTime: 22.836353595380977
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
   - id: snowprototypechart_drum_copy_0134
     hitTime: 22.619135576435404
     laneIndex: 3
@@ -2247,7 +2310,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0001
+  - id: snowprototypechart_synth_copy_0058
     hitTime: 23.311481219598654
     laneIndex: 7
     musicalPartId: synth
@@ -2259,7 +2322,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0002
+  - id: snowprototypechart_synth_copy_0059
     hitTime: 23.426872160125864
     laneIndex: 6
     musicalPartId: synth
@@ -2283,7 +2346,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0003
+  - id: snowprototypechart_synth_copy_0060
     hitTime: 23.542263100653074
     laneIndex: 5
     musicalPartId: synth
@@ -2307,7 +2370,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0004
+  - id: snowprototypechart_synth_copy_0061
     hitTime: 23.65765404118028
     laneIndex: 4
     musicalPartId: synth
@@ -2331,7 +2394,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0005
+  - id: snowprototypechart_synth_copy_0062
     hitTime: 23.77304498170749
     laneIndex: 3
     musicalPartId: synth
@@ -2343,7 +2406,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0006
+  - id: snowprototypechart_synth_copy_0063
     hitTime: 23.8884359222347
     laneIndex: 2
     musicalPartId: synth
@@ -2367,7 +2430,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0007
+  - id: snowprototypechart_synth_copy_0064
     hitTime: 24.003826862761905
     laneIndex: 1
     musicalPartId: synth
@@ -2391,8 +2454,8 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0008
-    hitTime: 24.119217803289114
+  - id: snowprototypechart_synth_copy_0065
+    hitTime: 24.119217803289118
     laneIndex: 0
     musicalPartId: synth
     noteType: 0
@@ -2410,6 +2473,18 @@ MonoBehaviour:
     noteType: 0
     endTime: 1
     endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0001
+    hitTime: 24.234608743816324
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 1
+    endTime: 24.682608643816316
+    endLaneIndex: 6
     slideEndBehavior: 0
     slideNodes: []
     bananaCurveHandles: []
@@ -2487,7 +2562,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0009
+  - id: snowprototypechart_synth_copy_0002
     hitTime: 25.157736268033993
     laneIndex: 7
     musicalPartId: synth
@@ -2499,7 +2574,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0010
+  - id: snowprototypechart_synth_copy_0003
     hitTime: 25.273127208561203
     laneIndex: 6
     musicalPartId: synth
@@ -2523,7 +2598,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0011
+  - id: snowprototypechart_synth_copy_0004
     hitTime: 25.38851814908841
     laneIndex: 5
     musicalPartId: synth
@@ -2547,7 +2622,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0012
+  - id: snowprototypechart_synth_copy_0005
     hitTime: 25.503909089615618
     laneIndex: 4
     musicalPartId: synth
@@ -2571,7 +2646,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0013
+  - id: snowprototypechart_synth_copy_0006
     hitTime: 25.619300030142828
     laneIndex: 3
     musicalPartId: synth
@@ -2583,13 +2658,25 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0014
+  - id: snowprototypechart_synth_copy_0007
     hitTime: 25.734690970670034
     laneIndex: 2
     musicalPartId: synth
     noteType: 0
     endTime: 20.19592582536402
     endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0008
+    hitTime: 25.85008191119724
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
     slideEndBehavior: 0
     slideNodes: []
     bananaCurveHandles: []
@@ -2607,18 +2694,6 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0015
-    hitTime: 25.850081911197243
-    laneIndex: 1
-    musicalPartId: synth
-    noteType: 0
-    endTime: 20.31131676589123
-    endLaneIndex: 1
-    slideEndBehavior: 0
-    slideNodes: []
-    bananaCurveHandles: []
-    bananaCheckpoints: []
-    bananaMaximumBonusCombo: 4
   - id: snowprototypechart_drum_copy_0156
     hitTime: 25.965472851724453
     laneIndex: 4
@@ -2631,8 +2706,8 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0016
-    hitTime: 25.965472851724453
+  - id: snowprototypechart_synth_copy_0066
+    hitTime: 25.965472851724456
     laneIndex: 0
     musicalPartId: synth
     noteType: 0
@@ -2650,6 +2725,18 @@ MonoBehaviour:
     noteType: 0
     endTime: 1
     endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0009
+    hitTime: 26.080863792251662
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 1
+    endTime: 26.528863692251655
+    endLaneIndex: 6
     slideEndBehavior: 0
     slideNodes: []
     bananaCurveHandles: []
@@ -2727,7 +2814,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0041
+  - id: snowprototypechart_synth_copy_0010
     hitTime: 27.003991316469328
     laneIndex: 7
     musicalPartId: synth
@@ -2739,7 +2826,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0042
+  - id: snowprototypechart_synth_copy_0011
     hitTime: 27.119382256996538
     laneIndex: 6
     musicalPartId: synth
@@ -2763,7 +2850,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0043
+  - id: snowprototypechart_synth_copy_0012
     hitTime: 27.234773197523747
     laneIndex: 5
     musicalPartId: synth
@@ -2787,7 +2874,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0044
+  - id: snowprototypechart_synth_copy_0013
     hitTime: 27.350164138050957
     laneIndex: 4
     musicalPartId: synth
@@ -2811,7 +2898,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0045
+  - id: snowprototypechart_synth_copy_0014
     hitTime: 27.465555078578163
     laneIndex: 3
     musicalPartId: synth
@@ -2823,13 +2910,25 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0046
+  - id: snowprototypechart_synth_copy_0015
     hitTime: 27.580946019105372
     laneIndex: 2
     musicalPartId: synth
     noteType: 0
     endTime: 20.19592582536402
     endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0016
+    hitTime: 27.69633695963258
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
     slideEndBehavior: 0
     slideNodes: []
     bananaCurveHandles: []
@@ -2847,18 +2946,6 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0047
-    hitTime: 27.696336959632582
-    laneIndex: 1
-    musicalPartId: synth
-    noteType: 0
-    endTime: 20.31131676589123
-    endLaneIndex: 1
-    slideEndBehavior: 0
-    slideNodes: []
-    bananaCurveHandles: []
-    bananaCheckpoints: []
-    bananaMaximumBonusCombo: 4
   - id: snowprototypechart_drum_copy_0168
     hitTime: 27.81172790015979
     laneIndex: 4
@@ -2871,8 +2958,8 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0048
-    hitTime: 27.81172790015979
+  - id: snowprototypechart_synth_copy_0067
+    hitTime: 27.811727900159795
     laneIndex: 0
     musicalPartId: synth
     noteType: 0
@@ -2890,6 +2977,18 @@ MonoBehaviour:
     noteType: 0
     endTime: 1
     endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0041
+    hitTime: 27.927118840686997
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 1
+    endTime: 28.37511874068699
+    endLaneIndex: 6
     slideEndBehavior: 0
     slideNodes: []
     bananaCurveHandles: []
@@ -2967,7 +3066,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0049
+  - id: snowprototypechart_synth_copy_0042
     hitTime: 28.850246364904667
     laneIndex: 7
     musicalPartId: synth
@@ -2979,7 +3078,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0050
+  - id: snowprototypechart_synth_copy_0043
     hitTime: 28.965637305431876
     laneIndex: 6
     musicalPartId: synth
@@ -3003,7 +3102,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0051
+  - id: snowprototypechart_synth_copy_0044
     hitTime: 29.081028245959086
     laneIndex: 5
     musicalPartId: synth
@@ -3027,7 +3126,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0052
+  - id: snowprototypechart_synth_copy_0045
     hitTime: 29.196419186486292
     laneIndex: 4
     musicalPartId: synth
@@ -3051,7 +3150,7 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0053
+  - id: snowprototypechart_synth_copy_0046
     hitTime: 29.3118101270135
     laneIndex: 3
     musicalPartId: synth
@@ -3063,13 +3162,25 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0054
+  - id: snowprototypechart_synth_copy_0047
     hitTime: 29.42720106754071
     laneIndex: 2
     musicalPartId: synth
     noteType: 0
     endTime: 20.19592582536402
     endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0048
+    hitTime: 29.542592008067917
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
     slideEndBehavior: 0
     slideNodes: []
     bananaCurveHandles: []
@@ -3087,18 +3198,6 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
-  - id: snowprototypechart_synth_copy_0055
-    hitTime: 29.54259200806792
-    laneIndex: 1
-    musicalPartId: synth
-    noteType: 0
-    endTime: 20.31131676589123
-    endLaneIndex: 1
-    slideEndBehavior: 0
-    slideNodes: []
-    bananaCurveHandles: []
-    bananaCheckpoints: []
-    bananaMaximumBonusCombo: 4
   - id: snowprototypechart_drum_copy_0180
     hitTime: 29.657982948595127
     laneIndex: 4
@@ -3111,8 +3210,4352 @@ MonoBehaviour:
     bananaCurveHandles: []
     bananaCheckpoints: []
     bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0068
+    hitTime: 29.65798294859513
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0181
+    hitTime: 29.773373889122336
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0049
+    hitTime: 29.773373889122336
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 1
+    endTime: 30.221373789122325
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0182
+    hitTime: 30.00415577017675
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0183
+    hitTime: 30.11954671070396
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0184
+    hitTime: 30.23493765123117
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0185
+    hitTime: 30.465719532285586
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0186
+    hitTime: 30.581110472812796
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0187
+    hitTime: 30.696501413340005
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0050
+    hitTime: 30.696501413340005
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0051
+    hitTime: 30.811892353867215
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0188
+    hitTime: 30.92728329439442
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0052
+    hitTime: 30.92728329439442
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0189
+    hitTime: 31.04267423492163
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0053
+    hitTime: 31.04267423492163
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0190
+    hitTime: 31.15806517544884
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0054
+    hitTime: 31.15806517544884
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0055
+    hitTime: 31.273456115976046
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0191
+    hitTime: 31.388847056503256
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
   - id: snowprototypechart_synth_copy_0056
-    hitTime: 29.657982948595127
+    hitTime: 31.388847056503256
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0192
+    hitTime: 31.504237997030465
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0069
+    hitTime: 31.504237997030465
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0193
+    hitTime: 31.619628937557675
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0070
+    hitTime: 31.619628937557675
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 1
+    endTime: 32.06762883755766
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0194
+    hitTime: 31.85041081861209
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0195
+    hitTime: 31.9658017591393
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0196
+    hitTime: 32.08119269966651
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0197
+    hitTime: 32.31197458072093
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0198
+    hitTime: 32.427365521248134
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0199
+    hitTime: 32.54275646177534
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0071
+    hitTime: 32.54275646177534
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0072
+    hitTime: 32.65814740230255
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0200
+    hitTime: 32.77353834282976
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0073
+    hitTime: 32.77353834282976
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0201
+    hitTime: 32.888929283356966
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0074
+    hitTime: 32.888929283356966
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0202
+    hitTime: 33.00432022388418
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0075
+    hitTime: 33.00432022388418
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0076
+    hitTime: 33.119711164411385
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0203
+    hitTime: 33.23510210493859
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0077
+    hitTime: 33.23510210493859
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0204
+    hitTime: 33.350493045465804
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0078
+    hitTime: 33.350493045465804
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0205
+    hitTime: 33.46588398599301
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0079
+    hitTime: 33.46588398599301
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 1
+    endTime: 33.913883885993
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0206
+    hitTime: 33.69666586704743
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0207
+    hitTime: 33.812056807574635
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0208
+    hitTime: 33.92744774810185
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0209
+    hitTime: 34.15822962915626
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0210
+    hitTime: 34.27362056968347
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0211
+    hitTime: 34.38901151021068
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0080
+    hitTime: 34.38901151021068
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0081
+    hitTime: 34.504402450737885
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0212
+    hitTime: 34.6197933912651
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0082
+    hitTime: 34.6197933912651
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0213
+    hitTime: 34.735184331792304
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0083
+    hitTime: 34.735184331792304
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0214
+    hitTime: 34.85057527231952
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0084
+    hitTime: 34.85057527231952
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0085
+    hitTime: 34.96596621284672
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0215
+    hitTime: 35.08135715337393
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0086
+    hitTime: 35.08135715337393
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0216
+    hitTime: 35.19674809390114
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0087
+    hitTime: 35.19674809390114
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0217
+    hitTime: 35.31213903442835
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0088
+    hitTime: 35.31213903442835
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 1
+    endTime: 35.76013893442834
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0218
+    hitTime: 35.54292091548277
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0219
+    hitTime: 35.65831185600997
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0220
+    hitTime: 35.77370279653718
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0221
+    hitTime: 36.0044846775916
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0222
+    hitTime: 36.11987561811881
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0223
+    hitTime: 36.23526655864602
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0089
+    hitTime: 36.23526655864602
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0090
+    hitTime: 36.350657499173224
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0224
+    hitTime: 36.46604843970044
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0091
+    hitTime: 36.46604843970044
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0225
+    hitTime: 36.58143938022764
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0092
+    hitTime: 36.58143938022764
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0226
+    hitTime: 36.69683032075485
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0093
+    hitTime: 36.69683032075485
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0094
+    hitTime: 36.81222126128206
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0227
+    hitTime: 36.92761220180927
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0095
+    hitTime: 36.92761220180927
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0228
+    hitTime: 37.04300314233648
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0096
+    hitTime: 37.04300314233648
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0229
+    hitTime: 37.15839408286369
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0097
+    hitTime: 37.15839408286369
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 1
+    endTime: 37.60639398286367
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0230
+    hitTime: 37.389175963918106
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0231
+    hitTime: 37.50456690444531
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0232
+    hitTime: 37.61995784497252
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0233
+    hitTime: 37.85073972602694
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0234
+    hitTime: 37.96613066655414
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0235
+    hitTime: 38.081521607081356
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0098
+    hitTime: 38.081521607081356
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0099
+    hitTime: 38.19691254760856
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0236
+    hitTime: 38.312303488135775
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0100
+    hitTime: 38.312303488135775
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0237
+    hitTime: 38.42769442866298
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0101
+    hitTime: 38.42769442866298
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0238
+    hitTime: 38.54308536919019
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0102
+    hitTime: 38.54308536919019
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0103
+    hitTime: 38.6584763097174
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0239
+    hitTime: 38.77386725024461
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0104
+    hitTime: 38.77386725024461
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0240
+    hitTime: 38.88925819077181
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0105
+    hitTime: 38.88925819077182
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0241
+    hitTime: 39.004649131299026
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0106
+    hitTime: 39.004649131299026
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 1
+    endTime: 39.45264903129901
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0242
+    hitTime: 39.23543101235344
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0243
+    hitTime: 39.35082195288065
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0244
+    hitTime: 39.46621289340786
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0245
+    hitTime: 39.696994774462276
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0246
+    hitTime: 39.81238571498948
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0247
+    hitTime: 39.927776655516695
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0107
+    hitTime: 39.927776655516695
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0108
+    hitTime: 40.0431675960439
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0248
+    hitTime: 40.15855853657111
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0109
+    hitTime: 40.158558536571114
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0249
+    hitTime: 40.27394947709832
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0110
+    hitTime: 40.27394947709832
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0250
+    hitTime: 40.389340417625526
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0111
+    hitTime: 40.389340417625526
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0112
+    hitTime: 40.50473135815273
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0251
+    hitTime: 40.620122298679945
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0113
+    hitTime: 40.620122298679945
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0252
+    hitTime: 40.73551323920715
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0114
+    hitTime: 40.73551323920716
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0253
+    hitTime: 40.850904179734364
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0115
+    hitTime: 40.850904179734364
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 1
+    endTime: 41.29890407973435
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0254
+    hitTime: 41.081686060788776
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0255
+    hitTime: 41.19707700131599
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0256
+    hitTime: 41.312467941843195
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0257
+    hitTime: 41.543249822897614
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0258
+    hitTime: 41.65864076342482
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0259
+    hitTime: 41.774031703952026
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0116
+    hitTime: 41.774031703952026
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0117
+    hitTime: 41.88942264447924
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0260
+    hitTime: 42.004813585006445
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0118
+    hitTime: 42.00481358500645
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0261
+    hitTime: 42.12020452553366
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0119
+    hitTime: 42.12020452553366
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0262
+    hitTime: 42.235595466060865
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0120
+    hitTime: 42.235595466060865
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0121
+    hitTime: 42.35098640658807
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0263
+    hitTime: 42.466377347115284
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0122
+    hitTime: 42.466377347115284
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0264
+    hitTime: 42.58176828764249
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0123
+    hitTime: 42.5817682876425
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0265
+    hitTime: 42.697159228169696
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0124
+    hitTime: 42.697159228169696
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 1
+    endTime: 43.14515912816969
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0266
+    hitTime: 42.927941109224115
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0267
+    hitTime: 43.04333204975133
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0268
+    hitTime: 43.158722990278534
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0269
+    hitTime: 43.38950487133295
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0270
+    hitTime: 43.50489581186016
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0125
+    hitTime: 43.620286752387365
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0126
+    hitTime: 43.73567769291458
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0127
+    hitTime: 43.85106863344179
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0128
+    hitTime: 43.96645957396899
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0129
+    hitTime: 44.0818505144962
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0130
+    hitTime: 44.19724145502341
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0131
+    hitTime: 44.31263239555062
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0132
+    hitTime: 44.428023336077835
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0017
+    hitTime: 44.543414276605034
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 0
+    endTime: 44.543414276605034
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0271
+    hitTime: 44.543414276605034
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0133
+    hitTime: 44.543414276605034
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 1
+    endTime: 45.034313343271705
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0001
+    hitTime: 44.77419615765945
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 1
+    endTime: 44.90219615765945
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0272
+    hitTime: 44.77419615765945
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0273
+    hitTime: 44.88958709818666
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0018
+    hitTime: 45.00497803871387
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 0
+    endTime: 45.00497803871387
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0274
+    hitTime: 45.00497803871387
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0002
+    hitTime: 45.235759919768284
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 1
+    endTime: 45.36375971976824
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0275
+    hitTime: 45.235759919768284
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0276
+    hitTime: 45.3511508602955
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0019
+    hitTime: 45.466541800822704
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 0
+    endTime: 45.466541800822704
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0277
+    hitTime: 45.466541800822704
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0134
+    hitTime: 45.466541800822704
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0135
+    hitTime: 45.58193274134992
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0003
+    hitTime: 45.69732368187712
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 1
+    endTime: 45.81465711521042
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0278
+    hitTime: 45.69732368187712
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0136
+    hitTime: 45.69732368187712
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0279
+    hitTime: 45.81271462240433
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0137
+    hitTime: 45.81271462240433
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0020
+    hitTime: 45.92810556293154
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 0
+    endTime: 45.92810556293154
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0280
+    hitTime: 45.92810556293154
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0138
+    hitTime: 45.92810556293154
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0139
+    hitTime: 46.04349650345875
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0004
+    hitTime: 46.158887443985954
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 1
+    endTime: 46.286887443985954
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0281
+    hitTime: 46.158887443985954
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0140
+    hitTime: 46.158887443985954
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0282
+    hitTime: 46.27427838451317
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0141
+    hitTime: 46.27427838451317
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0021
+    hitTime: 46.38966932504037
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 0
+    endTime: 46.38966932504037
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0283
+    hitTime: 46.38966932504037
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0142
+    hitTime: 46.38966932504037
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 1
+    endTime: 46.880336091707036
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0005
+    hitTime: 46.62045120609479
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 1
+    endTime: 46.74845130609476
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0284
+    hitTime: 46.62045120609479
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0285
+    hitTime: 46.735842146622
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0022
+    hitTime: 46.85123308714921
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 0
+    endTime: 46.85123308714921
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0286
+    hitTime: 46.85123308714921
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0006
+    hitTime: 47.08201496820362
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 1
+    endTime: 47.21001506820359
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0287
+    hitTime: 47.08201496820362
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0288
+    hitTime: 47.197405908730836
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0023
+    hitTime: 47.31279684925804
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 0
+    endTime: 47.31279684925804
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0289
+    hitTime: 47.31279684925804
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0143
+    hitTime: 47.31279684925804
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0144
+    hitTime: 47.42818778978525
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0007
+    hitTime: 47.54357873031246
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 1
+    endTime: 47.66091226364584
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0290
+    hitTime: 47.54357873031246
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0145
+    hitTime: 47.54357873031246
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0291
+    hitTime: 47.65896967083967
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0146
+    hitTime: 47.65896967083967
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0024
+    hitTime: 47.77436061136687
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 0
+    endTime: 47.77436061136687
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0292
+    hitTime: 47.77436061136687
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0147
+    hitTime: 47.77436061136687
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0148
+    hitTime: 47.889751551894086
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0008
+    hitTime: 48.00514249242129
+    laneIndex: 2
+    musicalPartId: bass
+    noteType: 1
+    endTime: 48.13314249242118
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0293
+    hitTime: 48.00514249242129
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0149
+    hitTime: 48.00514249242129
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0294
+    hitTime: 48.120533432948505
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0150
+    hitTime: 48.120533432948505
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0025
+    hitTime: 48.23592437347571
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 0
+    endTime: 48.23592437347571
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0295
+    hitTime: 48.23592437347571
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0151
+    hitTime: 48.23592437347571
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 1
+    endTime: 48.70525790680903
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0009
+    hitTime: 48.46670625453013
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 1
+    endTime: 48.60537282119672
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0296
+    hitTime: 48.46670625453013
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0297
+    hitTime: 48.58209719505734
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0026
+    hitTime: 48.69748813558454
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 0
+    endTime: 48.69748813558454
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0298
+    hitTime: 48.69748813558454
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0010
+    hitTime: 48.92827001663896
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 1
+    endTime: 49.04560324997233
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0299
+    hitTime: 48.92827001663896
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0300
+    hitTime: 49.04366095716617
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0027
+    hitTime: 49.15905189769338
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 0
+    endTime: 49.15905189769338
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0301
+    hitTime: 49.15905189769338
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0152
+    hitTime: 49.15905189769338
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0153
+    hitTime: 49.27444283822059
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0011
+    hitTime: 49.3898337787478
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 1
+    endTime: 49.5071672120811
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0302
+    hitTime: 49.3898337787478
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0154
+    hitTime: 49.3898337787478
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0303
+    hitTime: 49.505224719275006
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0155
+    hitTime: 49.505224719275006
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0028
+    hitTime: 49.62061565980221
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 0
+    endTime: 49.62061565980221
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0304
+    hitTime: 49.62061565980221
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0156
+    hitTime: 49.62061565980221
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0157
+    hitTime: 49.736006600329425
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0012
+    hitTime: 49.85139754085663
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 1
+    endTime: 49.979397440856665
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0305
+    hitTime: 49.85139754085663
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0158
+    hitTime: 49.85139754085663
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0306
+    hitTime: 49.96678848138384
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0159
+    hitTime: 49.96678848138384
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0029
+    hitTime: 50.08217942191105
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 0
+    endTime: 50.08217942191105
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0307
+    hitTime: 50.08217942191105
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0160
+    hitTime: 50.08217942191105
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 1
+    endTime: 50.530179321911035
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0013
+    hitTime: 50.31296130296547
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 1
+    endTime: 50.430294636298804
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0308
+    hitTime: 50.31296130296547
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0309
+    hitTime: 50.428352243492675
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0030
+    hitTime: 50.54374318401988
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 0
+    endTime: 50.54374318401988
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0310
+    hitTime: 50.54374318401988
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0014
+    hitTime: 50.7745250650743
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 1
+    endTime: 50.90252516507438
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0311
+    hitTime: 50.7745250650743
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0312
+    hitTime: 50.889916005601506
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0031
+    hitTime: 51.00530694612872
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 0
+    endTime: 51.00530694612872
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0313
+    hitTime: 51.00530694612872
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0161
+    hitTime: 51.00530694612872
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0162
+    hitTime: 51.120697886655925
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0015
+    hitTime: 51.23608882718313
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 1
+    endTime: 51.364088727183166
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0314
+    hitTime: 51.23608882718313
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0163
+    hitTime: 51.23608882718313
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0315
+    hitTime: 51.351479767710345
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0164
+    hitTime: 51.351479767710345
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0032
+    hitTime: 51.46687070823755
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 0
+    endTime: 51.46687070823755
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0316
+    hitTime: 51.46687070823755
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0165
+    hitTime: 51.46687070823755
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0166
+    hitTime: 51.582261648764764
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_bass_0016
+    hitTime: 51.69765258929197
+    laneIndex: 3
+    musicalPartId: bass
+    noteType: 1
+    endTime: 51.825652689291935
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0317
+    hitTime: 51.69765258929197
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0167
+    hitTime: 51.69765258929197
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0318
+    hitTime: 51.813043529819176
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0168
+    hitTime: 51.813043529819176
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0319
+    hitTime: 51.92843447034639
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0169
+    hitTime: 51.92843447034639
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 1
+    endTime: 52.376434370346374
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0320
+    hitTime: 52.1592163514008
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0321
+    hitTime: 52.274607291928014
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0322
+    hitTime: 52.38999823245522
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0323
+    hitTime: 52.62078011350964
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0324
+    hitTime: 52.736171054036845
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0325
+    hitTime: 52.85156199456406
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0170
+    hitTime: 52.85156199456406
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0171
+    hitTime: 52.966952935091264
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0326
+    hitTime: 53.08234387561847
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0172
+    hitTime: 53.08234387561847
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0327
+    hitTime: 53.19773481614568
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0173
+    hitTime: 53.19773481614568
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0328
+    hitTime: 53.31312575667289
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0174
+    hitTime: 53.31312575667289
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0175
+    hitTime: 53.428516697200095
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0329
+    hitTime: 53.54390763772731
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0176
+    hitTime: 53.54390763772731
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0330
+    hitTime: 53.659298578254514
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0177
+    hitTime: 53.659298578254514
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0331
+    hitTime: 53.77468951878172
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0178
+    hitTime: 53.77468951878172
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 1
+    endTime: 54.22268941878171
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0332
+    hitTime: 54.00547139983614
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0333
+    hitTime: 54.12086234036335
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0334
+    hitTime: 54.23625328089056
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0335
+    hitTime: 54.46703516194498
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0336
+    hitTime: 54.58242610247218
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0337
+    hitTime: 54.69781704299939
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0179
+    hitTime: 54.69781704299939
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0180
+    hitTime: 54.8132079835266
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0338
+    hitTime: 54.92859892405381
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0181
+    hitTime: 54.92859892405381
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0339
+    hitTime: 55.043989864581015
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0182
+    hitTime: 55.043989864581015
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0340
+    hitTime: 55.15938080510823
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0183
+    hitTime: 55.15938080510823
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0184
+    hitTime: 55.274771745635434
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0341
+    hitTime: 55.39016268616265
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0185
+    hitTime: 55.39016268616265
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0342
+    hitTime: 55.50555362668985
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0186
+    hitTime: 55.50555362668985
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0343
+    hitTime: 55.62094456721706
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0187
+    hitTime: 55.62094456721706
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 1
+    endTime: 56.06894446721705
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0344
+    hitTime: 55.85172644827148
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0345
+    hitTime: 55.967117388798684
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0346
+    hitTime: 56.0825083293259
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0347
+    hitTime: 56.313290210380316
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0348
+    hitTime: 56.42868115090752
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0349
+    hitTime: 56.54407209143473
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0188
+    hitTime: 56.54407209143473
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0189
+    hitTime: 56.65946303196194
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0350
+    hitTime: 56.77485397248915
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0190
+    hitTime: 56.77485397248915
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0351
+    hitTime: 56.89024491301635
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0191
+    hitTime: 56.89024491301635
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0352
+    hitTime: 57.005635853543566
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0192
+    hitTime: 57.005635853543566
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0193
+    hitTime: 57.12102679407077
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0353
+    hitTime: 57.23641773459798
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0194
+    hitTime: 57.23641773459798
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0354
+    hitTime: 57.35180867512519
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0195
+    hitTime: 57.3518086751252
+    laneIndex: 0
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.42670770641844
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0355
+    hitTime: 57.4671996156524
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0196
+    hitTime: 57.4671996156524
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 1
+    endTime: 57.91519951565239
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0356
+    hitTime: 57.69798149670682
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0357
+    hitTime: 57.81337243723402
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0358
+    hitTime: 57.928763377761236
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0359
+    hitTime: 58.15954525881565
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0360
+    hitTime: 58.27493619934286
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0361
+    hitTime: 58.39032713987007
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0197
+    hitTime: 58.39032713987007
+    laneIndex: 7
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.61897112272798
+    endLaneIndex: 7
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0198
+    hitTime: 58.50571808039727
+    laneIndex: 6
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.734362063255187
+    endLaneIndex: 6
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0362
+    hitTime: 58.621109020924486
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0199
+    hitTime: 58.621109020924486
+    laneIndex: 5
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.849753003782396
+    endLaneIndex: 5
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0363
+    hitTime: 58.73649996145169
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0200
+    hitTime: 58.73649996145169
+    laneIndex: 4
+    musicalPartId: synth
+    noteType: 0
+    endTime: 19.965143944309606
+    endLaneIndex: 4
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0364
+    hitTime: 58.851890901978905
+    laneIndex: 0
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0201
+    hitTime: 58.851890901978905
+    laneIndex: 3
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.080534884836815
+    endLaneIndex: 3
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0202
+    hitTime: 58.96728184250611
+    laneIndex: 2
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.19592582536402
+    endLaneIndex: 2
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0365
+    hitTime: 59.08267278303332
+    laneIndex: 3
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0203
+    hitTime: 59.08267278303332
+    laneIndex: 1
+    musicalPartId: synth
+    noteType: 0
+    endTime: 20.31131676589123
+    endLaneIndex: 1
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_drum_copy_0366
+    hitTime: 59.19806372356053
+    laneIndex: 4
+    musicalPartId: drum
+    noteType: 0
+    endTime: 1
+    endLaneIndex: 0
+    slideEndBehavior: 0
+    slideNodes: []
+    bananaCurveHandles: []
+    bananaCheckpoints: []
+    bananaMaximumBonusCombo: 4
+  - id: snowprototypechart_synth_copy_0204
+    hitTime: 59.19806372356053
     laneIndex: 0
     musicalPartId: synth
     noteType: 0

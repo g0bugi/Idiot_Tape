@@ -28,7 +28,7 @@ namespace IdiotTape.EditorTools
 
         }
 
-        public static int Normalize(PrototypeChart chart)
+        public static int Normalize(PrototypeChart chart, bool recordUndo = true)
         {
 
             if (chart == null || chart.ActivationWindows.Count == 0)
@@ -117,7 +117,13 @@ namespace IdiotTape.EditorTools
 
             }
 
-            Undo.RecordObject(chart, "활성 구간 중복 정리");
+            if (recordUndo)
+            {
+
+                Undo.RecordObject(chart, "활성 구간 중복 정리");
+
+            }
+
             SerializedObject serializedChart = new(chart);
             SerializedProperty windows = serializedChart.FindProperty("activationWindows");
             windows.arraySize = normalized.Count;
@@ -134,7 +140,14 @@ namespace IdiotTape.EditorTools
             }
 
             serializedChart.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(chart);
+
+            if (recordUndo)
+            {
+
+                EditorUtility.SetDirty(chart);
+
+            }
+
             return removedCount;
 
         }

@@ -19,6 +19,7 @@ namespace IdiotTape.Gameplay
         public event Action<int, double> LanePressed;
         public event Action<int, double> LaneReleased;
         public event Action<double> FlickAssistRequested;
+        public event Action StartRequested;
         public event Action RestartRequested;
         public event Action PauseRequested;
 
@@ -68,6 +69,13 @@ namespace IdiotTape.Gameplay
         {
 
             PauseRequested?.Invoke();
+
+        }
+
+        public void RequestStart()
+        {
+
+            StartRequested?.Invoke();
 
         }
 
@@ -187,6 +195,14 @@ namespace IdiotTape.Gameplay
             {
 
                 RestartRequested?.Invoke();
+
+            }
+
+            if (keyboard.enterKey.wasPressedThisFrame || keyboard.numpadEnterKey.wasPressedThisFrame ||
+                keyboard.spaceKey.wasPressedThisFrame)
+            {
+
+                RequestStart();
 
             }
 

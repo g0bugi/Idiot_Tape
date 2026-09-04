@@ -1,7 +1,7 @@
 # Idiot_Tape — Note Interactions
 
 > Status: Accepted for current prototype
-> Last reviewed: 2026-08-27
+> Last reviewed: 2026-09-04
 > Applies to: The implemented prototype interaction set
 > Authority: Player-visible tap, hold, slide, flick, and banana-note behavior
 
@@ -10,9 +10,9 @@
 This document defines the note-interaction rules intentionally accepted for the next prototype
 expansion.
 
-The runtime and authoring tool now implement this contract for prototype validation. Automated
-math, chart, editor-preservation, and existing Play Mode regression checks pass; representative
-new-note Play Mode cases and physical-device feel remain verification work in `BACKLOG.md`.
+The runtime and authoring tool implement this contract for prototype validation. Verification
+evidence is recorded in `BACKLOG.md`; representative new-note Play Mode cases and physical-device
+feel, including the revised step-slide transition, remain verification work.
 
 Data representation belongs in `CHART_FORMAT.md`. Authoritative timing belongs in
 `RHYTHM_SYSTEM.md`. Authoring workflow belongs in `CHART_AUTHORING.md`.
@@ -123,19 +123,39 @@ failed.
 
 ### Player Rule
 
-A slide is a lane-based piecewise-linear path.
+A slide is a sequence of lane holds joined by timed lane changes.
 
 - the start, every authored middle node, and the normal end occupy explicit lanes
-- node-to-node motion is straight; a curved path is a banana note instead
-- the player must remain inside the interpolated path corridor between nodes
+- between nodes, the player holds the previous node's lane
+- each node's time is the beat at which the player changes to that node's lane; the target does not
+  drift diagonally between the two lanes during the preceding interval
+- the player may move through intermediate positions during the bounded transition allowance
+  defined in `RHYTHM_SYSTEM.md`; an ordinary lane change does not require flick speed or direction
 - reaching the normal end while a valid contact is present succeeds automatically
 - successful middle nodes and the end inherit the start grade
 
+For example, a `3 -> 7 -> 6` slide means hold lane 3, change to lane 7 at its authored time, hold
+lane 7, then change to lane 6 at its authored time. The normal recording sequence `3 -> 7 -> 6 -> 6`
+adds a final hold in lane 6 before completion.
+
+### Shape and Reading
+
+With time on the vertical axis, draw each lane hold vertically and each lane change horizontally
+at its authored node time. Reversing the chart's time direction for gameplay reverses the vertical
+ordering, but must not turn the holds into diagonal tracking segments. With time on the horizontal
+axis, the same step shape is transposed.
+
+The corner at the old lane and new node time is generated presentation geometry, not an extra
+authored node or reward. Show the destination node and distinguish a normal end from a terminal
+flick. Banana remains the interaction for continuous free-curve tracing.
+
 ### Checks, Nodes, and Rewards
 
-- path validity is checked on the global quarter-beat grid
+- held-lane validity is checked on the global quarter-beat grid, with the transition allowance
+  defined in `RHYTHM_SYSTEM.md`
 - combo and score ticks occur on the global half-beat grid
-- every authored middle node is also a required path check and awards one tap-equivalent result
+- every authored middle node also requires arrival in its destination lane and awards one
+  tap-equivalent result
 - a node and a half-beat tick at the same time share the positional check but each award their own
   tap-equivalent result
 - any failed internal check or required node produces one Miss, breaks combo, terminates the whole
@@ -146,17 +166,20 @@ A slide is a lane-based piecewise-linear path.
 
 A slide may transfer between contacts.
 
-- a replacement contact may enter the valid path corridor before or after the previous contact is
-  released
-- if at least one eligible contact is valid when a required quarter-beat or node check occurs, the
-  slide remains valid
-- if no eligible contact is valid at a required check, the slide fails
+- a replacement contact may enter the held lane or the current transition corridor before or after
+  the previous contact is released
+- outside a transition allowance, at least one eligible contact must occupy the held lane at each
+  required check
+- during a transition allowance, a replacement contact must reach the destination lane within the
+  allowed time; unresolved checks wait for that arrival or the deadline
+- a required check with no qualifying contact fails once its allowed time is exhausted
 - each participating contact still belongs to no more than one sustained interaction at a time
 
 ### Normal and Flick Endings
 
 A normal slide ends by pressing its current lane a second time during authoring. In play, a valid
-contact at that end lane and time completes it automatically.
+contact at that end lane and time completes it automatically. If the author later edits the normal
+end to a different lane, it is a final timed lane change with the same transition allowance.
 
 A slide may instead end with a terminal flick. The final authored lane transition becomes the
 flick itself:
@@ -276,6 +299,7 @@ The detailed workflow is owned by `CHART_AUTHORING.md`.
 - tap recording uses lane keys `1` through `8`
 - slide recording begins on a lane key, adds a node whenever another lane key is pressed, and ends
   normally when the current lane key is pressed again
+- a different lane key records the lane-change beat, after the previous lane's hold
 - a slide with no movement nodes becomes a hold
 - pressing `0` after a final lane transition does not add a time or node; it retroactively marks
   that last transition as a terminal flick and closes the slide
@@ -308,6 +332,8 @@ conflicts.
 - do global quarter-beat checks and half-beat rewards feel musically aligned through tempo changes?
 - is one-beat hold release grace forgiving without trivializing short holds?
 - can slide handoff work without allowing one contact to own multiple interactions?
+- can players read lane holds and transition beats from the step shape, and does the transition
+  allowance feel fair without permitting early diagonal travel?
 - do distant horizontal flicks remain readable and reliable on a physical mobile device?
 - does banana charge communicate tracking quality without making missed checkpoints feel like
   unexplained input loss?

@@ -1,7 +1,7 @@
 # Idiot_Tape — Rhythm System
 
 > Status: Current
-> Last reviewed: 2026-08-27
+> Last reviewed: 2026-09-04
 > Applies to: All rhythm-sensitive runtime and chart-authoring behavior
 > Authority: Song time, synchronization, input timing, and judgement timing contracts
 
@@ -65,6 +65,12 @@ polled as the per-frame authoritative judgement clock.
 
 Starting, restarting, pausing, resuming, or seeking the FMOD event must recapture the DSP/timeline
 anchor so audio playback, note presentation, and judgement continue to share one timeline.
+
+`FmodSongPlayback.TimelineTime` extends that same anchor into negative time before a scheduled
+start so gameplay can present approaching notes during preparation. It is a signed view of the
+existing FMOD clock, not a separately accumulated timer. The existing nonnegative `SongTime` and
+authoring timestamp APIs retain their previous semantics. Once the scheduled audio start is
+reached, both views agree for ordinary song playback.
 
 
 ## Do Not Use Accumulated Delta Time as Song Time
@@ -251,9 +257,9 @@ Do not duplicate latency compensation logic across individual note components.
 The accepted hold, slide, flick, and banana rules are defined in `NOTE_INTERACTIONS.md`. Their
 implementation must follow the timing contract below.
 
-This section describes the implemented interaction-timing contract. Deterministic math and current
-Play Mode regression checks pass; representative interaction and physical-device timing still
-require the evidence listed in `BACKLOG.md`.
+This section describes the implemented interaction-timing contract. Verification evidence is
+recorded in `BACKLOG.md`; representative interaction and physical-device timing, including the
+revised step-slide transition, still require validation.
 
 ### Global Musical Check Grid
 
@@ -277,7 +283,9 @@ and completion inherit that grade rather than manufacturing new timing errors fr
 
 Hold completion is automatic while the required lane contact remains valid. Slide completion is
 automatic while a valid contact occupies its end lane, except when the slide has an authored
-terminal flick. Neither normal completion requires a release timestamp.
+terminal flick. A normal end edited to a different lane uses the slide transition allowance below;
+a same-lane end retains its exact authored end check. Neither normal completion requires a release
+timestamp.
 
 A slide terminal flick uses flick motion conditions to decide success, but its one end result still
 inherits the slide start grade. It is not an additional independently graded flick reward.
@@ -294,12 +302,53 @@ grace boundary fails immediately.
 
 ### Slide Sampling and Contact Handoff
 
-Slide validity uses its authored linear path plus required quarter-beat and node times. Contact
-handoff may occur between those checks. At each required check, at least one eligible contact must
-occupy the valid path corridor. A contact may not satisfy two sustained interactions at once.
+Slide target position is piecewise constant: retain the previous authored node's lane until the
+next node time, then change to that node's lane. The visible step follows those exact chart times.
+Do not interpolate a diagonal target between nodes.
+
+An ordinary lane-changing node has a provisional transition allowance using the existing
+configurable `GoodWindowSeconds` (currently 0.14 seconds on each side). This lets a finger cross
+intermediate positions or a handoff occur around the musical transition without demanding an
+instantaneous jump. It does not require flick direction or speed.
+
+To avoid a dense sequence becoming one long free-travel corridor, resolve each node's window from
+the adjacent authored times:
+
+```text
+windowStart = max(nodeTime - GoodWindowSeconds, (previousTime + nodeTime) / 2)
+windowEnd   = min(nodeTime + GoodWindowSeconds, (nodeTime + nextTime) / 2)
+```
+
+`previousTime` is the previous node or slide start. The final normal end has no next-node midpoint
+cap. A same-lane node or same-lane end has no added transition allowance. A terminal-flick end
+retains the separate flick-motion contract and its existing window.
+
+After the preceding node has been validated, quarter-beat checks strictly after that node and
+inside the terminal flick's Good window wait for successful flick motion. They must not require
+the finger to remain in the departure lane while flicking. Success resolves crossed checks and
+their half-beat rewards before the single end reward; an unsuccessful flick fails at its deadline.
+Checks before that motion window and arrival at the preceding node remain mandatory.
+
+- outside a transition window, required quarter-beat checks sample the held lane at the original
+  absolute check time
+- checks, half-beat reward ticks, and node arrival checks inside the window require an eligible
+  contact to occupy its destination lane at some timestamp in that window
+- intermediate positions, a release gap, and contact handoff during the window are tolerated only
+  if that timely destination arrival occurs
+- an unresolved event waits for destination arrival or the window deadline; process events in
+  chronological order and emit every authored check/reward/node result at most once
+- late accepted arrival may delay visible results, but does not move authored note times, musical
+  grid times, or the displayed step
+- after the window closes, subsequent held-lane checks again require that destination lane
+
+Each successful node and half-beat reward remains a separate inherited-grade result even when they
+share a destination check. Contact histories and absolute timestamps must resolve early, exact,
+late, and frame-hitch cases consistently. A contact may not satisfy two sustained interactions at
+once.
 
 A failed required check ends the entire slide. Later check times must not generate repeated Misses
-or rewards after termination.
+or rewards after termination. The transition allowance is provisional and requires physical-device
+testing for distant and closely spaced lane changes.
 
 ### Flick Timestamp
 
@@ -359,6 +408,85 @@ be scheduled against one FMOD DSP clock. Editor realtime may estimate the remain
 but it must not trigger song playback or recording activation. A non-zero first-downbeat offset must
 therefore remain part of the continuous interval between the final negative-time count-in beat and
 the first musical downbeat after the audio begins.
+
+
+## Gameplay Preparation and First-Note Approach
+
+Preparing the selected FMOD event does not itself start a gameplay attempt. The session waits in
+Ready until the player starts, then schedules a CountIn followed by Playing. Audio time zero keeps
+its original meaning; no preparation offset is added to chart note times or tempo sections.
+
+The preparation plan uses the first chart tempo section's BPM, beats per bar, beat unit, and
+calibrated first-downbeat time. Only a missing tempo map uses explicit session fallback settings.
+For requested bar count `N`, bar duration `B`, current visual lead `L`, and earliest displayed note
+time `T`, the number of preparation bars is:
+
+```text
+preparationBars = max(N, ceil(max(0, L - T) / B))
+requestedAudioStartDelay = preparationBars * B + schedulingLead
+```
+
+The default and short choices request two and one bars respectively. The earliest displayed note
+includes dim notes outside musical-part activation windows, because those notes also need a full
+approach. At the signed timeline's initial position, the earliest note is at least one full visual
+lead away from its hit time. Notes are spawned and positioned from that signed time, including
+during CountIn. A later first note contributes its existing intro to the approach; the plan never
+rewrites the note to make it appear sooner.
+
+Negative-time beat cues extend the first tempo section backwards from its calibrated downbeat.
+Preparation duration and musical-grid phase are separate: a nonzero downbeat offset does not
+silently become zero, and the audio may begin between grid beats. The small countdown shows the
+last bar's remaining beats, using the actual time signature. A skipped rendering frame reads the
+current beat directly from the same signed timeline rather than replaying stale countdown values.
+
+The scheduled music start and negative-time clicks use the same FMOD DSP sample origin. Runtime
+and authoring share `FmodMetronome`; the Editor wrapper retains authoring-specific grid and offset
+behavior. Clicks remain presentation cues, with insufficient-lead clicks skipped rather than
+played late. No Unity built-in audio clock or accumulated frame timer starts the song.
+
+Scheduled playback must preserve the audio-to-chart phase used by ordinary Play/Restart and
+authoring recording. It restores FMOD's default event scheduling property and anchors the signed
+timeline at the event channel group's scheduled gate. Parent and master DSP clocks are captured
+together under the mixer lock so the returned master-clock anchor represents the same gate.
+The scheduled path must not independently subtract Studio's native startup delay: doing so only
+for gameplay advances the music relative to charts recorded with the existing playback timebase.
+The anchor is an event scheduling origin, not a promise that decoded sample zero or physical
+speaker output occurs at that instant. Native buffer-phase differences between immediate and
+scheduled starts must remain measured and explicit; preserving the timebase convention does not
+assert identical output phase to the sample.
+
+The playback component reads native streaming-schedule settings, the Studio update period, and
+DSP buffer sizes only to obtain minimum preparation lead. That minimum is one native preparation
+budget (at least one DSP block), plus the larger of the DSP buffer queue and one Studio update
+period. Very short requests may be extended to that minimum. Ordinary bar-based preparation
+retains its requested duration when the budget already fits. Gameplay clicks and preview follow
+the returned anchor; the authoring count-in's remaining-time display derives from the resulting
+signed timeline. A caller must not assume its requested delay is the final absolute start.
+Neither a measured startup discrepancy nor a song identity becomes a hardcoded timing offset.
+
+For a scheduled start at a nonzero song position, start the event paused, then set its timeline
+position before flushing Studio commands and installing the Core gate. Setting the position while
+the event is stopped can make a later unpause replace the gate; the observed failure allowed a
+long preparation to play early. This ordering belongs to scheduled starts and does not establish
+the correctness of the separate live `Seek` path.
+
+Synchronization regression checks must compare scheduled output against ordinary Play/Restart
+under the same backend settings, including repeated starts and later song positions. Raw Studio
+or decoded-channel cursor agreement with the signed timeline alone is insufficient: it can pass
+while the phase of existing authored charts changes. Master-mix PCM correlation can measure that
+compatibility before final output downmix; it does not measure physical-device latency. See
+[the start-sync regression record](Playtests/2026-09-04-start-sync-regression-verification.md)
+for the observed failure and current verification status.
+
+During CountIn, notes can be presented but judgement, Miss processing, and contact ownership are
+disabled. Preparation contacts are cleared before Playing, and note speed is locked so the
+approved visual-lead guarantee cannot change midway through the approach. Entering Playing
+requires both reaching the scheduled DSP start and a nonnegative signed timeline.
+
+A pause/cancel request during CountIn stops scheduled music and clicks, clears runtime state, and
+returns to Ready. Repeated start/restart requests during CountIn are ignored. Restart from Playing
+clears the previous attempt and schedules a fresh preparation from the same chart data. Normal
+pause/resume while Playing continues to use the established FMOD pause state.
 
 
 ## Pause and Resume

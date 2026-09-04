@@ -242,7 +242,7 @@ namespace IdiotTape.Audio
         }
 
         // The millisecond FMOD timeline is used for audition UI, seeking, and DSP anchor capture.
-        // Rhythm gameplay reads SongTime, which advances from the FMOD DSP sample clock.
+        // SongTime and gameplay's signed TimelineTime advance from the same FMOD DSP sample clock.
         public double PlaybackPositionSeconds
         {
 
@@ -290,6 +290,40 @@ namespace IdiotTape.Audio
                         dspSampleRate,
                         anchorSongTime))
                     : Math.Max(0d, anchorSongTime);
+
+            }
+
+        }
+
+        // Scheduled playback extends the same DSP timeline used by ordinary playback.
+        // Unlike the authoring-compatible SongTime, this extends before a future anchor.
+        public double TimelineTime
+        {
+
+            get
+            {
+
+                if (!IsRunning)
+                {
+
+                    return 0d;
+
+                }
+
+                if (IsPaused)
+                {
+
+                    return pausedSongTime;
+
+                }
+
+                return TryGetCurrentDspClock(out ulong currentDspClock)
+                    ? SongTimelineMath.FromDspClockSigned(
+                        anchorDspClock,
+                        currentDspClock,
+                        dspSampleRate,
+                        anchorSongTime)
+                    : anchorSongTime;
 
             }
 
@@ -580,17 +614,19 @@ namespace IdiotTape.Audio
 
             double clampedSongTime = Math.Max(0d, songTimeSeconds);
             int positionMilliseconds = (int)Math.Min(int.MaxValue, clampedSongTime * 1000d);
-            RESULT seekResult = songInstance.setTimelinePosition(positionMilliseconds);
 
-            if (seekResult != RESULT.OK)
+            ClearScheduleDelay();
+
+            if (!TryGetScheduledPreparationBudget(sampleRate, out ulong nativePreparationSamples,
+                    out ulong bufferLeadSamples))
             {
 
-                LogFmodError("seek the scheduled song", seekResult);
                 return false;
 
             }
 
-            ClearScheduleDelay();
+            ulong startDelaySamples = SongTimelineMath.GetScheduledStartDelaySamples(
+                delaySeconds, sampleRate, nativePreparationSamples, bufferLeadSamples);
             RESULT pauseResult = songInstance.setPaused(true);
 
             if (pauseResult != RESULT.OK)
@@ -609,6 +645,19 @@ namespace IdiotTape.Audio
 
                 LogFmodError("schedule the song start", startResult);
                 songInstance.setPaused(false);
+                return false;
+
+            }
+
+            // Apply the target after starting the paused event. Seeking while stopped can
+            // make Studio's later unpause replace the Core DSP gate with its own start delay.
+            RESULT seekResult = songInstance.setTimelinePosition(positionMilliseconds);
+
+            if (seekResult != RESULT.OK)
+            {
+
+                LogFmodError("seek the scheduled song", seekResult);
+                Stop();
                 return false;
 
             }
@@ -635,32 +684,10 @@ namespace IdiotTape.Audio
 
             }
 
-            RESULT clockResult = channelGroup.getDSPClock(
-                out _,
-                out ulong parentDspClock);
-
-            if (clockResult != RESULT.OK)
+            if (!TryScheduleSongChannelGroup(channelGroup, startDelaySamples, out scheduledStartDspClock))
             {
 
-                LogFmodError("read the scheduled song parent DSP clock", clockResult);
                 Stop();
-                return false;
-
-            }
-
-            scheduledStartDspClock = parentDspClock +
-                SecondsToDspClock(delaySeconds, sampleRate);
-            RESULT scheduledDelayResult = channelGroup.setDelay(
-                scheduledStartDspClock,
-                0,
-                false);
-
-            if (scheduledDelayResult != RESULT.OK)
-            {
-
-                LogFmodError("set the scheduled song DSP clock", scheduledDelayResult);
-                Stop();
-                scheduledStartDspClock = 0;
                 return false;
 
             }
@@ -696,6 +723,121 @@ namespace IdiotTape.Audio
             hasTimelineAnchor = true;
             hasScheduledStart = true;
             return true;
+
+        }
+
+        private bool TryGetScheduledPreparationBudget(
+            int sampleRate,
+            out ulong nativePreparationSamples,
+            out ulong bufferLeadSamples)
+        {
+
+            nativePreparationSamples = 0;
+            bufferLeadSamples = 0;
+            RESULT settingsResult = RuntimeManager.StudioSystem.getAdvancedSettings(out var settings);
+
+            if (settingsResult != RESULT.OK)
+            {
+
+                LogFmodError("read Studio scheduling settings", settingsResult);
+                return false;
+
+            }
+
+            RESULT bufferResult = RuntimeManager.CoreSystem.getDSPBufferSize(out uint bufferLength, out int bufferCount);
+
+            if (bufferResult != RESULT.OK)
+            {
+
+                LogFmodError("read FMOD DSP buffering", bufferResult);
+                return false;
+
+            }
+
+            // Give Studio's unpause and streaming work time to settle before the gate.
+            // This budget only limits how soon we may schedule; it must not advance the
+            // audio relative to the timeline used by ordinary Play/Restart and recording.
+            nativePreparationSamples = (ulong)Math.Max((long)bufferLength, settings.streamingscheduledelay);
+            bufferLeadSamples = Math.Max(
+                bufferLength * (ulong)Math.Max(1, bufferCount),
+                SecondsToDspClock(settings.studioupdateperiod / 1000d, sampleRate));
+
+            return true;
+
+        }
+
+        private bool TryScheduleSongChannelGroup(
+            ChannelGroup channelGroup,
+            ulong startDelaySamples,
+            out ulong timelineStartClock)
+        {
+
+            timelineStartClock = 0;
+            RESULT groupResult = RuntimeManager.CoreSystem.getMasterChannelGroup(out ChannelGroup masterGroup);
+
+            if (groupResult != RESULT.OK)
+            {
+
+                LogFmodError("read the scheduling master channel group", groupResult);
+                return false;
+
+            }
+
+            RESULT lockResult = RuntimeManager.CoreSystem.lockDSP();
+
+            if (lockResult != RESULT.OK)
+            {
+
+                LogFmodError("capture simultaneous scheduling DSP clocks", lockResult);
+                return false;
+
+            }
+
+            try
+            {
+
+                RESULT parentResult = channelGroup.getDSPClock(out _, out ulong parentClock);
+                RESULT masterResult = masterGroup.getDSPClock(out ulong masterClock, out _);
+
+                if (parentResult != RESULT.OK || masterResult != RESULT.OK)
+                {
+
+                    LogFmodError("read scheduling DSP clocks", parentResult != RESULT.OK ? parentResult : masterResult);
+                    return false;
+
+                }
+
+                // Preserve the established playback/recording phase: timeline zero marks
+                // the event gate, without compensating Studio's internal preparation delay.
+                ulong gateClock = parentClock + startDelaySamples;
+                RESULT delayResult = channelGroup.setDelay(gateClock, 0, false);
+
+                if (delayResult != RESULT.OK)
+                {
+
+                    LogFmodError("set the scheduled song DSP clock", delayResult);
+                    return false;
+
+                }
+
+                timelineStartClock = masterClock + startDelaySamples;
+                return true;
+
+            }
+            finally
+            {
+
+                // Never flush Studio commands while holding the mixer lock.
+                RESULT unlockResult = RuntimeManager.CoreSystem.unlockDSP();
+
+                if (unlockResult != RESULT.OK)
+                {
+
+                    LogFmodError("release scheduling DSP clocks", unlockResult);
+
+                }
+
+            }
 
         }
 

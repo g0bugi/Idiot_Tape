@@ -19,6 +19,72 @@ namespace IdiotTape.Gameplay
 
         private const double Tolerance = 0.000001d;
 
+        public static bool TryGetSlideTransitionWindow(
+            ChartNote note,
+            double checkTime,
+            double goodWindowSeconds,
+            out int nodeIndex,
+            out double windowStart,
+            out double windowEnd)
+        {
+
+            nodeIndex = -1;
+            windowStart = 0d;
+            windowEnd = 0d;
+
+            if (note == null || note.NoteType != ChartNoteType.Slide)
+            {
+
+                return false;
+
+            }
+
+            double previousTime = note.HitTime;
+            int previousLane = note.LaneIndex;
+
+            for (int index = 0; index < note.SlideNodes.Count; index++)
+            {
+
+                ChartPathNode node = note.SlideNodes[index];
+                bool isTerminalFlick = index == note.SlideNodes.Count - 1 &&
+                                       note.SlideEndBehavior == SlideEndBehavior.Flick;
+
+                if (node.LaneIndex != previousLane && !isTerminalFlick)
+                {
+
+                    double start = Math.Max(
+                        node.Time - goodWindowSeconds,
+                        (previousTime + node.Time) * 0.5d);
+                    double end = node.Time + goodWindowSeconds;
+
+                    if (index + 1 < note.SlideNodes.Count)
+                    {
+
+                        end = Math.Min(end, (node.Time + note.SlideNodes[index + 1].Time) * 0.5d);
+
+                    }
+
+                    if (checkTime >= start - Tolerance && checkTime <= end + Tolerance)
+                    {
+
+                        nodeIndex = index;
+                        windowStart = start;
+                        windowEnd = end;
+                        return true;
+
+                    }
+
+                }
+
+                previousTime = node.Time;
+                previousLane = node.LaneIndex;
+
+            }
+
+            return false;
+
+        }
+
         public static int GetBananaBonusCombo(
             int successfulCheckpoints,
             int totalCheckpoints,

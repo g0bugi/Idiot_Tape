@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +8,7 @@ namespace IdiotTape.Gameplay
     {
 
         private const int BananaLinePointCount = 25;
-        private const int TimedSegmentPointCount = 5;
+        private const int SlideConnectorSegmentCount = 4;
 
         private readonly List<SpriteRenderer> spriteRenderers = new();
         private ChartNote note;
@@ -186,7 +185,10 @@ namespace IdiotTape.Gameplay
 
                 GameObject arrow = new("Direction");
                 arrow.transform.SetParent(markerRoot, false);
-                float direction = note.EndLaneIndex > note.LaneIndex ? 1f : -1f;
+                int flickStartLane = note.NoteType == ChartNoteType.Slide && note.SlideNodes.Count > 1
+                    ? note.SlideNodes[^2].LaneIndex
+                    : note.LaneIndex;
+                float direction = note.EndLaneIndex > flickStartLane ? 1f : -1f;
                 arrow.transform.localPosition = new Vector3(direction * 0.72f, 0f, 0f);
                 arrow.transform.localRotation = Quaternion.Euler(0f, 0f, direction > 0f ? -90f : 90f);
                 SpriteRenderer arrowRenderer = arrow.AddComponent<SpriteRenderer>();
@@ -260,6 +262,14 @@ namespace IdiotTape.Gameplay
         private void UpdateBody(double songTime)
         {
 
+            if (note.NoteType == ChartNoteType.Slide)
+            {
+
+                UpdateSlideBody(songTime);
+                return;
+
+            }
+
             int pointCount = GetBodyPointCount();
             bodyOutline.positionCount = pointCount;
             bodyFill.positionCount = pointCount;
@@ -281,6 +291,44 @@ namespace IdiotTape.Gameplay
 
         }
 
+        private void UpdateSlideBody(double songTime)
+        {
+
+            int renderPointCount = NotePathMath.GetSlideRenderPointCount(note);
+            int pointCount = 1 + note.SlideNodes.Count * (SlideConnectorSegmentCount + 1);
+            bodyOutline.positionCount = pointCount;
+            bodyFill.positionCount = pointCount;
+            float previousX = PlayfieldGeometry.GetLaneCenterNormalized(note.LaneIndex, laneCount);
+            int outputIndex = 0;
+
+            for (int index = 0; index < renderPointCount; index++)
+            {
+
+                NotePathMath.GetSlideRenderPoint(note, index, out double pointTime, out int pointLane);
+                float normalizedX = PlayfieldGeometry.GetLaneCenterNormalized(pointLane, laneCount);
+                bool isConnector = index > 0 && index % 2 == 0;
+                int segmentCount = isConnector ? SlideConnectorSegmentCount : 1;
+
+                for (int segmentIndex = 1; segmentIndex <= segmentCount; segmentIndex++)
+                {
+
+                    // A lane transition spans space at one chart time, including on a curved playfield.
+                    float pointX = isConnector
+                        ? Mathf.Lerp(previousX, normalizedX, (float)segmentIndex / segmentCount)
+                        : normalizedX;
+                    Vector3 position = GetWorldPosition(pointTime, pointX, songTime);
+                    bodyOutline.SetPosition(outputIndex, position);
+                    bodyFill.SetPosition(outputIndex, position);
+                    outputIndex++;
+
+                }
+
+                previousX = normalizedX;
+
+            }
+
+        }
+
         private int GetBodyPointCount()
         {
 
@@ -288,13 +336,6 @@ namespace IdiotTape.Gameplay
             {
 
                 return BananaLinePointCount;
-
-            }
-
-            if (note.NoteType == ChartNoteType.Slide)
-            {
-
-                return Math.Max(2, note.SlideNodes.Count * TimedSegmentPointCount + 1);
 
             }
 
@@ -322,16 +363,6 @@ namespace IdiotTape.Gameplay
             switch (note.NoteType)
             {
 
-                case ChartNoteType.Slide:
-                    if (note.SlideEndBehavior == SlideEndBehavior.Flick &&
-                        pointTime >= note.EndTime - 0.000001d)
-                    {
-
-                        return PlayfieldGeometry.GetLaneCenterNormalized(note.EndLaneIndex, laneCount);
-
-                    }
-
-                    return NotePathMath.GetSlideNormalizedX(note, pointTime, laneCount);
                 case ChartNoteType.Banana:
                     return NotePathMath.GetBananaNormalizedX(note, pointTime, laneCount);
                 default:

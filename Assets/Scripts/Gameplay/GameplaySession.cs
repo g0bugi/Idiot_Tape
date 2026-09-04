@@ -11,6 +11,16 @@ namespace IdiotTape.Gameplay
     public sealed class GameplaySession : MonoBehaviour
     {
 
+        private enum SessionPhase
+        {
+
+            Preparing,
+            Ready,
+            CountIn,
+            Playing
+
+        }
+
         private const float SongPreparationTimeoutSeconds = 15f;
         private const int KeyboardContactIdBase = -1000;
         private const double ScheduleTolerance = 0.000001d;
@@ -41,9 +51,11 @@ namespace IdiotTape.Gameplay
             public double NextQuarterCheckTime { get; set; } = double.PositiveInfinity;
             public double NextHalfRewardTime { get; set; } = double.PositiveInfinity;
             public int NextSlideNodeIndex { get; set; }
+            public int ValidatedSlideTransitionIndex { get; set; } = -1;
             public int NextBananaCheckpointIndex { get; set; }
             public int SuccessfulBananaCheckpoints { get; set; }
             public bool TerminalFlickReady { get; set; }
+            public bool TerminalFlickCompleted { get; set; }
             public float FlickStartNormalizedX { get; set; }
 
         }
@@ -52,6 +64,8 @@ namespace IdiotTape.Gameplay
         {
 
             private readonly List<ContactSample> samples = new();
+            private readonly List<ContactOwnership> ownershipChanges = new();
+            private ActiveNote owner;
 
             public ContactState(int id, float normalizedX, double songTime)
             {
@@ -73,7 +87,68 @@ namespace IdiotTape.Gameplay
             public double PreviousSongTime { get; set; }
             public bool IsDown { get; set; }
             public int LaneIndex { get; set; }
-            public ActiveNote Owner { get; set; }
+            public ActiveNote Owner
+            {
+
+                get => owner;
+                set => SetOwnerAtTime(value, SongTime);
+
+            }
+
+            public ActiveNote GetOwnerAtTime(double songTime)
+            {
+
+                for (int index = ownershipChanges.Count - 1; index >= 0; index--)
+                {
+
+                    if (ownershipChanges[index].SongTime <= songTime + ScheduleTolerance)
+                    {
+
+                        return ownershipChanges[index].Owner;
+
+                    }
+
+                }
+
+                return null;
+
+            }
+
+            public void SetOwnerAtTime(ActiveNote newOwner, double songTime)
+            {
+
+                if (GetOwnerAtTime(songTime) == newOwner)
+                {
+
+                    return;
+
+                }
+
+                int index = ownershipChanges.Count;
+
+                while (index > 0 && ownershipChanges[index - 1].SongTime > songTime)
+                {
+
+                    index--;
+
+                }
+
+                if (index > 0 && ownershipChanges[index - 1].SongTime == songTime)
+                {
+
+                    ownershipChanges[index - 1] = new ContactOwnership(songTime, newOwner);
+
+                }
+                else
+                {
+
+                    ownershipChanges.Insert(index, new ContactOwnership(songTime, newOwner));
+
+                }
+
+                owner = ownershipChanges[^1].Owner;
+
+            }
 
             public void Record(float normalizedX, double songTime, bool isDown)
             {
@@ -87,7 +162,10 @@ namespace IdiotTape.Gameplay
 
             }
 
-            public bool TryGetNormalizedX(double songTime, out float normalizedX)
+            public bool TryGetNormalizedX(
+                double songTime,
+                out float normalizedX,
+                bool interpolate = true)
             {
 
                 ContactSample previous = samples[0];
@@ -116,7 +194,8 @@ namespace IdiotTape.Gameplay
 
                         }
 
-                        if (next.IsDown && next.SongTime > previous.SongTime + ScheduleTolerance)
+                        if (interpolate && next.IsDown &&
+                            next.SongTime > previous.SongTime + ScheduleTolerance)
                         {
 
                             float progress = Mathf.Clamp01(
@@ -143,6 +222,104 @@ namespace IdiotTape.Gameplay
                 return previous.IsDown;
 
             }
+
+            public bool HasContactInLaneWindow(
+                double startTime,
+                double endTime,
+                float targetX,
+                int laneCount,
+                float tolerance,
+                ActiveNote activeNote,
+                out double contactTime)
+            {
+
+                contactTime = startTime;
+                // Use only positions already observed at or before the deadline. Interpolating
+                // towards a later sample would change the result when a frame crosses the window.
+                ActiveNote startOwner = GetOwnerAtTime(startTime);
+
+                if ((startOwner == null || startOwner == activeNote) &&
+                    TryGetNormalizedX(startTime, out float startX, false) &&
+                    NotePathMath.IsInsideLaneCorridor(startX, targetX, laneCount, tolerance))
+                {
+
+                    return true;
+
+                }
+
+                for (int index = 0; index < samples.Count; index++)
+                {
+
+                    ContactSample sample = samples[index];
+
+                    if (sample.SongTime > endTime + ScheduleTolerance)
+                    {
+
+                        break;
+
+                    }
+
+                    if (sample.SongTime >= startTime - ScheduleTolerance && sample.IsDown &&
+                        (GetOwnerAtTime(sample.SongTime) == null ||
+                         GetOwnerAtTime(sample.SongTime) == activeNote) &&
+                        NotePathMath.IsInsideLaneCorridor(
+                            sample.NormalizedX,
+                            targetX,
+                            laneCount,
+                            tolerance))
+                    {
+
+                        contactTime = sample.SongTime;
+                        return true;
+
+                    }
+
+                }
+
+                for (int index = 0; index < ownershipChanges.Count; index++)
+                {
+
+                    ContactOwnership change = ownershipChanges[index];
+
+                    if (change.SongTime > endTime + ScheduleTolerance)
+                    {
+
+                        break;
+
+                    }
+
+                    if (change.SongTime >= startTime - ScheduleTolerance &&
+                        (change.Owner == null || change.Owner == activeNote) &&
+                        TryGetNormalizedX(change.SongTime, out float position, false) &&
+                        NotePathMath.IsInsideLaneCorridor(position, targetX, laneCount, tolerance))
+                    {
+
+                        contactTime = change.SongTime;
+                        return true;
+
+                    }
+
+                }
+
+                return false;
+
+            }
+
+        }
+
+        private readonly struct ContactOwnership
+        {
+
+            public ContactOwnership(double songTime, ActiveNote owner)
+            {
+
+                SongTime = songTime;
+                Owner = owner;
+
+            }
+
+            public double SongTime { get; }
+            public ActiveNote Owner { get; }
 
         }
 
@@ -187,6 +364,15 @@ namespace IdiotTape.Gameplay
         [SerializeField] private GameplayHud hud;
         [SerializeField] private JudgementSettings judgementSettings = new();
 
+        [Header("Start Preparation")]
+        [SerializeField, Min(1)] private int preparationBars = 2;
+        [SerializeField, Min(1)] private int shortPreparationBars = 1;
+        [SerializeField, Min(0.05f)] private float startSchedulingLeadSeconds = 0.1f;
+        [SerializeField, Range(0f, 1f)] private float countInVolume = 0.15f;
+        [SerializeField, Min(1f)] private float fallbackBeatsPerMinute = 120f;
+        [SerializeField, Min(1)] private int fallbackBeatsPerBar = 4;
+        [SerializeField, Min(1)] private int fallbackBeatUnit = 4;
+
         private readonly List<ActiveNote> activeNotes = new();
         private readonly List<ActiveTimingGuide> activeTimingGuides = new();
         private readonly List<JudgementCandidate> judgementCandidates = new();
@@ -198,6 +384,14 @@ namespace IdiotTape.Gameplay
         private int score;
         private int combo;
         private bool isReady;
+        private bool startCalled;
+        private Coroutine preparationRoutine;
+        private SessionPhase phase;
+        private GameplayStartPlan startPlan;
+        private FmodMetronome countInMetronome;
+
+        public bool IsWaitingForStart => isActiveAndEnabled && isReady && phase == SessionPhase.Ready;
+        public bool IsCountingIn => phase == SessionPhase.CountIn;
 
         private void OnEnable()
         {
@@ -208,8 +402,22 @@ namespace IdiotTape.Gameplay
             inputRouter.LanePressed += HandleLanePressed;
             inputRouter.LaneReleased += HandleLaneReleased;
             inputRouter.FlickAssistRequested += HandleFlickAssistRequested;
+            inputRouter.StartRequested += RequestStart;
             inputRouter.RestartRequested += BeginSession;
             inputRouter.PauseRequested += TogglePause;
+
+            if (isReady)
+            {
+
+                ReturnToStartPrompt();
+
+            }
+            else if (startCalled)
+            {
+
+                preparationRoutine = StartCoroutine(PrepareSession());
+
+            }
 
         }
 
@@ -222,13 +430,49 @@ namespace IdiotTape.Gameplay
             inputRouter.LanePressed -= HandleLanePressed;
             inputRouter.LaneReleased -= HandleLaneReleased;
             inputRouter.FlickAssistRequested -= HandleFlickAssistRequested;
+            inputRouter.StartRequested -= RequestStart;
             inputRouter.RestartRequested -= BeginSession;
             inputRouter.PauseRequested -= TogglePause;
             ClearContactsAndLanePresses();
 
+            if (preparationRoutine != null)
+            {
+
+                StopCoroutine(preparationRoutine);
+                preparationRoutine = null;
+
+            }
+
+            if (phase == SessionPhase.CountIn)
+            {
+
+                songPlayback.Stop();
+                ClearSessionState();
+                phase = SessionPhase.Ready;
+
+            }
+
+            countInMetronome?.Dispose();
+            countInMetronome = null;
+
+            if (hud != null)
+            {
+
+                hud.HideStartFlow();
+
+            }
+
         }
 
-        private IEnumerator Start()
+        private void Start()
+        {
+
+            startCalled = true;
+            preparationRoutine = StartCoroutine(PrepareSession());
+
+        }
+
+        private IEnumerator PrepareSession()
         {
 
             if (!chart.TryValidate(out string error))
@@ -250,7 +494,21 @@ namespace IdiotTape.Gameplay
                    Time.realtimeSinceStartup < preparationDeadline)
             {
 
+                if (!isActiveAndEnabled)
+                {
+
+                    yield break;
+
+                }
+
                 yield return null;
+
+            }
+
+            if (!isActiveAndEnabled)
+            {
+
+                yield break;
 
             }
 
@@ -266,21 +524,31 @@ namespace IdiotTape.Gameplay
             isReady = true;
             activeLanePressCounts = new int[chart.LaneCount];
             presenter.ConfigureLaneFeedback(chart.LaneCount);
-            BeginSession();
+            ReturnToStartPrompt();
+            preparationRoutine = null;
 
         }
 
         private void Update()
         {
 
-            if (!isReady || songPlayback.IsPaused)
+            if (!isReady || phase == SessionPhase.Ready || songPlayback.IsPaused)
             {
 
                 return;
 
             }
 
-            double songTime = songPlayback.SongTime;
+            double songTime = songPlayback.TimelineTime;
+            CompleteCountInIfStarted(songTime);
+
+            if (phase == SessionPhase.CountIn)
+            {
+
+                hud.ShowCountIn(startPlan.GetCountdownNumber(songTime));
+
+            }
+
             float visualLeadTime = NoteSpeedMath.GetVisualLeadTime(
                 chart.VisualLeadTime,
                 hud.NoteSpeedMultiplier);
@@ -298,12 +566,129 @@ namespace IdiotTape.Gameplay
         private void BeginSession()
         {
 
-            if (!isReady)
+            if (isReady)
+            {
+
+                CompleteCountInIfStarted(songPlayback.TimelineTime);
+
+            }
+
+            if (!isReady || phase == SessionPhase.CountIn)
             {
 
                 return;
 
             }
+
+            ClearSessionState();
+            float visualLead = NoteSpeedMath.GetVisualLeadTime(chart.VisualLeadTime, hud.NoteSpeedMultiplier);
+            startPlan = GameplayStartPlan.Create(
+                chart.TempoSections,
+                chart.Notes.Count > 0 ? chart.Notes[0].HitTime : 0d,
+                visualLead,
+                hud.ShortPreparation ? shortPreparationBars : preparationBars,
+                startSchedulingLeadSeconds,
+                fallbackBeatsPerMinute,
+                fallbackBeatsPerBar,
+                fallbackBeatUnit);
+
+            if (!songPlayback.SchedulePlay(startPlan.AudioStartDelaySeconds, 0d,
+                    out ulong audioStartClock, out int sampleRate))
+            {
+
+                ReturnToStartPrompt();
+                return;
+
+            }
+
+            phase = SessionPhase.CountIn;
+            hud.ShowCountIn(startPlan.GetCountdownNumber(songPlayback.TimelineTime));
+            ScheduleCountInClicks(audioStartClock, sampleRate);
+            float leadTime = NoteSpeedMath.GetVisualLeadTime(chart.VisualLeadTime, hud.NoteSpeedMultiplier);
+            double songTime = songPlayback.TimelineTime;
+            SpawnUpcomingNotes(songTime, leadTime);
+            UpdateActiveNotes(songTime, leadTime);
+
+        }
+
+        public void RequestStart()
+        {
+
+            if (IsWaitingForStart)
+            {
+
+                BeginSession();
+
+            }
+
+        }
+
+        private void CompleteCountInIfStarted(double songTime)
+        {
+
+            if (phase != SessionPhase.CountIn || !songPlayback.HasReachedScheduledStart || songTime < 0d)
+            {
+
+                return;
+
+            }
+
+            // InputRouter may update before this component on the first music frame.
+            // Resolve the transition from DSP time there too, so the opening hit is not lost.
+            phase = SessionPhase.Playing;
+            ClearContactsAndLanePresses();
+            countInMetronome?.StopAll();
+            hud.HideStartFlow();
+
+        }
+
+        private void ReturnToStartPrompt()
+        {
+
+            songPlayback.Stop();
+            countInMetronome?.StopAll();
+            ClearSessionState();
+            phase = SessionPhase.Ready;
+            hud.ShowStartPrompt(chart.name);
+
+        }
+
+        private void ScheduleCountInClicks(ulong audioStartClock, int sampleRate)
+        {
+
+            if (countInVolume <= 0f)
+            {
+
+                return;
+
+            }
+
+            countInMetronome ??= new FmodMetronome();
+
+            for (int beatIndex = startPlan.FirstCountInBeatIndex;
+                beatIndex <= startPlan.LastCountInBeatIndex; beatIndex++)
+            {
+
+                double beatTime = startPlan.GetBeatTime(beatIndex);
+                // The audio and preparation clicks share the scheduled FMOD sample origin.
+                ulong leadSamples = (ulong)Math.Round(-beatTime * sampleRate);
+
+                if (leadSamples < audioStartClock)
+                {
+
+                    countInMetronome.ScheduleAtDspClock(
+                        audioStartClock - leadSamples, beatIndex % startPlan.BeatsPerBar == 0, countInVolume);
+
+                }
+
+            }
+
+        }
+
+        private void ClearSessionState()
+        {
+
+            countInMetronome?.StopAll();
 
             for (int index = activeNotes.Count - 1; index >= 0; index--)
             {
@@ -335,7 +720,6 @@ namespace IdiotTape.Gameplay
             hud.SetPaused(false);
             hud.SetProgress(0f);
             ClearContactsAndLanePresses();
-            songPlayback.Restart();
 
         }
 
@@ -371,6 +755,13 @@ namespace IdiotTape.Gameplay
                 ActiveNote activeNote = activeNotes[index];
                 activeNote.View.SetVisualLeadTime(visualLeadTime);
                 activeNote.View.UpdatePresentation(songTime);
+
+                if (phase == SessionPhase.CountIn)
+                {
+
+                    continue;
+
+                }
 
                 if (!activeNote.IsPlayable)
                 {
@@ -460,7 +851,7 @@ namespace IdiotTape.Gameplay
                 {
 
                     AwardTapEquivalent(activeNote, activeNote.StartGrade, activeNote.Note.EndLaneIndex);
-                    RemoveActiveNote(activeNote);
+                    RemoveActiveNote(activeNote, songTime);
 
                 }
 
@@ -478,7 +869,7 @@ namespace IdiotTape.Gameplay
                         activeNote.NextQuarterCheckTime))
                 {
 
-                    FailSustained(activeNote);
+                    FailSustained(activeNote, songTime);
                     return;
 
                 }
@@ -511,13 +902,13 @@ namespace IdiotTape.Gameplay
                         activeNote.Note.EndTime))
                 {
 
-                    FailSustained(activeNote);
+                    FailSustained(activeNote, songTime);
                     return;
 
                 }
 
                 AwardTapEquivalent(activeNote, activeNote.StartGrade, activeNote.Note.EndLaneIndex);
-                RemoveActiveNote(activeNote);
+                RemoveActiveNote(activeNote, songTime);
 
             }
 
@@ -562,10 +953,17 @@ namespace IdiotTape.Gameplay
                     checkTime,
                     chart.LaneCount);
 
-                if (!TryClaimEligibleContact(activeNote, expectedX, checkTime))
+                if (!TryValidateSlideCheck(activeNote, checkTime, songTime, out bool pending))
                 {
 
-                    FailSustained(activeNote);
+                    if (pending)
+                    {
+
+                        return;
+
+                    }
+
+                    FailSustained(activeNote, songTime);
                     return;
 
                 }
@@ -616,7 +1014,7 @@ namespace IdiotTape.Gameplay
                 if (songTime > activeNote.Note.EndTime + judgementSettings.GoodWindowSeconds)
                 {
 
-                    FailSustained(activeNote);
+                    FailSustained(activeNote, songTime);
 
                 }
 
@@ -627,20 +1025,27 @@ namespace IdiotTape.Gameplay
             if (songTime >= activeNote.Note.EndTime)
             {
 
-                float endX = PlayfieldGeometry.GetLaneCenterNormalized(
-                    activeNote.Note.EndLaneIndex,
-                    chart.LaneCount);
-
-                if (!TryClaimEligibleContact(activeNote, endX, activeNote.Note.EndTime))
+                if (!TryValidateSlideCheck(
+                        activeNote,
+                        activeNote.Note.EndTime,
+                        songTime,
+                        out bool pending))
                 {
 
-                    FailSustained(activeNote);
+                    if (pending)
+                    {
+
+                        return;
+
+                    }
+
+                    FailSustained(activeNote, songTime);
                     return;
 
                 }
 
                 AwardTapEquivalent(activeNote, activeNote.StartGrade, activeNote.Note.EndLaneIndex);
-                RemoveActiveNote(activeNote);
+                RemoveActiveNote(activeNote, songTime);
 
             }
 
@@ -708,7 +1113,7 @@ namespace IdiotTape.Gameplay
                     activeNote.Note.BananaMaximumBonusCombo);
                 combo += bonusCombo;
                 hud.ShowCombo(combo);
-                RemoveActiveNote(activeNote);
+                RemoveActiveNote(activeNote, songTime);
                 return;
 
             }
@@ -717,7 +1122,7 @@ namespace IdiotTape.Gameplay
             {
 
                 ShowMiss();
-                RemoveActiveNote(activeNote);
+                RemoveActiveNote(activeNote, songTime);
 
             }
 
@@ -727,6 +1132,35 @@ namespace IdiotTape.Gameplay
         {
 
             if (!isReady)
+            {
+
+                return;
+
+            }
+
+            CompleteCountInIfStarted(songPlayback.TimelineTime);
+
+            if (phase == SessionPhase.Ready)
+            {
+
+                if (hud.IsStartButtonPress(screenPosition))
+                {
+
+                    RequestStart();
+                    return;
+
+                }
+
+                if (hud.TryTogglePreparationFromScreenPosition(screenPosition))
+                {
+
+                    return;
+
+                }
+
+            }
+
+            if (phase == SessionPhase.CountIn)
             {
 
                 return;
@@ -749,7 +1183,7 @@ namespace IdiotTape.Gameplay
 
             }
 
-            if (songPlayback.IsPaused ||
+            if (phase != SessionPhase.Playing || songPlayback.IsPaused ||
                 !presenter.TryGetInputPosition(screenPosition, out float normalizedX))
             {
 
@@ -757,7 +1191,14 @@ namespace IdiotTape.Gameplay
 
             }
 
-            BeginContact(contactId, normalizedX, ConvertInputTimestamp(eventTimestamp));
+            double inputTime = ConvertInputTimestamp(eventTimestamp);
+
+            if (inputTime >= 0d)
+            {
+
+                BeginContact(contactId, normalizedX, inputTime);
+
+            }
 
         }
 
@@ -900,7 +1341,15 @@ namespace IdiotTape.Gameplay
         private void HandleLanePressed(int laneIndex, double eventTimestamp)
         {
 
-            if (!isReady || songPlayback.IsPaused || laneIndex < 0 || laneIndex >= chart.LaneCount)
+            if (isReady)
+            {
+
+                CompleteCountInIfStarted(songPlayback.TimelineTime);
+
+            }
+
+            if (!isReady || phase != SessionPhase.Playing || songPlayback.IsPaused ||
+                laneIndex < 0 || laneIndex >= chart.LaneCount)
             {
 
                 return;
@@ -908,7 +1357,14 @@ namespace IdiotTape.Gameplay
             }
 
             float normalizedX = PlayfieldGeometry.GetLaneCenterNormalized(laneIndex, chart.LaneCount);
-            BeginContact(KeyboardContactIdBase - laneIndex, normalizedX, ConvertInputTimestamp(eventTimestamp));
+            double inputTime = ConvertInputTimestamp(eventTimestamp);
+
+            if (inputTime >= 0d)
+            {
+
+                BeginContact(KeyboardContactIdBase - laneIndex, normalizedX, inputTime);
+
+            }
 
         }
 
@@ -929,7 +1385,14 @@ namespace IdiotTape.Gameplay
         private void HandleFlickAssistRequested(double eventTimestamp)
         {
 
-            if (!isReady || songPlayback.IsPaused)
+            if (isReady)
+            {
+
+                CompleteCountInIfStarted(songPlayback.TimelineTime);
+
+            }
+
+            if (!isReady || phase != SessionPhase.Playing || songPlayback.IsPaused)
             {
 
                 return;
@@ -937,6 +1400,14 @@ namespace IdiotTape.Gameplay
             }
 
             double songTime = ConvertInputTimestamp(eventTimestamp);
+
+            if (songTime < 0d)
+            {
+
+                return;
+
+            }
+
             ActiveNote best = null;
             double bestError = double.PositiveInfinity;
 
@@ -976,24 +1447,53 @@ namespace IdiotTape.Gameplay
 
             }
 
+            if (best.Note.NoteType == ChartNoteType.Slide &&
+                !ResolveSlideBeforeTerminalFlick(best, songTime))
+            {
+
+                return;
+
+            }
+
+            if (best.Note.NoteType == ChartNoteType.Slide)
+            {
+
+                best.TerminalFlickCompleted = true;
+                UpdateSlide(best, songTime);
+
+            }
+
             AwardTapEquivalent(
                 best,
                 best.Note.NoteType == ChartNoteType.Flick
                     ? JudgementGrade.Perfect
                     : best.StartGrade,
                 best.Note.EndLaneIndex);
-            RemoveActiveNote(best);
+            RemoveActiveNote(best, songTime);
 
         }
 
         private void BeginContact(int contactId, float normalizedX, double songTime)
         {
 
-            if (contacts.TryGetValue(contactId, out ContactState existing) && existing.IsDown)
+            if (contacts.TryGetValue(contactId, out ContactState existing))
             {
 
-                RemoveLanePress(existing.LaneIndex);
-                ReleaseContact(existing);
+                if (existing.IsDown)
+                {
+
+                    RemoveLanePress(existing.LaneIndex);
+                    existing.Record(existing.NormalizedX, songTime, false);
+                    ReleaseContact(existing);
+
+                }
+
+                // Keyboard lanes and touch devices may reuse an ID before a deferred check runs.
+                existing.Record(normalizedX, songTime, true);
+                existing.LaneIndex = PlayfieldGeometry.GetLaneIndex(normalizedX, chart.LaneCount);
+                AddLanePress(existing.LaneIndex);
+                JudgeContactStart(existing);
+                return;
 
             }
 
@@ -1176,6 +1676,15 @@ namespace IdiotTape.Gameplay
             JudgementGrade rewardGrade)
         {
 
+            if (activeNote.Note.NoteType == ChartNoteType.Slide &&
+                (!ResolveSlideBeforeTerminalFlick(activeNote, contact.SongTime) ||
+                 contact.Owner != activeNote))
+            {
+
+                return;
+
+            }
+
             FlickMotionResult motionResult = NoteInteractionMath.EvaluateFlickMotion(
                 activeNote.FlickStartNormalizedX,
                 contact.PreviousNormalizedX,
@@ -1214,8 +1723,65 @@ namespace IdiotTape.Gameplay
 
             }
 
+            if (activeNote.Note.NoteType == ChartNoteType.Slide)
+            {
+
+                float targetX = PlayfieldGeometry.GetLaneCenterNormalized(
+                    activeNote.Note.EndLaneIndex,
+                    chart.LaneCount);
+                float direction = Mathf.Sign(targetX - activeNote.FlickStartNormalizedX);
+
+                if (Mathf.Sign(contact.NormalizedX - contact.PreviousNormalizedX) != direction)
+                {
+
+                    return;
+
+                }
+
+                activeNote.TerminalFlickCompleted = true;
+                UpdateSlide(activeNote, contact.SongTime);
+
+            }
+
             AwardTapEquivalent(activeNote, rewardGrade, activeNote.Note.EndLaneIndex);
-            RemoveActiveNote(activeNote);
+            RemoveActiveNote(activeNote, contact.SongTime);
+
+        }
+
+        private bool ResolveSlideBeforeTerminalFlick(ActiveNote activeNote, double songTime)
+        {
+
+            if (songTime < GetTerminalFlickStartTime(activeNote.Note))
+            {
+
+                return false;
+
+            }
+
+            UpdateSlide(activeNote, songTime);
+
+            if (activeNote.HasFailed ||
+                activeNote.NextSlideNodeIndex < activeNote.Note.SlideNodes.Count - 1)
+            {
+
+                return false;
+
+            }
+
+            return activeNote.NextQuarterCheckTime >= activeNote.Note.EndTime - ScheduleTolerance ||
+                   activeNote.NextQuarterCheckTime > songTime + ScheduleTolerance ||
+                   IsTerminalFlickMotionCheck(activeNote, activeNote.NextQuarterCheckTime);
+
+        }
+
+        private bool IsTerminalFlickMotionCheck(ActiveNote activeNote, double checkTime)
+        {
+
+            return activeNote.Note.SlideEndBehavior == SlideEndBehavior.Flick &&
+                   activeNote.NextSlideNodeIndex >= activeNote.Note.SlideNodes.Count - 1 &&
+                   checkTime > GetTerminalFlickStartTime(activeNote.Note) + ScheduleTolerance &&
+                   checkTime >= activeNote.Note.EndTime - judgementSettings.GoodWindowSeconds - ScheduleTolerance &&
+                   checkTime < activeNote.Note.EndTime - ScheduleTolerance;
 
         }
 
@@ -1247,7 +1813,13 @@ namespace IdiotTape.Gameplay
 
             }
 
-            if (contact.IsDown)
+            if (activeNote.Note.NoteType == ChartNoteType.Slide)
+            {
+
+                ClaimContact(activeNote, contact, checkTime);
+
+            }
+            else if (contact.IsDown)
             {
 
                 ClaimContact(activeNote, contact);
@@ -1255,6 +1827,86 @@ namespace IdiotTape.Gameplay
             }
 
             return true;
+
+        }
+
+        private bool TryValidateSlideCheck(
+            ActiveNote activeNote,
+            double checkTime,
+            double songTime,
+            out bool pending)
+        {
+
+            pending = false;
+
+            if (IsTerminalFlickMotionCheck(activeNote, checkTime))
+            {
+
+                // A valid final flick necessarily leaves the held lane. Defer checks crossed
+                // during its motion window until that flick succeeds, keeping their reward times.
+                pending = !activeNote.TerminalFlickCompleted &&
+                          songTime <= activeNote.Note.EndTime + judgementSettings.GoodWindowSeconds;
+                return activeNote.TerminalFlickCompleted;
+
+            }
+
+            if (!NoteInteractionMath.TryGetSlideTransitionWindow(
+                    activeNote.Note,
+                    checkTime,
+                    judgementSettings.GoodWindowSeconds,
+                    out int nodeIndex,
+                    out double windowStart,
+                    out double windowEnd))
+            {
+
+                float expectedX = NotePathMath.GetSlideNormalizedX(
+                    activeNote.Note,
+                    checkTime,
+                    chart.LaneCount);
+                return TryClaimEligibleContact(activeNote, expectedX, checkTime);
+
+            }
+
+            if (activeNote.ValidatedSlideTransitionIndex == nodeIndex)
+            {
+
+                return true;
+
+            }
+
+            float targetX = PlayfieldGeometry.GetLaneCenterNormalized(
+                activeNote.Note.SlideNodes[nodeIndex].LaneIndex,
+                chart.LaneCount);
+            double availableEnd = Math.Min(songTime, windowEnd);
+
+            foreach (ContactState contact in contacts.Values)
+            {
+
+                if (!contact.HasContactInLaneWindow(
+                        windowStart,
+                        availableEnd,
+                        targetX,
+                        chart.LaneCount,
+                        judgementSettings.SlideToleranceInLaneWidths,
+                        activeNote,
+                        out double contactTime))
+                {
+
+                    continue;
+
+                }
+
+                ClaimContact(activeNote, contact, contactTime);
+
+                activeNote.ValidatedSlideTransitionIndex = nodeIndex;
+                return true;
+
+            }
+
+            // Leave the chronological check/reward cursors untouched while a lane change is
+            // still possible. A hitch then resolves the same authored events exactly once.
+            pending = songTime <= windowEnd + ScheduleTolerance;
+            return false;
 
         }
 
@@ -1273,8 +1925,15 @@ namespace IdiotTape.Gameplay
             foreach (ContactState contact in contacts.Values)
             {
 
-                if ((contact.Owner != null && contact.Owner != activeNote) ||
-                    !contact.TryGetNormalizedX(checkTime, out float sampledX))
+                ActiveNote ownerAtCheck = activeNote.Note.NoteType == ChartNoteType.Slide
+                    ? contact.GetOwnerAtTime(checkTime)
+                    : contact.Owner;
+
+                if ((ownerAtCheck != null && ownerAtCheck != activeNote) ||
+                    !contact.TryGetNormalizedX(
+                        checkTime,
+                        out float sampledX,
+                        activeNote.Note.NoteType != ChartNoteType.Slide))
                 {
 
                     continue;
@@ -1323,10 +1982,16 @@ namespace IdiotTape.Gameplay
 
         }
 
-        private void ClaimContact(ActiveNote activeNote, ContactState contact)
+        private void ClaimContact(
+            ActiveNote activeNote,
+            ContactState contact,
+            double? claimTime = null)
         {
 
-            if (contact.Owner != null && contact.Owner != activeNote)
+            double ownershipTime = claimTime ?? contact.SongTime;
+            ActiveNote previousOwner = contact.GetOwnerAtTime(ownershipTime);
+
+            if (previousOwner != null && previousOwner != activeNote)
             {
 
                 return;
@@ -1336,15 +2001,21 @@ namespace IdiotTape.Gameplay
             if (activeNote.PrimaryContactId.HasValue &&
                 activeNote.PrimaryContactId.Value != contact.Id &&
                 contacts.TryGetValue(activeNote.PrimaryContactId.Value, out ContactState previous) &&
-                previous.Owner == activeNote)
+                previous.GetOwnerAtTime(ownershipTime) == activeNote)
             {
 
-                previous.Owner = null;
+                previous.SetOwnerAtTime(null, ownershipTime);
 
             }
 
-            contact.Owner = activeNote;
-            activeNote.PrimaryContactId = contact.Id;
+            contact.SetOwnerAtTime(activeNote, ownershipTime);
+
+            if (contact.IsDown && contact.Owner == activeNote)
+            {
+
+                activeNote.PrimaryContactId = contact.Id;
+
+            }
 
         }
 
@@ -1363,7 +2034,7 @@ namespace IdiotTape.Gameplay
 
         }
 
-        private void ReleaseOwnedContacts(ActiveNote activeNote)
+        private void ReleaseOwnedContacts(ActiveNote activeNote, double? releaseTime = null)
         {
 
             foreach (ContactState contact in contacts.Values)
@@ -1372,7 +2043,12 @@ namespace IdiotTape.Gameplay
                 if (contact.Owner == activeNote)
                 {
 
-                    contact.Owner = null;
+                    // A stationary contact's last input can predate an entire hold. Releasing at
+                    // that old input time would erase its ownership during deferred slide checks.
+                    double currentTime = songPlayback != null
+                        ? songPlayback.SongTime
+                        : contact.SongTime;
+                    contact.SetOwnerAtTime(null, releaseTime ?? currentTime);
 
                 }
 
@@ -1391,7 +2067,7 @@ namespace IdiotTape.Gameplay
 
         }
 
-        private void FailSustained(ActiveNote activeNote)
+        private void FailSustained(ActiveNote activeNote, double? failureTime = null)
         {
 
             if (activeNote.HasFailed)
@@ -1403,7 +2079,7 @@ namespace IdiotTape.Gameplay
 
             activeNote.HasFailed = true;
             activeNote.View.SetFailed();
-            ReleaseOwnedContacts(activeNote);
+            ReleaseOwnedContacts(activeNote, failureTime);
             ShowMiss();
 
         }
@@ -1467,7 +2143,7 @@ namespace IdiotTape.Gameplay
 
         }
 
-        private void RemoveActiveNote(ActiveNote activeNote)
+        private void RemoveActiveNote(ActiveNote activeNote, double? completionTime = null)
         {
 
             int index = activeNotes.IndexOf(activeNote);
@@ -1475,17 +2151,17 @@ namespace IdiotTape.Gameplay
             if (index >= 0)
             {
 
-                RemoveActiveNoteAt(index);
+                RemoveActiveNoteAt(index, completionTime);
 
             }
 
         }
 
-        private void RemoveActiveNoteAt(int index)
+        private void RemoveActiveNoteAt(int index, double? completionTime = null)
         {
 
             ActiveNote activeNote = activeNotes[index];
-            ReleaseOwnedContacts(activeNote);
+            ReleaseOwnedContacts(activeNote, completionTime);
             activeNote.View.Remove();
             activeNotes.RemoveAt(index);
 
@@ -1494,7 +2170,8 @@ namespace IdiotTape.Gameplay
         private double ConvertInputTimestamp(double eventTimestamp)
         {
 
-            return songPlayback.GetSongTimeForExternalTimestamp(
+            return SongTimelineMath.ForExternalTimestamp(
+                songPlayback.TimelineTime,
                 eventTimestamp,
                 InputState.currentTime);
 
@@ -1571,6 +2248,23 @@ namespace IdiotTape.Gameplay
         {
 
             if (!isReady)
+            {
+
+                return;
+
+            }
+
+            CompleteCountInIfStarted(songPlayback.TimelineTime);
+
+            if (phase == SessionPhase.CountIn)
+            {
+
+                ReturnToStartPrompt();
+                return;
+
+            }
+
+            if (phase != SessionPhase.Playing)
             {
 
                 return;

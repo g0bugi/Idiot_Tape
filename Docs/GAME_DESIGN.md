@@ -1,7 +1,7 @@
 # Idiot_Tape — Game Design
 
 > Status: Current
-> Last reviewed: 2026-08-27
+> Last reviewed: 2026-09-04
 > Applies to: The current prototype and durable game-design direction
 > Authority: Player experience, design principles, and player-visible rules
 
@@ -163,6 +163,32 @@ Development and frequent playtesting may occur inside the Unity Editor on PC.
 Editor testing must not be treated as proof that mobile input latency and performance are correct.
 
 
+## Starting and Restarting Play
+
+After the selected chart and audio are prepared, the game waits for an explicit start. The ready
+screen shows the song, note speed, and preparation-length choice. Music and gameplay notes do not
+advance while the player is choosing settings. Touching the start button or pressing Enter/Space
+begins preparation; the development lane keys do not start a session.
+
+The default preparation lasts two musical bars, with a short one-bar option. Both use the selected
+chart's tempo and time signature, including its beat unit. These are reusable session settings,
+not durations or musical values embedded for one song. Charts without a tempo map use explicit
+session fallback settings. A small final-bar countdown and quiet beat clicks introduce the pulse
+without covering the approaching notes.
+
+The first note must have its full approach from the playfield entrance. If the chosen preparation
+would be too short for the current note speed and the first authored note time, preparation extends
+by whole bars. A note at song time zero therefore approaches during preparation instead of first
+appearing beside the judgement line. A song with a later first note retains its authored intro;
+neither its note times nor its calibrated first downbeat are shifted to create preparation time.
+
+Preparation displays note movement but cannot award score, produce Misses, or retain gameplay
+contacts. Note speed is locked until preparation finishes. A pause/cancel request during
+preparation returns to the ready screen and cancels both scheduled music and clicks. Restart
+during play clears the previous attempt and uses the same preparation flow. Repeated start or
+restart requests during an existing preparation do not stack additional starts.
+
+
 ## Lane Philosophy
 
 Do not design the game under the assumption that every chart has a traditional fixed lane count.
@@ -241,14 +267,15 @@ The current runtime and authoring tool implement the following prototype interac
 
 - tap for discrete lane-and-time input
 - hold for sustained input inside one lane
-- slide for sustained piecewise-linear movement through authored lanes
+- slide for holding authored lanes and changing lanes at designated musical times
 - horizontal flick for a directed gesture between lane-anchored endpoints
 - banana for free curved tracking whose middle is not lane-constrained
 
 Banana notes are intended to become a distinctive expression of the project's central idea: a
 curved path may communicate melodic or instrumental motion directly rather than reducing that
 motion to a fixed sequence of lanes. Slide remains deliberately lane-based so the two interactions
-have different reading and execution purposes.
+have different reading and execution purposes. Its step shape expresses a held position followed
+by a timed lane change; it does not ask the player to trace a diagonal path between lane nodes.
 
 The accepted player rules, prototype score and combo behavior, contact ownership, and failure
 semantics are defined in `NOTE_INTERACTIONS.md`.
@@ -303,11 +330,10 @@ IDIOTAPE's album `11111101` is currently being considered as the musical basis f
 prototype testing.
 
 The current chart-authoring prototype uses KIRARA's `Snow` as its primary full-song reference.
-Its authoring grid is configured for 130 BPM and 4/4, with the first downbeat at song time 0.
-The earlier forced one-beat offset was removed because it shifted the beat grid after restarting
-from the beginning. The chart authoring tool supports two-anchor calibration so the stored BPM and
-first-downbeat time can be replaced by measured values after checking widely separated downbeats
-across the song.
+Its calibrated authoring grid is approximately 129.993 BPM and 4/4, with the first downbeat at
+song time `0.233293`. This musical-grid origin is independent of runtime preparation. The chart
+authoring tool supports two-anchor calibration so the stored BPM and first-downbeat time can be
+replaced by measured values after checking widely separated downbeats across the song.
 
 Likely early test tracks include:
 

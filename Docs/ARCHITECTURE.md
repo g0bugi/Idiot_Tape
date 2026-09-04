@@ -1,7 +1,7 @@
 # Idiot_Tape — Architecture
 
 > Status: Current
-> Last reviewed: 2026-08-27
+> Last reviewed: 2026-09-04
 > Applies to: The current Unity prototype
 > Authority: Runtime ownership, dependency, and data-flow contracts
 
@@ -69,22 +69,24 @@ contract.
 
 | Responsibility | Current implementation | Owned state or output |
 |---|---|---|
-| FMOD playback and authoritative song time | `FmodSongPlayback` | FMOD event instance, DSP/timeline anchor, current song time, pause and seek state, stem volumes |
-| Timeline calculations | `SongTimelineMath` | Pure DSP-clock-to-song-time calculations |
-| Session orchestration | `GameplaySession` | Active-note and timing-guide collections, scheduler indices, score, combo, input-to-judgement flow |
+| FMOD playback and authoritative song time | `FmodSongPlayback` | FMOD event instance, shared DSP/timeline anchor, nonnegative song time and signed preparation time, pause and seek state, stem volumes |
+| Timeline calculations | `SongTimelineMath` | Pure DSP-clock-to-song-time calculations, including the signed view before a future anchor |
+| Preparation planning | `GameplayStartPlan` | Pure tempo-derived bar duration, minimum first-note approach, negative beat grid, and countdown calculation |
+| Beat-click scheduling | `FmodMetronome` | FMOD DSP-scheduled click channels shared by gameplay and the Editor authoring wrapper |
+| Session orchestration | `GameplaySession` | Preparing/Ready/CountIn/Playing phase, preparation settings, active-note and timing-guide collections, scheduler indices, score, combo, input-to-judgement flow |
 | Chart definition and validation | `PrototypeChart` | Song event path, stem mappings, tempo sections, lane count, parts, activation windows, notes |
 | Tempo navigation math | `ChartTempoMap` | Bar, beat, and song-time conversion for authoring and runtime timing guides |
 | Input collection | `GameplayInputRouter` | Touch, mouse, and development keyboard events with timestamps |
 | Judgement calculation | `JudgementEvaluator` | Pure candidate selection and judgement result |
 | Playfield presentation | `PlayfieldPresenter` and focused view classes | Note and timing-guide visuals, lane feedback, hit effects, judgement-line reaction |
-| HUD presentation | `GameplayHud` | Score, combo, judgement, instrument, progress, and pause display |
+| HUD presentation | `GameplayHud` | Ready/start controls, preparation choice, note speed, countdown, score, combo, judgement, instrument, progress, and pause display |
 | Chart authoring | `PrototypeChartRecorderWindow` and Editor utilities | Play Mode recording, navigation, quantization, tempo calibration, apply, Undo, validation, save |
 
 ### Current Assembly Boundaries
 
 | Assembly | Current responsibility | Current dependency direction |
 |---|---|---|
-| `IdiotTape.Audio` | FMOD playback and timeline math | FMOD Unity integration |
+| `IdiotTape.Audio` | FMOD playback, timeline math, and shared DSP metronome | FMOD Unity integration |
 | `IdiotTape.Gameplay` | Chart data, session, input, judgement, and presentation | Audio, Input System, uGUI |
 | `IdiotTape.Gameplay.Editor` | Chart-authoring and prototype setup tools | Gameplay, Audio, Editor-facing Unity and FMOD APIs |
 | `IdiotTape.Gameplay.Tests` | EditMode tests for isolated gameplay, timing, and authoring logic | Gameplay, Audio, Editor tool assembly |
@@ -95,20 +97,46 @@ public audio timeline contract, but it must not duplicate FMOD timing ownership.
 
 ### Current Session Lifecycle
 
-The current prototype uses an implicit lifecycle rather than a dedicated state enum:
+The session owns an explicit `SessionPhase` for the shared start flow:
 
 ```text
-Validate chart
-  -> configure and prepare the chart-selected FMOD event
-  -> mark the session ready
-  -> restart playback and clear runtime state
-  -> schedule, present, and judge notes from SongTime
-  <-> pause and resume
+Preparing: validate chart and prepare the chart-selected FMOD event
+  -> Ready: show start/settings controls and wait for the player
+  -> CountIn: schedule music and beat clicks, present notes from signed TimelineTime
+  -> Playing: schedule, present, and judge notes after the DSP start is reached
+       <-> existing FMOD pause/resume state
   -> continue until playback ends
 ```
 
+Ready does not automatically play music or advance note scheduling. Start requests arrive through
+the HUD button or the input router's Enter/Space action. `GameplayStartPlan` consumes the selected
+chart's first tempo section, earliest visible note, selected visual lead, and session preparation
+settings. The session schedules the audio and shared `FmodMetronome` against one FMOD DSP anchor;
+the plan itself owns no clock, audio objects, or chart mutation.
+
+`FmodSongPlayback` owns the native event scheduling budget and preserves the playback/recording
+timebase used by ordinary Play/Restart. It restores the default event scheduling property and
+places the timeline anchor at the Core gate, without subtracting native startup delay from only
+the scheduled path. Simultaneous parent/master clock readings translate that gate into the
+returned master-clock anchor. Streaming/update and DSP-buffer settings determine minimum lead:
+one native preparation budget plus buffer/update lead. Very short requests may be extended;
+session and authoring callers use the actual returned anchor and signed timeline. For a nonzero
+scheduled target, the event starts paused before its timeline position is set, preventing Studio's
+later unpause from replacing the installed Core gate. These FMOD details do not belong in chart
+data, HUD logic, or `GameplayStartPlan`. Preserving this timebase does not assert zero hardware
+latency or close the separate live-seek verification finding.
+
+CountIn permits note presentation while suppressing judgement, Miss processing, and gameplay
+contacts. The HUD locks preparation controls until this phase ends. On the transition to Playing,
+the session discards preparation contacts. Pause/cancel during CountIn cancels both scheduled
+music and clicks and returns to Ready; repeated start/restart requests cannot create overlapping
+attempts. Pause while Playing continues to use the playback component's existing pause state and
+does not introduce another session phase.
+
 Restart clears active note and timing-guide views, candidates, scheduler positions, score, combo,
-progress, and lane-press presentation before restarting the FMOD timeline.
+progress, contact ownership, and lane-press presentation before scheduling a fresh CountIn. The
+same flow applies to other charts without embedded song identities, BPM values, or fixed seconds
+of delay. Missing tempo data uses explicit session fallback configuration.
 
 The current implementation does not expose a distinct end-of-song or results state. The current
 prototype milestone treats that as a small missing lifecycle boundary, not as permission to invent
@@ -163,12 +191,17 @@ logic:
 
 - tap start and banana endpoints compare lane and timestamp
 - hold checks lane continuity on resolved musical times
-- slide checks a time-resolved linear path and authored nodes
+- slide checks the held lane and timestamped arrival at each authored lane-change node, with the
+  bounded transition allowance defined in `RHYTHM_SYSTEM.md`
 - flick checks timestamped direction, distance, speed, and end-lane entry
 - banana checks a normalized curve corridor at explicit checkpoints
 
 Evaluation must emit discrete outcomes and reward events. Presentation objects must not decide
 whether a checkpoint, tick, node, or gesture succeeded.
+
+Slide rendering derives step corners from adjacent chart nodes. Those corners do not become
+gameplay events, and the judgement transition allowance must not turn the displayed hold body into
+an interpolated diagonal. Required check times still come from the authoritative song timeline.
 
 ### Score and Combo Aggregation
 

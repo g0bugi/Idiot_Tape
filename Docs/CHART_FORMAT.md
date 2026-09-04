@@ -1,7 +1,7 @@
 # Idiot_Tape — Chart Format
 
 > Status: Current
-> Last reviewed: 2026-08-27
+> Last reviewed: 2026-09-04
 > Applies to: Current prototype chart data and future-compatible chart contracts
 > Authority: Chart data semantics, validation, and runtime interpretation
 
@@ -250,7 +250,7 @@ reinterpret one interaction as another merely because they can share lower-level
 logic. In particular:
 
 - a hold stays in one lane
-- a slide is an ordered lane-based linear path
+- a slide is an ordered sequence of lane holds and timed lane changes
 - a curved non-lane middle path is a banana
 - a flick has different start and end lanes and may cross multiple lanes
 - a slide terminal flick reuses the final slide transition rather than adding a second flick note
@@ -295,10 +295,20 @@ Keep musical timing independent from visual movement representation.
 For the accepted prototype target:
 
 - tap and hold use lane positions
-- slide nodes use lanes and interpolate linearly between adjacent authored nodes in time
+- slide nodes retain their explicit lane and time; hold the previous node's lane until the next
+  node time, then change to that node's lane
+- the old-lane corner at a slide transition is derived from the adjacent nodes and is not stored
+  as a same-time duplicate node; it contributes no additional judgement or reward
 - flick uses lane-anchored start and end markers
 - banana start and end use lanes while its curve handles and internal checkpoints use normalized
   playfield coordinates independent of physical pixels and current device resolution
+
+The step-slide interpretation was accepted on 2026-09-04 in place of the earlier diagonal
+interpolation. Existing slide node times, lanes, ordering, IDs, and terminal flags are preserved;
+their intervals now describe held lanes and transition beats. No chart schema or serialized asset
+migration is required. Previously authored slides should be reviewed in playback because their
+intended finger motion has changed. The transition allowance is a judgement setting owned by
+`RHYTHM_SYSTEM.md`, not extra authored path points or a visual smoothing parameter.
 
 
 ## Suggested Conceptual Runtime Model

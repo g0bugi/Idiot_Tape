@@ -410,7 +410,7 @@ namespace IdiotTape.EditorTools
 
         }
 
-        private static ChartNoteAuthoringData CloneAtMusicalBarOffset(
+        internal static ChartNoteAuthoringData CloneAtMusicalBarOffset(
             PrototypeChart chart,
             ChartNoteAuthoringData source,
             int barOffset,

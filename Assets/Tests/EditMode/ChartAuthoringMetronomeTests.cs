@@ -1,3 +1,4 @@
+using IdiotTape.Audio;
 using IdiotTape.EditorTools;
 using NUnit.Framework;
 using UnityEngine;
@@ -19,6 +20,20 @@ namespace IdiotTape.Gameplay.Tests
             Assert.DoesNotThrow(metronome.Dispose);
 
             Assert.That(metronome.IsInitialized, Is.False);
+
+        }
+
+        [Test]
+        public void RuntimeMetronomeDoesNotCreateAudioResourcesBeforeScheduling()
+        {
+
+            using FmodMetronome metronome = new();
+
+            Assert.That(typeof(Component).IsAssignableFrom(typeof(FmodMetronome)), Is.False);
+            Assert.That(metronome.IsInitialized, Is.False);
+            Assert.That(metronome.Schedule(0d, false, 0.15f), Is.False);
+            Assert.That(metronome.IsInitialized, Is.False);
+            Assert.DoesNotThrow(metronome.StopAll);
 
         }
 

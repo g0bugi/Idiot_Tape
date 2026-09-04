@@ -116,6 +116,7 @@ Includes:
 
 - gameplay pause and resume
 - gameplay restart
+- explicit start, chart-tempo preparation, and full-distance first-note approach
 - authoring seek and loop boundaries where they use the same playback component
 
 Acceptance:
@@ -123,6 +124,34 @@ Acceptance:
 - audio, chart scheduling, active notes, score, combo, progress, and input presentation agree after each supported transition
 - the test covers a transition from a later part of the song, not only the first seconds
 - new Console errors are absent
+
+Open verification finding (2026-09-04):
+
+- the existing live `Seek` path can capture the previous cached FMOD timeline as its new anchor;
+  a request near 293.134 seconds left the song clock near 6.027 seconds after waiting five seconds
+- a temporary explicit-target anchor experiment removed that stale origin but still showed about
+  149 ms of streaming-transition discrepancy; that experiment was reverted
+- define and repair the seek/streaming transition contract in follow-up work; it is outside the
+  explicit-start/count-in change and is not a regression introduced by that flow
+- start-flow verification uses the changed `SchedulePlay` path at a later song position and does
+  not establish that existing live seek or paused seek is correct
+
+Start synchronization regression (2026-09-04): master-mix PCM comparison found that compensating
+native startup delay only in the new scheduled path advanced music by approximately 149 ms
+relative to ordinary Restart/authoring playback. The correction restores the shared timebase
+without retiming charts or adding a song-specific offset. A separate nonzero scheduled-start
+ordering correction prevents Studio unpause from replacing the future Core gate. Final PCM
+comparison confirms the early-music regression is removed across five scheduled target/delay
+conditions, with approximately 21.33 ms of residual phase difference from ordinary Restart.
+The corrected complete suites passed 12/12 PlayMode and 268/268 EditMode; final chart/settings
+preservation and diff review passed. Sampled PCM, UI, residual timing limits, and remaining
+physical-device/full-song verification are recorded in
+`Playtests/2026-09-04-start-sync-regression-verification.md`.
+
+Historical evidence: `Playtests/2026-09-04-gameplay-start-flow-verification.md` records the earlier
+268/268 EditMode and 11/11 PlayMode pass. Those checks did not compare actual output phase with
+the established playback/recording timebase, so they do not establish synchronization acceptance
+for the corrected implementation or close the separate live-seek and physical-device findings.
 
 ### IT-P0-004 — Add a Minimal End-of-Song State
 
@@ -226,18 +255,57 @@ Acceptance:
 
 Status: `Ready`
 
+Authoring workspace implementation: `Implemented; verification pending`. The throughput measurement
+itself has not been completed. Automated workspace checks and sampled native-window visual inspection
+passed on 2026-09-04; representative manual workflow validation remains pending.
+
 Depends on: `IT-P0-001`
 
 Goal:
 
 - evaluate `H-AUTHOR-001` using the normal chart-authoring workflow
 
+Current workflow under evaluation:
+
+- top recording/loop/snap/save controls, left musical-part selection, and central `노트 편집` /
+  `파트 개요` views
+- right-hand `노트` / `파트` / `녹화` / `박자` / `도구` tabs for interaction editing and existing
+  detailed operations, including full banana-curve and applied-note editing
+- bottom temporary-record drawer and explicit `차트에 반영`, followed by separate asset saving
+- at widths below 1000 pixels, `속성 열기` / `채보로 돌아가기` switches the center between chart and
+  properties; the other working controls remain available
+
 Acceptance:
 
 - a representative layered or dense section is chosen before timing begins
 - recording, correction, part assignment, activation, validation, saving, and replay are included
 - total time and repeated friction points are recorded
+- compare full-width and compact workflows for control reachability, time spent finding properties,
+  unnecessary scrolling, and confusion between temporary records and unsaved chart edits
 - the next tooling improvement is justified by observed cost
+
+Evidence:
+
+- `Playtests/2026-09-04-authoring-workspace-verification.md`: complete suites passed **188/188
+  EditMode** and **7/7 PlayMode** on 2026-09-04
+- 10 window tests and 16 canvas tests cover pane bounds, actual EditorWindow render smoke in both
+  views and all five properties tabs, all five note types, compact/full-width layouts, preservation
+  of chart and temporary-buffer state, applied-banana serialization/Undo, and path geometry
+- native-window captures at 150% scaling were inspected in both chart views and compact chart /
+  properties modes, including the expanded buffer; no timed authoring session is recorded, so this
+  evidence does not establish `H-AUTHOR-001`
+- follow-up stability verification passed **202/202 EditMode** and **8/8 PlayMode**, including actual
+  view/inspector clicks, buffer Undo/Redo, banana boundary preservation, and stopped-audio Space
+  playback; see `Playtests/2026-09-04-authoring-stability-verification.md`
+- repeated hold recording, unresolved-part preservation, and validation before buffer application
+  are covered by `Playtests/2026-09-04-recording-serialization-verification.md`
+
+Verification pending:
+
+- representative interactive use of every properties tab, both chart views, and the expanded drawer
+- all-type recording/correction, scoped duplication/replacement, Undo, validation, explicit save,
+  and re-entered Play Mode inspection
+- measured throughput and readability; the implemented layout is not evidence of a speed improvement
 
 ### IT-P0-010 — Record the Prototype Decision
 
@@ -445,13 +513,14 @@ Depends on: `IT-P0-014`
 
 Player or author goal:
 
-- play lane-locked holds and readable lane-based linear paths with the accepted reward cadence
+- play lane-locked holds and readable step slides with the accepted reward cadence
 
 Includes:
 
 - inherited start grade, quarter-beat checks, half-beat rewards, node rewards, and end rewards
 - hold lane continuity, final-one-beat grace for holds at least two beats long, and no recovery
-- slide linear path corridor, contact handoff, normal ending, and terminal flick ending
+- slide held lanes, bounded timed lane changes, contact handoff, normal ending, and terminal flick
+  ending
 - one-failure termination and black-until-end presentation
 
 Excludes:
@@ -472,6 +541,8 @@ Acceptance:
 - a node and half-beat tick at the same time both award results
 - invalid hold release or slide check fails once, stops later rewards, and leaves the note black
 - valid slide handoff succeeds while an empty required check fails
+- a `3 -> 7 -> 6` slide holds each preceding lane until its transition allowance, shows the step
+  path in authoring and gameplay, and requires timely arrival at each destination
 
 Automated verification:
 
@@ -480,13 +551,17 @@ Automated verification:
 Manual verification:
 
 - representative normal, early-release, handoff, failed-node, normal-end, and terminal-flick cases
+- revised step-slide readability and early/exact/late lane changes, including a distant transition
 
 Evidence:
 
 - runtime start-grade inheritance, check/reward cadence, handoff, grace, termination, and failed
   black presentation are implemented
 - existing complete PlayMode regression suite passed 4/4 on 2026-08-27
-- representative hold/slide interaction smoke cases and manual feel checks remain pending
+- 2026-09-04 complete EditMode suite passed 162/162 and PlayMode suite passed 7/7, including step
+  geometry, transition-state, ownership, and terminal-motion regression coverage; see
+  `Playtests/2026-09-04-step-slide-verification.md`
+- representative interactive hold/slide cases and physical-device feel checks remain pending
 
 ### IT-P0-016 — Implement Horizontal Flick Gameplay
 
@@ -608,9 +683,11 @@ Includes:
 - lane-key slide sequences, same-lane normal close, and incomplete-slide discard
 - `0` as a non-timestamped command that converts the final slide transition to a terminal flick
 - default-adjacent ordinary flick creation with later arbitrary end-lane dragging
-- slide node dragging and line-click node insertion
+- slide node dragging, hold-body node insertion, and transition-connector selection
 - banana endpoint, curve-handle, generated-checkpoint, and manual-checkpoint editing
 - preview, quantization, buffer safety, Undo, validation, and explicit save
+- the workspace layout described in `CHART_AUTHORING.md`, including full banana paths in both
+  timelines and shared temporary/applied banana properties
 
 Excludes:
 
@@ -630,6 +707,7 @@ Acceptance:
 - stopping with an open slide leaves no incomplete buffered interaction
 - `0` adds no timestamp or extra node
 - every applied interaction validates, saves, and replays after leaving and re-entering Play Mode
+- the same core edit controls remain reachable in the full-width and compact workspace
 
 Automated verification:
 
@@ -645,8 +723,26 @@ Evidence:
 - per-type recording modes, discrete slide/hold sequences, non-timestamped `0` conversion,
   adjacent-default flicks, banana checkpoint generation, slide path canvas, detailed interaction
   fields, and full-data apply/quantize/copy preservation are implemented
-- complete EditMode suite passed 83/83; timed manual authoring, Undo/save/re-enter inspection, and
-  dedicated recorder-state automation remain pending
+- 2026-09-01 complete EditMode suite passed 88/88; deterministic hold, normal-slide,
+  terminal-flick-slide, ordinary-flick, and all-type asset save/reload coverage now passes
+- full non-banana shapes, snapped time/lane dragging, timing-event preview, Korean mode guidance,
+  and applied-note re-editing are implemented
+- the workspace panel layout, full banana-curve display, curve-handle canvas editing, and applied
+  banana re-editing are implemented
+- 2026-09-04 complete suites passed **188/188 EditMode** and **7/7 PlayMode**; see
+  `Playtests/2026-09-04-authoring-workspace-verification.md`. Workspace tests render both views,
+  all five tabs and note types, and compact/full-width layouts without changing chart/buffer data;
+  they also verify applied-banana JSON round-trip and Undo, visible path selection, 12-input-position
+  geometry, runtime-matching banana curves/checkpoints, and tempo-aware duplication previews
+- sampled native-window inspection passed at 150% scaling; representative mouse/keyboard operation
+  and physical-touch validation remain pending
+- the reported overview-to-note-view failure was reproduced with real click events and fixed;
+  follow-up stability suites passed **202/202 EditMode** and **8/8 PlayMode**, recorded in
+  `Playtests/2026-09-04-authoring-stability-verification.md`
+- the repeated-hold Undo serialization failure and implicit Drum assignment are corrected;
+  buffer application validates a separate result before changing the chart or clearing recordings.
+  See `Playtests/2026-09-04-recording-serialization-verification.md` for regression evidence.
+- timed manual authoring plus interactive Undo/save/re-enter inspection remain pending
 
 ### IT-P0-019 — Validate the Accepted Interactions on Mobile
 

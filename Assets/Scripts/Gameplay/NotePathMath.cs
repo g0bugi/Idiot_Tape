@@ -19,41 +19,71 @@ namespace IdiotTape.Gameplay
 
             }
 
-            double previousTime = note.HitTime;
             int previousLane = note.LaneIndex;
 
             for (int index = 0; index < note.SlideNodes.Count; index++)
             {
 
                 ChartPathNode node = note.SlideNodes[index];
-                bool isTerminalFlickSegment = note.SlideEndBehavior == SlideEndBehavior.Flick &&
-                                              index == note.SlideNodes.Count - 1;
-
-                if (songTime <= node.Time)
+                if (songTime < node.Time)
                 {
 
-                    if (isTerminalFlickSegment)
-                    {
-
-                        return GetLaneCenter(previousLane, laneCount);
-
-                    }
-
-                    double duration = Math.Max(0.000001d, node.Time - previousTime);
-                    float progress = Mathf.Clamp01((float)((songTime - previousTime) / duration));
-                    return Mathf.Lerp(
-                        GetLaneCenter(previousLane, laneCount),
-                        GetLaneCenter(node.LaneIndex, laneCount),
-                        progress);
+                    return GetLaneCenter(previousLane, laneCount);
 
                 }
 
-                previousTime = node.Time;
                 previousLane = node.LaneIndex;
 
             }
 
             return GetLaneCenter(note.EndLaneIndex, laneCount);
+
+        }
+
+        public static int GetSlideRenderPointCount(ChartNote note)
+        {
+
+            return note == null ? 0 : 1 + 2 * (note.SlideNodes?.Count ?? 0);
+
+        }
+
+        public static void GetSlideRenderPoint(
+            ChartNote note,
+            int index,
+            out double chartTime,
+            out int laneIndex)
+        {
+
+            if (note == null)
+            {
+
+                throw new ArgumentNullException(nameof(note));
+
+            }
+
+            if (index < 0 || index >= GetSlideRenderPointCount(note))
+            {
+
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            }
+
+            if (index == 0)
+            {
+
+                chartTime = note.HitTime;
+                laneIndex = note.LaneIndex;
+                return;
+
+            }
+
+            int nodeIndex = (index - 1) / 2;
+            ChartPathNode node = note.SlideNodes[nodeIndex];
+            chartTime = node.Time;
+            // Rendering pairs share a time; authored nodes still have strictly increasing times.
+            laneIndex = index % 2 == 0
+                ? node.LaneIndex
+                : nodeIndex == 0 ? note.LaneIndex : note.SlideNodes[nodeIndex - 1].LaneIndex;
 
         }
 

@@ -4,6 +4,7 @@
   "references": [
     "IdiotTape.Gameplay",
     "IdiotTape.Audio",
+    "FMODUnity",
     "Unity.InputSystem",
     "Unity.ugui"
   ],
