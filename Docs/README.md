@@ -22,6 +22,7 @@ loaded again.
 | Choosing work or judging milestone completion | [PROTOTYPE_MILESTONE.md](PROTOTYPE_MILESTONE.md), relevant [BACKLOG.md](BACKLOG.md) item | Gate, hypothesis, and work-item IDs |
 | Verification and repository procedure | [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md) | `Assets/Tests/EditMode`, `Assets/Tests/PlayMode` |
 | A specific regression or manual session | Linked record under [Playtests/](Playtests/) | Commands, observations, and artifact paths in that record |
+| Playing the mixed-note test chart | [TEST_CHART.md](TEST_CHART.md) | `Assets/Data/SnowNoteTestChart.asset` |
 | Revisiting a consequential decision | Relevant [ADR/](ADR/) entry | FMOD clock (0001), ScriptableObject charts (0002), hidden lanes (0003) |
 
 Runtime sources live under `Assets/Scripts/Audio` and `Assets/Scripts/Gameplay`; authoring
