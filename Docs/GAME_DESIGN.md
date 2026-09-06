@@ -1,167 +1,36 @@
 # Idiot_Tape — Game Design
 
 > Status: Current
-> Last reviewed: 2026-09-04
+> Last reviewed: 2026-09-05
 > Applies to: The current prototype and durable game-design direction
 > Authority: Player experience, design principles, and player-visible rules
 
-## Document Purpose
-
-This document describes the intended gameplay and design direction of `Idiot_Tape`.
-
-It defines what the game is trying to achieve.
-
-Implementation details belong in:
-
-- `NOTE_INTERACTIONS.md`
-- `RHYTHM_SYSTEM.md`
-- `CHART_FORMAT.md`
-- `ARCHITECTURE.md`
-
-This document should not be treated as permission to rewrite unrelated working systems.
-
-
-## Project Status
-
-`Idiot_Tape` is currently in the prototype / demo stage.
-
-The immediate goal is not to build a complete commercial rhythm game.
-
-The prototype exists to determine whether the central gameplay idea is:
-
-- fun
-- readable
-- technically viable
-- authorable at reasonable speed
-- stable enough for mobile rhythm gameplay
-
-
-## Core Concept
-
-Idiot_Tape is a mobile rhythm game inspired by the direct touch-based gameplay feel of
-older mobile rhythm games such as Tapsonic.
-
-It is not intended to be a remake or clone.
-
-The defining idea is that the chart should visually communicate the structure of the music.
-
-Notes should not exist only as abstract objects falling through fixed lanes.
-
-Different instruments, voices, or musical layers may occupy different spatial patterns,
-regions, trajectories, or note structures.
-
-The player should be able to perceive some relationship between what they hear and what
-they see.
-
-
-## Core Design Pillars
-
-### 1. Music Structure Becomes Gameplay Structure
-
-The chart should reflect meaningful musical parts.
-
-Examples include:
-
-- percussion generating one recognizable visual pattern
-- a synthesizer line appearing in another region
-- a newly entering instrument changing the visible chart structure
-- multiple musical layers coexisting while remaining visually distinguishable
-
-These examples are design possibilities, not mandatory rules for every song.
-
-
-### 2. Timing Comes Before Spectacle
-
-The game may use dynamic note movement and visually expressive charts.
-
-However:
-
-- animation must not damage judgement accuracy
-- visual effects must not alter authoritative timing
-- visual complexity must not make the chart unreadable
-
-A visually impressive chart that feels rhythmically inconsistent is a failed chart.
-
-
-### 3. Dynamic Does Not Mean Random
-
-Spatial variation should communicate music, not arbitrary motion.
-
-When positions or patterns change, players should be able to form expectations from:
-
-- repeated musical phrases
-- instrument identity
-- rhythmic motifs
-- visual continuity
-- chart structure
-
-Changes should feel intentional.
-
-
-### 4. Readability Is Part of Difficulty Design
-
-Difficulty should come primarily from meaningful rhythmic and spatial interaction.
-
-It should not come from hiding information or making note motion unnecessarily confusing.
-
-A difficult chart should still allow a skilled player to understand why they missed.
-
-
-### 5. Fast Chart Iteration Matters
-
-The project depends heavily on experimenting with unconventional chart presentation.
-
-Chart editing must therefore support rapid:
-
-- timing correction
-- position adjustment
-- musical-part reassignment
-- pattern iteration
-- playtesting
-
-A technically flexible gameplay system that makes chart editing painfully slow is not
-sufficient for this project.
-
-
-## Target Experience
-
-The primary target audience is players who enjoy rhythm-game play itself.
-
-The game is not currently designed around:
-
-- character collection
-- gacha
-- character progression
-- story progression
-- large collection systems
-
-The prototype should focus attention on:
-
-- music
-- chart interaction
-- timing
-- touch response
-- visual rhythm
-
-The current executable validation scope and pass conditions are defined in
-`PROTOTYPE_MILESTONE.md`. That milestone may narrow current work, but it must not silently redefine
-the design principles in this document.
-
-
-## Input and Platform
-
-Primary target platform:
-
-- mobile devices
-
-Primary interaction style:
-
-- touch-based rhythm gameplay
-
-Development and frequent playtesting may occur inside the Unity Editor on PC.
-
-Editor testing must not be treated as proof that mobile input latency and performance are correct.
-
+## Concept and Prototype Goal
+
+`Idiot_Tape` is a mobile touch rhythm-game prototype inspired by the direct play feel of
+older games such as Tapsonic, not a remake. Note layout and movement should communicate
+instruments, voices, and musical layers through spatial patterns, regions, trajectories,
+and interactions. The player should recognize a relationship between sound and chart structure.
+
+The prototype must establish fun, readability, technical/mobile viability, and reasonable
+authoring speed before expanding into a commercial production system. Its executable scope
+and pass conditions live in [PROTOTYPE_MILESTONE.md](PROTOTYPE_MILESTONE.md).
+Editor/PC playtesting is useful but cannot prove physical-device latency or performance.
+
+## Design Pillars
+
+| Principle | Implication |
+|---|---|
+| Music structure becomes gameplay structure | A percussion pattern, new instrument entry, or simultaneous layers may have recognizable spatial identities. These are possibilities, not mandatory patterns for every song. |
+| Timing before spectacle | Dynamic visuals must preserve accurate judgement, synchronization, and readable chart motion. |
+| Dynamic does not mean random | Repeated phrases, instrument identity, rhythmic motifs, and visual continuity should help players form expectations. |
+| Readability is difficulty design | Challenge comes from meaningful rhythm and spatial interaction; a skilled player should understand a miss. |
+| Fast chart iteration matters | Timing, positions, part assignment, repeated patterns, and playtesting must be easy enough to support experiments. |
+
+The target audience enjoys rhythm play itself. Focus attention on music, touch response,
+chart interaction, and visual rhythm. Detailed note rules belong in
+[NOTE_INTERACTIONS.md](NOTE_INTERACTIONS.md); timing, data, and ownership belong in their
+respective technical documents.
 
 ## Starting and Restarting Play
 
@@ -187,7 +56,6 @@ contacts. Note speed is locked until preparation finishes. A pause/cancel reques
 preparation returns to the ready screen and cancels both scheduled music and clicks. Restart
 during play clears the previous attempt and uses the same preparation flow. Repeated start or
 restart requests during an existing preparation do not stack additional starts.
-
 
 ## Lane Philosophy
 
@@ -219,26 +87,10 @@ The scope and reconsideration conditions for this prototype choice are recorded 
 For Editor playtesting, the number keys `1` through `8` trigger the corresponding hidden positions
 from left to right. This is a development input path and does not replace mobile touch input.
 
-
 ## Musical Parts
 
-Charts may associate gameplay information with musical parts such as:
-
-- drums
-- percussion
-- bass
-- synthesizer
-- melody
-- vocals
-- effects
-- other song-specific layers
-
-The final classification system has not yet been decided.
-
-Do not hard-code a universal list of instruments into the core runtime unless such a list
-is later intentionally defined.
-
-Prefer chart-defined identifiers or data-driven musical-part definitions.
+Use chart-defined musical-part identities; drums, bass, synthesizer, melody, vocals, and effects
+are examples, not a universal instrument enum. The final classification remains open.
 
 ### Musical-Part Activation
 
@@ -259,7 +111,6 @@ Activation windows may overlap. This supports structures such as:
 
 The current HUD displays the part of the note that was just judged. A later anticipation UI may
 look ahead to upcoming activation-window boundaries without changing note timing or judgement.
-
 
 ## Notes and Interaction Types
 
@@ -283,42 +134,17 @@ semantics are defined in `NOTE_INTERACTIONS.md`.
 This accepted prototype set does not finalize the production note taxonomy. New note mechanics
 should still be added only when their musical and gameplay purpose is clear.
 
-
 ## Prototype Questions
 
-The prototype should help answer the following questions.
+| Area | Questions to validate |
+|---|---|
+| Rhythm | Is input immediate and judgement consistent? Does synchronization hold through a whole song? |
+| Readability | Can players anticipate repeated patterns and understand changing/multiple-part layouts? |
+| Music relationship | Do players recognize musical parts in the chart, and does that add meaningful gameplay? |
+| Authoring | Can timings, positions, parts, and repeated structures be edited efficiently across a long chart? |
+| Feasibility | Can timing, active-object overhead, and mobile performance remain stable? |
 
-### Rhythm Feel
-
-- Does touch input feel immediate?
-- Do judgement results feel consistent?
-- Does the game remain synchronized over an entire song?
-
-### Visual Readability
-
-- Can players understand changing spatial patterns?
-- Can multiple musical parts appear simultaneously without becoming visual noise?
-- Can a player anticipate recurring patterns?
-
-### Music-to-Chart Relationship
-
-- Does separating musical parts visually make the song easier or more interesting to perceive?
-- Do players notice the relationship between sound and note structure?
-- Does the feature create meaningful gameplay rather than only visual decoration?
-
-### Authoring
-
-- Can a chart be edited quickly?
-- Can timings be corrected without manually moving scene objects?
-- Can repeated musical structures be authored efficiently?
-- Can long songs be iterated on without an excessive workflow cost?
-
-### Technical Feasibility
-
-- Can the rhythm clock remain stable?
-- Can long charts run without unnecessary runtime object overhead?
-- Can the prototype maintain acceptable performance on mobile hardware?
-
+Hypothesis IDs and evidence requirements live in `PROTOTYPE_MILESTONE.md`.
 
 ## Demo Identity
 
@@ -330,10 +156,10 @@ IDIOTAPE's album `11111101` is currently being considered as the musical basis f
 prototype testing.
 
 The current chart-authoring prototype uses KIRARA's `Snow` as its primary full-song reference.
-Its calibrated authoring grid is approximately 129.993 BPM and 4/4, with the first downbeat at
-song time `0.233293`. This musical-grid origin is independent of runtime preparation. The chart
-authoring tool supports two-anchor calibration so the stored BPM and first-downbeat time can be
-replaced by measured values after checking widely separated downbeats across the song.
+The current grid is documented in [CHART_FORMAT.md](CHART_FORMAT.md#current-prototype-tempo-map)
+and stored in its chart asset; it is independent of runtime preparation. The full-song audio
+reference does not imply the entire chart is authored. Two-anchor and repeated-downbeat
+calibration can refine the grid while preserving absolute note times.
 
 Likely early test tracks include:
 
@@ -346,24 +172,11 @@ These tracks are prototype reference content.
 
 Do not assume that prototype music is permanently licensed production content.
 
-
 ## Current Non-Goals
 
-Unless explicitly requested, the prototype does not currently need:
-
-- online accounts
-- multiplayer
-- leaderboards
-- monetization
-- gacha
-- character systems
-- story systems
-- large song-selection progression systems
-- live-service infrastructure
-- downloadable content infrastructure
-- anti-cheat systems
-- production analytics infrastructure
-
+Unless explicitly requested: accounts, multiplayer, leaderboards, monetization/gacha, character
+or story progression, production song-selection/download infrastructure, live services,
+anti-cheat, and production analytics. Keep work focused on the prototype gates.
 
 ## Decisions Not Yet Finalized
 
@@ -387,7 +200,6 @@ The following should remain open until intentionally decided:
 | `GD-OPEN-014` | Production content pipeline | Open |
 
 Do not silently convert an unresolved design question into a permanent architectural assumption.
-
 
 ## Updating This Document
 

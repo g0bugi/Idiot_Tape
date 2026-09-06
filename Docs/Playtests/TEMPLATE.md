@@ -4,6 +4,11 @@
 > Applies to: One manual validation session
 > Authority: Evidence only; this file does not redefine game or technical contracts
 
+Use only sections relevant to the session; omit unrelated device, rhythm, readability, or
+authoring sections instead of filling them with placeholders. Retain metadata, goal/procedure,
+expected/observed results, outcome, and material unverified checks. Use `Not recorded` for
+missing relevant facts; never infer test success from an implementation or an earlier run.
+
 ## Record Metadata
 
 - Date and local time:

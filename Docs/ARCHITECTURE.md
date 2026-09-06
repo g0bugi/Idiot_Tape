@@ -1,65 +1,16 @@
 # Idiot_Tape — Architecture
 
 > Status: Current
-> Last reviewed: 2026-09-04
+> Last reviewed: 2026-09-05
 > Applies to: The current Unity prototype
 > Authority: Runtime ownership, dependency, and data-flow contracts
 
-## Document Purpose
+## Scope and Data Flow
 
-This document describes intended high-level system boundaries for Idiot_Tape.
-
-It is not a requirement to immediately create every system named here.
-
-The repository's current implementation must be inspected before introducing new classes.
-
-The purpose of this document is to define responsibilities and prevent incompatible parallel
-systems from growing over time.
-
-
-## Architectural Goals
-
-The architecture should support:
-
-- accurate rhythm timing
-- unconventional chart layouts
-- rapid chart iteration
-- long songs
-- mobile performance
-- clear ownership of gameplay state
-- testable timing and judgement behavior
-
-
-## Main Data Flow
-
-The intended conceptual flow is:
-
-```text
-Song / Chart Data
-        |
-        v
-Gameplay Session
-        |
-        +----> Authoritative Song Clock
-        |
-        +----> Chart Scheduling
-        |          |
-        |          v
-        |      Runtime Notes
-        |
-        +----> Input
-                   |
-                   v
-              Judgement
-                   |
-                   v
-            Gameplay Result
-```
-
-Visual systems observe gameplay state.
-
-Visual systems must not become the authoritative source of musical timing.
-
+This document owns responsibility boundaries, not a list of classes to create. Inspect the
+current owners below before adding a system. Gameplay state flows from chart data and the
+FMOD timeline through session scheduling, timestamped input, and judgement to score and
+presentation. Visuals observe that state; they never own musical timing.
 
 ## Current Implementation Map
 
@@ -73,14 +24,15 @@ contract.
 | Timeline calculations | `SongTimelineMath` | Pure DSP-clock-to-song-time calculations, including the signed view before a future anchor |
 | Preparation planning | `GameplayStartPlan` | Pure tempo-derived bar duration, minimum first-note approach, negative beat grid, and countdown calculation |
 | Beat-click scheduling | `FmodMetronome` | FMOD DSP-scheduled click channels shared by gameplay and the Editor authoring wrapper |
-| Session orchestration | `GameplaySession` | Preparing/Ready/CountIn/Playing phase, preparation settings, active-note and timing-guide collections, scheduler indices, score, combo, input-to-judgement flow |
+| Session orchestration | `GameplaySession` | Preparing/Ready/CountIn/Playing phase, preparation settings, active-note and timing-guide collections, scheduler indices, timestamped contact/ownership histories, per-note interaction cursors, score, combo, input-to-judgement flow |
 | Chart definition and validation | `PrototypeChart` | Song event path, stem mappings, tempo sections, lane count, parts, activation windows, notes |
 | Tempo navigation math | `ChartTempoMap` | Bar, beat, and song-time conversion for authoring and runtime timing guides |
+| Interaction geometry and math | `NotePathMath`, `NoteInteractionMath` | Step geometry, banana curves, transition windows, hold grace, flick motion, bonus calculations |
 | Input collection | `GameplayInputRouter` | Touch, mouse, and development keyboard events with timestamps |
 | Judgement calculation | `JudgementEvaluator` | Pure candidate selection and judgement result |
 | Playfield presentation | `PlayfieldPresenter` and focused view classes | Note and timing-guide visuals, lane feedback, hit effects, judgement-line reaction |
 | HUD presentation | `GameplayHud` | Ready/start controls, preparation choice, note speed, countdown, score, combo, judgement, instrument, progress, and pause display |
-| Chart authoring | `PrototypeChartRecorderWindow` and Editor utilities | Play Mode recording, navigation, quantization, tempo calibration, apply, Undo, validation, save |
+| Chart authoring | `PrototypeChartRecorderWindow` partials (`.cs`, `.Workspace.cs`, `.Canvas.cs`, `.Inspector.cs`) and Editor utilities | Workspace, recording drafts, selection/path editing, navigation, quantization, calibration, transactional apply, Undo, validation, save |
 
 ### Current Assembly Boundaries
 
@@ -88,9 +40,10 @@ contract.
 |---|---|---|
 | `IdiotTape.Audio` | FMOD playback, timeline math, and shared DSP metronome | FMOD Unity integration |
 | `IdiotTape.Gameplay` | Chart data, session, input, judgement, and presentation | Audio, Input System, uGUI |
+| `IdiotTape.Audio.Editor` | FMOD playback-test scene construction | Audio, FMOD Unity integration and Editor APIs |
 | `IdiotTape.Gameplay.Editor` | Chart-authoring and prototype setup tools | Gameplay, Audio, Editor-facing Unity and FMOD APIs |
 | `IdiotTape.Gameplay.Tests` | EditMode tests for isolated gameplay, timing, and authoring logic | Gameplay, Audio, Editor tool assembly |
-| `IdiotTape.Gameplay.PlayModeTests` | Gameplay-scene and view smoke tests | Gameplay, Audio, Input System, uGUI |
+| `IdiotTape.Gameplay.PlayModeTests` | Scene/view, start-flow, authoring playback, and scheduled FMOD playback tests | Gameplay, Audio, FMOD Unity integration, Input System, uGUI |
 
 Runtime assemblies must not acquire a dependency on the Editor assembly. Gameplay may read the
 public audio timeline contract, but it must not duplicate FMOD timing ownership.
@@ -114,17 +67,12 @@ chart's first tempo section, earliest visible note, selected visual lead, and se
 settings. The session schedules the audio and shared `FmodMetronome` against one FMOD DSP anchor;
 the plan itself owns no clock, audio objects, or chart mutation.
 
-`FmodSongPlayback` owns the native event scheduling budget and preserves the playback/recording
-timebase used by ordinary Play/Restart. It restores the default event scheduling property and
-places the timeline anchor at the Core gate, without subtracting native startup delay from only
-the scheduled path. Simultaneous parent/master clock readings translate that gate into the
-returned master-clock anchor. Streaming/update and DSP-buffer settings determine minimum lead:
-one native preparation budget plus buffer/update lead. Very short requests may be extended;
-session and authoring callers use the actual returned anchor and signed timeline. For a nonzero
-scheduled target, the event starts paused before its timeline position is set, preventing Studio's
-later unpause from replacing the installed Core gate. These FMOD details do not belong in chart
-data, HUD logic, or `GameplayStartPlan`. Preserving this timebase does not assert zero hardware
-latency or close the separate live-seek verification finding.
+The playback component owns native scheduling lead, Core-gate/master-clock conversion, and
+nonzero scheduled-target ordering. Callers use the returned actual anchor. These details and
+the ordinary Play/Restart phase-compatibility contract are defined in
+[RHYTHM_SYSTEM.md](RHYTHM_SYSTEM.md#gameplay-preparation-and-first-note-approach).
+Scheduled-start verification does not close the separate live-seek finding in
+[BACKLOG.md](BACKLOG.md#it-p0-003--verify-pause-resume-restart-and-seek-boundaries).
 
 CountIn permits note presentation while suppressing judgement, Miss processing, and gameplay
 contacts. The HUD locks preparation controls until this phase ends. On the transition to Playing,
@@ -147,13 +95,12 @@ final scoring, failure, reward, or progression systems.
 - invalid chart data logs a contextual error and disables the gameplay session
 - FMOD preparation failure or timeout logs the selected event path and disables the gameplay session
 - unsupported or invalid input is rejected before judgement
-- chart authoring disables the live gameplay session while recording to prevent stale scheduler state
+- chart authoring disables the live gameplay session when taking playback ownership (including event preparation, audition, seeking, and recording) to prevent stale scheduler state
 
 New failure handling should remain explicit and testable. Do not hide essential data or playback
 failures by silently substituting unrelated charts, songs, or clocks.
 
-
-## Accepted Interaction Expansion Boundaries
+## Interaction Ownership
 
 This section defines responsibility boundaries for the implemented prototype interactions in
 `NOTE_INTERACTIONS.md`. It does not require creating one class per bullet.
@@ -164,7 +111,7 @@ Tap, hold, slide, flick, and banana should share focused timing, input, and resu
 their accepted behavior actually overlaps. They must not be forced through one generic framework
 that hides interaction-specific rules.
 
-Runtime interaction state may need to own:
+`GameplaySession.ActiveNote` owns per-interaction state, including:
 
 - the chart interaction identity and resolved timing events
 - its active, completed, or failed lifecycle
@@ -177,7 +124,8 @@ That state must not own the song clock, global score, chart loading, or unrelate
 
 ### Timestamped Contact State
 
-Input collection must retain enough timestamped press, move, and release information to evaluate
+`GameplayInputRouter` emits timestamped events; `GameplaySession.ContactState` retains samples
+and ownership changes. That history must preserve enough press, move, and release information to evaluate
 path state across required musical checks, including when one render frame crosses multiple checks.
 
 Contact ownership belongs to gameplay interaction state, not presentation. One contact may own at
@@ -232,314 +180,31 @@ The Editor assembly owns recording modes, node/curve manipulation, checkpoint ge
 and save flow. Runtime assemblies consume the applied chart representation and must not depend on
 Editor-only draft types.
 
-
-## Core Responsibility Boundaries
-
-### Gameplay Session
-
-The gameplay session coordinates the current play session.
-
-Possible responsibilities:
-
-- selecting the current song / chart
-- starting gameplay
-- restarting gameplay
-- coordinating pause / resume
-- owning session-level state
-- coordinating completion
-
-It should not personally implement every subsystem.
-
-
-### Song Clock
-
-The song clock owns the authoritative rhythm timeline.
-
-Responsibilities include:
-
-- current song time
-- timing origin
-- pause / resume synchronization
-- restart synchronization
-- conversion needed by judgement timing
-
-There must not be multiple independent authoritative song clocks.
-
-For the current FMOD prototype, the FMOD playback component owns both event playback and the
-DSP-backed song timeline. The gameplay session reads that component for scheduling, presentation,
-input timestamp conversion, pause, resume, and restart. It must not run a parallel Unity
-`AudioSettings.dspTime` gameplay clock while FMOD is playing the song.
-
-
-### Chart Data
-
-Chart data describes what should happen and when.
-
-It must not depend on live scene GameObjects.
-
-See `CHART_FORMAT.md`.
-
-
-### Chart Scheduler
-
-The scheduler determines which chart objects are currently relevant.
-
-Possible responsibilities include:
-
-- advancing through ordered chart data
-- activating notes before their hit time
-- retiring notes after they are no longer relevant
-
-The scheduler does not redefine note timing.
-
-
-### Runtime Note
-
-A runtime note represents a currently active gameplay object.
-
-Its responsibilities should remain focused.
-
-A runtime note may:
-
-- display itself
-- expose its chart identity
-- represent its current interaction state
-- react to judgement results
-
-It should not become responsible for:
-
-- global song time
-- loading charts
-- global scoring
-- managing every other note
-- global input routing
-
-
-### Input
-
-Input code captures player input and exposes it to gameplay.
-
-Input handling should not duplicate rhythm-clock calculations throughout multiple components.
-
-Timestamp conversion or calibration logic should remain centralized where possible.
-
-
-### Judgement
-
-Judgement determines how input relates to chart notes.
-
-Judgement should primarily operate on data such as:
-
-- note timing
-- current relevant notes
-- input timing
-- judgement windows
-
-It should not depend on visual note position as the authoritative timing value.
-
-
-### Presentation
-
-Presentation includes:
-
-- note visuals
-- judgement effects
-- UI animation
-- background effects
-- chart visual transitions
-
-Presentation may use rhythm state.
-
-Presentation must not modify the authoritative rhythm timeline merely to make an effect work.
-
-
-### Score / Combo / Results
-
-Scoring is downstream from judgement.
-
-Judgement should emit or expose an outcome that score/result systems can consume.
-
-Avoid embedding scoring formulas independently into individual note objects.
-
-
-## Data Ownership
-
-Every important piece of state should have one clear owner.
-
-Examples:
-
-```text
-song time             -> timing system
-chart definition      -> chart data
-active note state     -> gameplay/runtime note system
-judgement rules       -> judgement system
-score                  -> score/result system
-```
-
-Avoid two systems independently storing mutable copies of the same authoritative state.
-
-
-## Dependency Direction
-
-Prefer dependencies that flow from orchestration toward focused systems.
-
-Avoid circular dependencies such as:
-
-```text
-Note -> GameManager -> JudgementManager -> Note -> GameManager
-```
-
-Do not use static globals merely to avoid defining dependencies clearly.
-
-
-## Managers
-
-A class should not be named or designed as a `Manager` simply because its responsibility
-has not been decided.
-
-Before creating a new manager:
-
-1. search for an existing owner of the responsibility
-2. define what state the new class owns
-3. define who calls it
-4. define what it must not own
-
-Avoid a single giant `GameManager` that accumulates unrelated responsibilities.
-
-
-## Singletons
-
-Do not use singletons by default.
-
-A singleton may be appropriate only when the lifetime and global ownership semantics genuinely
-match the system.
-
-Do not use a singleton merely because Inspector references are inconvenient.
-
-
-## Scene References
-
-Prefer explicit serialized or runtime dependencies over expensive global searches.
-
-Avoid repeated use of:
-
-- `FindObjectOfType`
-- `FindFirstObjectByType`
-- object name searches
-
-in gameplay hot paths.
-
-Do not introduce complex dependency-injection infrastructure solely to eliminate Inspector
-references.
-
-
-## ScriptableObjects
-
-ScriptableObjects may be useful for static project data.
-
-Do not use ScriptableObjects as implicit mutable global runtime state without intentionally
-defining those semantics.
-
-Runtime session state should have a clear lifecycle.
-
-
-## Scenes
-
-Scene structure is not yet finalized.
-
-Do not reorganize existing scenes solely to match this document.
-
-When modifying a scene:
-
-- preserve unrelated serialized references
-- avoid unnecessary hierarchy changes
-- verify missing references afterward
-
-
-## Editor Tooling
-
-Chart authoring tools should remain separated from runtime gameplay where practical.
-
-Editor-only code should not accidentally become a runtime dependency.
-
-As editor tooling grows, prefer keeping Unity Editor-specific code behind an Editor assembly
-or otherwise excluded from runtime builds.
-
-
-## Runtime Allocation
-
-Systems that scale with note count should avoid unnecessary garbage generation.
-
-Particularly inspect:
-
-- scheduler loops
-- note updates
-- judgement
-- input processing
-
-Do not introduce complex custom containers without an actual need.
-
-
-## Object Pooling
-
-Object pooling is an optimization strategy, not a timing system.
-
-If runtime notes are frequently created and destroyed, pooling may become appropriate.
-
-Adding or removing pooling must not change:
-
-- note hit time
-- judgement behavior
-- chart semantics
-
-
-## Events and Polling
-
-Use events when they represent discrete state changes naturally.
-
-Examples:
-
-- judgement occurred
-- song started
-- song ended
-- pause state changed
-
-Do not create event chains so indirect that state ownership becomes difficult to understand.
-
-Polling is acceptable when it is simpler and inexpensive.
-
-Choose based on responsibility rather than ideology.
-
-
-## Error Handling
-
-Fail clearly when essential gameplay data is invalid.
-
-Do not silently continue with obviously invalid timing or chart references if doing so would
-produce misleading gameplay.
-
-Development-time validation should provide enough context to identify:
-
-- affected song
-- affected chart
-- affected note or event
-- invalid field
-
-
-## Architecture Change Rule
-
-Do not rewrite working architecture solely to match the conceptual names in this document.
-
-When existing code already fulfills the responsibility correctly, preserve and evolve it.
-
-When intentionally changing a core responsibility:
-
-1. inspect current dependencies
-2. determine migration impact
-3. implement the smallest coherent transition
-4. verify affected gameplay
-5. update this document if the architectural contract changed
-
+## Responsibility and Dependency Rules
+
+- Session orchestration coordinates playback, scheduling, input, results, and lifecycle. The
+  current session also evaluates sustained interactions; a separate scheduler or score service
+  is not required merely to match a conceptual diagram.
+- `FmodSongPlayback` owns the clock, playback, and timestamp conversion. Gameplay must not
+  introduce a parallel Unity DSP clock or duplicate conversion/latency logic in note components.
+- Chart definitions are persistent data; runtime interaction state has a session lifetime.
+  ScriptableObjects must not become implicit mutable global session state.
+- Scheduling uses ordered chart data and activates/retires relevant notes. It does not redefine
+  hit times. Views own presentation, not chart loading, global input, score, or other notes.
+- Judgement operates on chart/input data, not transforms. Results feed the session's score/combo
+  owner. Presentation may animate from rhythm state but cannot change it.
+- Runtime assemblies must not depend on Editor assemblies or draft authoring types. Use explicit
+  dependencies; avoid circular event chains, globals, default singletons, and repeated scene
+  searches in hot paths. Use events for discrete outcomes or simple polling when appropriate.
+- Before adding an owner, identify its state, callers, lifetime, and exclusions. Prefer evolving
+  the existing owner over a parallel implementation or speculative dependency-injection system.
+- Pooling and containers are performance choices, not timing rules. They must preserve hit times,
+  judgement, and chart semantics; introduce them only for a measured or clear scaling need.
+- Fail clearly on invalid essential data or playback. Errors should identify chart/song,
+  note/event, and field where applicable; do not silently substitute another chart or clock.
+- Preserve scene references and serialized values. For an intentional ownership change, inspect
+  dependencies and migration impact, implement the smallest coherent transition, verify affected
+  behavior, and update this contract. See [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md).
 
 ## Currently Unresolved Architecture
 

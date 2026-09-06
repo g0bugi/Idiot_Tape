@@ -1,256 +1,62 @@
 # Idiot_Tape — Rhythm System
 
 > Status: Current
-> Last reviewed: 2026-09-04
+> Last reviewed: 2026-09-05
 > Applies to: All rhythm-sensitive runtime and chart-authoring behavior
 > Authority: Song time, synchronization, input timing, and judgement timing contracts
 
-## Document Purpose
+## Scope and Authoritative Clock
 
-This document defines timing and synchronization rules for rhythm-sensitive gameplay.
+This contract applies to playback, chart/input timing, note position, judgement, preparation,
+pause/resume/restart/seek, calibration, and latency compensation. All rhythm-critical systems
+derive from one high-precision audio timeline. Rendering may sample it, never replace it
+with accumulated `Time.deltaTime`, frame counts, or transform movement.
 
-Changes involving any of the following must follow this document:
+The current owner is `FmodSongPlayback`, using the selected FMOD event and an FMOD DSP-sample
+anchor plus captured timeline position. The millisecond Studio cursor supports audition/seek
+and anchor capture, not per-frame judgement. Playback state transitions must recapture a
+consistent anchor. See [ADR 0001](ADR/0001-fmod-dsp-authoritative-song-time.md).
 
-- song playback
-- chart time
-- note timing
-- note visual position
-- judgement
-- pause / resume
-- calibration
-- latency compensation
-- seeking or restarting
-- playback scheduling
-
-
-## Primary Rule
-
-Idiot_Tape must have one authoritative song timeline.
-
-All rhythm-critical systems must derive their timing from that timeline.
-
-Do not maintain independent clocks for:
-
-- audio playback
-- note movement
-- judgement
-- chart progression
-
-that can drift apart.
-
-
-## Authoritative Clock
-
-The authoritative clock should be based on a stable audio timeline rather than accumulated
-render-frame time.
-
-For Unity's built-in audio system, DSP-based audio time is the expected reference candidate.
-
-The exact implementation may change if the project later adopts another audio backend,
-but the architectural requirement remains:
-
-> rhythm gameplay must use one authoritative high-precision audio timeline.
-
-The current FMOD-specific choice and its reconsideration conditions are recorded in
-`ADR/0001-fmod-dsp-authoritative-song-time.md`.
-
-### Current FMOD Prototype
-
-The current playable prototype uses the selected FMOD song event as its audio source and derives
-gameplay song time from FMOD's DSP sample clock. The FMOD millisecond timeline position is captured
-when playback state changes, then DSP-sample progression advances the authoritative song time.
-
-The millisecond timeline position remains suitable for seeking and audition UI. It must not be
-polled as the per-frame authoritative judgement clock.
-
-Starting, restarting, pausing, resuming, or seeking the FMOD event must recapture the DSP/timeline
-anchor so audio playback, note presentation, and judgement continue to share one timeline.
-
-`FmodSongPlayback.TimelineTime` extends that same anchor into negative time before a scheduled
-start so gameplay can present approaching notes during preparation. It is a signed view of the
-existing FMOD clock, not a separately accumulated timer. The existing nonnegative `SongTime` and
-authoring timestamp APIs retain their previous semantics. Once the scheduled audio start is
-reached, both views agree for ordinary song playback.
-
-
-## Do Not Use Accumulated Delta Time as Song Time
-
-Do not implement authoritative song time as:
-
-```csharp
-songTime += Time.deltaTime;
-```
-
-A frame rate drop, pause behavior, or accumulated numerical error must not cause the
-gameplay timeline to permanently diverge from the audio timeline.
-
-`Update()` may read the current song time and update visuals every frame.
-
-It must not become a second authoritative music clock.
-
+`TimelineTime` is the signed view before a scheduled anchor; it permits negative preparation
+time without a second timer. `SongTime` remains nonnegative and authoring timestamp APIs keep
+their established semantics. The views agree during ordinary playback. Unity's built-in
+audio clock must not run alongside FMOD as another authoritative gameplay clock.
 
 ## Timing Terminology
 
-Use the following concepts consistently.
-
-### Song Time
-
-Current position on the authoritative gameplay/audio timeline.
-
-Measured relative to the intentionally defined start of the song timeline.
-
-
-### Note Time
-
-The chart-defined time at which a note should be hit.
-
-A note's timing should not be defined by the frame on which it happens to spawn.
-
-
-### Timing Error
-
-Judgement timing should use:
-
-```text
-timingError = inputChartTime - noteTime
-```
-
-By convention:
-
-```text
-timingError < 0  => early
-timingError > 0  => late
-```
-
-Keep this sign convention consistent throughout the project.
-
-
-### Visual Lead Time
-
-The amount of time before its hit time that a note becomes visible or enters gameplay.
-
-This affects presentation.
-
-It must not redefine the note's actual hit timing.
-
-The current gameplay HUD exposes a visual note-speed multiplier from `x1` through `x4`. `x1`
-uses the chart's authored visual lead time. Higher values divide that lead time, so notes and
-timing guides enter later and travel faster while their absolute hit times, song time, input
-timestamps, and judgement windows remain unchanged. Changing the multiplier must immediately
-recalculate active presentation from authoritative song time rather than accumulating movement.
-
-
-### Judgement Offset
-
-A timing calibration value applied intentionally to judgement timing.
-
-Its meaning and sign must be documented wherever it is exposed to users or tools.
-
-Do not introduce multiple overlapping offsets without clearly defined responsibilities.
-
-
-## Note Presentation
-
-A note's visual state should be derivable from:
-
-- current authoritative song time
-- the note's chart timing
-- its chart-defined presentation / motion information
-
-Conceptually:
-
-```text
-timeUntilHit = noteTime - currentSongTime
-```
-
-Visual position should ultimately be recoverable from timing state.
-
-Do not make correct note position depend only on repeatedly moving the note from its previous
-frame position.
-
-Runtime bar and beat guides follow the same rule. Each guide is resolved from the chart tempo map
-to an absolute beat time, displayed within the chart visual lead window, and positioned from
-`beatTime - currentSongTime`. It must not accumulate transform movement or become a timing source.
-The guide is removed when its beat reaches the judgement line.
-
-This ensures that after a temporary frame hitch, the visual can return immediately to the
-correct timeline position instead of preserving accumulated drift.
-
-
-## Spawning
-
-Spawning is a runtime optimization and presentation concern.
-
-Spawn time is not hit time.
-
-A note may be instantiated or activated shortly before it becomes relevant.
-
-Its actual timing always comes from chart data.
-
-Changing spawn lead time must not change judgement timing.
-
-
-## Runtime Object Lifetime
-
-The chart may contain all note data for the entire song.
-
-Runtime GameObjects do not need to exist for the entire chart simultaneously.
-
-The runtime may use:
-
-- look-ahead activation
-- spawn windows
-- recycling
-- object pooling
-
-when appropriate.
-
-Do not introduce pooling complexity before there is a meaningful repeated creation/destruction
-pattern or performance reason.
-
-Regardless of pooling strategy, runtime object lifetime must not define musical timing.
-
-
-## Judgement
-
-Judgement must compare input timing against chart timing using the same authoritative timeline
-used by the rest of gameplay.
-
-Avoid judgement implementations that:
-
-- depend on visual transform position as the authoritative timing source
-- rely on frame count
-- scan the entire chart for every input
-- allow the same note to be judged multiple times
-- produce different timing results solely because rendering frame rate changes
-
-Judgement windows are not yet finalized and should be configurable rather than scattered
-as unexplained constants.
-
-
-## Candidate Note Search
-
-Judgement should operate on a bounded set of currently relevant notes.
-
-As chart size grows, input processing should not require iterating over every note in the song.
-
-The exact indexing strategy should remain proportional to actual project needs.
-
-Avoid speculative complex data structures without evidence they are needed.
-
-
-## Input Timing
-
-Input handling and judgement must use a consistent definition of when an input occurred.
-
-Do not convert input into judgement based only on when a later `Update()` happens to process it
-if more accurate input event timing is available.
-
-If input timestamps require conversion into the song timeline, keep that conversion explicit
-and centralized.
-
-Do not duplicate latency compensation logic across individual note components.
-
+| Concept | Meaning |
+|---|---|
+| Song time | Position in seconds relative to the intentional song origin |
+| Note time | Authored absolute hit time, independent of spawn frame |
+| Timing error | `inputChartTime - noteTime`; negative is early, positive is late |
+| Visual lead | Seconds of approach before hit time; presentation only |
+| Judgement offset | Intentional input/judgement calibration with documented sign and responsibility |
+
+Keep timestamp conversion centralized. Use accurate input-event timestamps when available,
+not the later Update processing time. Do not duplicate latency compensation in note components
+or add overlapping offsets without defining their responsibilities.
+
+## Presentation, Scheduling, and Judgement
+
+Derive note position from chart motion/timing and current song time, conceptually
+`timeUntilHit = noteTime - currentSongTime`. A hitch must return visuals to the correct
+position immediately without permanent drift. Animation cannot alter judgement.
+
+The HUD's x1–x4 speed divides the chart's visual lead time. Changing it immediately recomputes
+active note/guide presentation from song time; hit times, timestamps, clock, and judgement
+windows remain unchanged. Speed is locked during CountIn as specified below.
+
+Runtime bar/beat guides resolve absolute beat times through `ChartTempoMap`, appear within
+the visual lead, and disappear at the judgement line. They never become a timing source.
+
+Keep whole-song lightweight data separately from active GameObjects. Ordered look-ahead
+scheduling activates/retires relevant notes; spawning and pooling cannot define hit time.
+Use pooling only when a measured or clear creation/destruction pattern warrants it.
+
+Judge a bounded set of relevant candidates from chart and timestamped input data. Do not scan
+the whole song per input, use transforms/frame counts as judgement truth, or judge the same event
+twice. Window values remain configurable and provisional; frame rate alone must not change
+results.
 
 ## Accepted Sustained and Gesture Timing
 
@@ -395,8 +201,10 @@ clock. If a click cannot retain at least 25 ms of scheduling lead, it is skipped
 played late; the following beat resumes normal ahead-of-time scheduling. An Editor-only output
 offset may move metronome clicks by up to 50 ms in either direction without changing chart time,
 song time, note times, or judgement.
-The preview changes only Editor metronome scheduling. It must not modify the FMOD-backed song time,
-absolute note times, or runtime judgement until the author explicitly applies the candidate tempo map.
+Preview changes only Editor metronome scheduling. Applying calibration updates the tempo map,
+not FMOD song time, existing absolute note times, or explicit banana checkpoints. Later
+hold/slide grid checks, preparation, and guides resolve against the applied map; preview alone
+must never change runtime judgement.
 
 Because Unity's built-in audio is disabled in the FMOD prototype, authoring clicks must be scheduled
 through FMOD. The Editor count-in display may use Editor realtime, but it must not depend on Unity's
@@ -408,7 +216,6 @@ be scheduled against one FMOD DSP clock. Editor realtime may estimate the remain
 but it must not trigger song playback or recording activation. A non-zero first-downbeat offset must
 therefore remain part of the continuous interval between the final negative-time count-in beat and
 the first musical downbeat after the audio begins.
-
 
 ## Gameplay Preparation and First-Note Approach
 
@@ -488,7 +295,6 @@ returns to Ready. Repeated start/restart requests during CountIn are ignored. Re
 clears the previous attempt and schedules a fresh preparation from the same chart data. Normal
 pause/resume while Playing continues to use the established FMOD pause state.
 
-
 ## Pause and Resume
 
 Pause / resume must preserve synchronization.
@@ -507,7 +313,6 @@ must agree.
 If audio scheduling or timing origin must be recalculated, perform that recalculation in one
 central timing system.
 
-
 ## Restart and Seeking
 
 Restarting gameplay must reset all rhythm state consistently.
@@ -524,9 +329,12 @@ This includes, where applicable:
 - sustained-note check cursors and termination state
 - pending banana charge and unclaimed bonus combo
 
-Seeking, if later implemented, must rebuild runtime note state from chart time instead of trying
-to replay every missed frame.
-
+Authoring seek and looping already use `FmodSongPlayback.Seek` while gameplay is disabled.
+The recorded live-seek stale-anchor/streaming finding remains open in
+[IT-P0-003](BACKLOG.md#it-p0-003--verify-pause-resume-restart-and-seek-boundaries); a successful
+scheduled nonzero start does not verify live or paused seek. Any gameplay seek must rebuild
+runtime state from chart time rather than replay missed frames; no player-facing gameplay
+seek flow is currently implemented.
 
 ## `Time.timeScale`
 
@@ -535,7 +343,6 @@ Do not assume `Time.timeScale` is the authoritative way to control rhythm playba
 Any pause or slowdown feature must explicitly account for the audio timeline.
 
 Gameplay animation time and rhythm time are different concerns.
-
 
 ## Frame Rate Independence
 
@@ -547,7 +354,6 @@ frame hitches do not create independent song-time drift.
 Rendering smoothness may differ.
 
 Authoritative timing should not.
-
 
 ## Long-Song Stability
 
@@ -562,7 +368,6 @@ When testing timing-system changes, pay attention to:
 - end of song
 
 Do not validate synchronization using only the first few seconds.
-
 
 ## Timing Tests
 
@@ -586,7 +391,6 @@ Useful cases include:
 
 When fixing a timing bug that can be reproduced deterministically, prefer adding a regression
 test when practical.
-
 
 ## Timing Change Verification
 
@@ -619,7 +423,6 @@ For a milestone or regression check, record the test in `Playtests/` using
 
 Do not convert a perceived offset into a hidden constant before distinguishing input latency,
 output latency, chart timing error, and clock-conversion error.
-
 
 ## Unresolved Timing Decisions
 

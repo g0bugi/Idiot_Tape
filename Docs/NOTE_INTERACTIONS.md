@@ -1,14 +1,13 @@
 # Idiot_Tape — Note Interactions
 
 > Status: Accepted for current prototype
-> Last reviewed: 2026-09-04
+> Last reviewed: 2026-09-05
 > Applies to: The implemented prototype interaction set
 > Authority: Player-visible tap, hold, slide, flick, and banana-note behavior
 
 ## Document Purpose
 
-This document defines the note-interaction rules intentionally accepted for the next prototype
-expansion.
+This document defines the implemented note-interaction rules accepted for prototype validation.
 
 The runtime and authoring tool implement this contract for prototype validation. Verification
 evidence is recorded in `BACKLOG.md`; representative new-note Play Mode cases and physical-device
@@ -66,7 +65,7 @@ authoritative song time, and timestamped input state.
 
 ## Tap
 
-Tap is the current implemented interaction.
+Tap is the single-press interaction.
 
 - it has one absolute hit time, one lane position, and one musical-part identity
 - an eligible press inside the spatial and timing windows produces Perfect or Good
@@ -292,23 +291,12 @@ uncharged checkpoint.
 - checkpoint times remain explicit deterministic chart times after authoring
 
 
-## Accepted Authoring Summary
+## Authoring
 
-The detailed workflow is owned by `CHART_AUTHORING.md`.
-
-- tap recording uses lane keys `1` through `8`
-- slide recording begins on a lane key, adds a node whenever another lane key is pressed, and ends
-  normally when the current lane key is pressed again
-- a different lane key records the lane-change beat, after the previous lane's hold
-- a slide with no movement nodes becomes a hold
-- pressing `0` after a final lane transition does not add a time or node; it retroactively marks
-  that last transition as a terminal flick and closes the slide
-- stopping recording with an incomplete slide discards that incomplete slide
-- ordinary flick recording creates an adjacent end lane by default, but the author may later drag
-  the end to any different lane
-- banana authoring places start and end lanes, edits one or two curve handles, generates musical
-  checkpoints, and permits manual checkpoint correction
-
+Recording sequences, the non-timestamped `0` terminal-flick command, temporary/applied editing,
+and banana curve/checkpoint tools are defined in
+[CHART_AUTHORING.md](CHART_AUTHORING.md#current-interaction-authoring). Keep interaction data and
+player behavior consistent with that workflow; do not duplicate its detailed controls here.
 
 ## Future Possibility: Composed Slides
 

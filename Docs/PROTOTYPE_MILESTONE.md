@@ -1,7 +1,7 @@
 # Idiot_Tape — Current Prototype Milestone
 
 > Status: Current
-> Last reviewed: 2026-08-27
+> Last reviewed: 2026-09-05
 > Applies to: The current full-song mobile rhythm prototype
 > Authority: Current validation scope and exit criteria
 
@@ -23,20 +23,29 @@ structure clearly enough to justify further development on physical mobile hardw
 
 The repository currently contains:
 
-- FMOD event playback with a DSP-sample-backed authoritative song time
+- FMOD event playback with a DSP-sample-backed authoritative song time and signed preparation view
+- explicit Ready/start, chart-tempo count-in, full first-note approach, and shared DSP beat clicks
 - chart-selected FMOD event paths and optional stem parameter mappings
 - ScriptableObject prototype charts with tempo sections, musical parts, activation windows, and notes
 - chart-driven lane count for runtime presentation and touch judgement
 - touch, mouse, and eight-position keyboard development input
-- timestamped tap, hold, lane-slide, horizontal-flick, and banana judgement
+- timestamped tap, hold, step-slide with bounded transitions, horizontal-flick, and banana judgement
 - score, combo, judgement, instrument, progress, and pause presentation
 - look-ahead note activation and song-time-derived note positions
-- Play Mode chart authoring with per-type recording, interaction correction, looping,
-  quantization, part activation, and tempo calibration tools
+- a panel-based chart-authoring workspace with per-type recording, temporary/applied interaction
+  correction, looping, quantization, duplication, part activation, tempo calibration, transactional
+  buffer apply, Undo, and explicit save
 - EditMode tests for timing math, judgement, geometry, tempo, quantization, and chart utilities
-- PlayMode smoke tests for the gameplay scene and lane feedback
+- PlayMode scene/view, start-flow, authoring playback, and scheduled FMOD playback tests
 
 Existence in the repository is not proof that the behavior has passed the milestone gates below.
+The latest recorded results and known live-seek limitation are indexed in
+[BACKLOG.md](BACKLOG.md#current-evidence-snapshot).
+
+Current content: [SnowPrototypeChart.asset](../Assets/Data/SnowPrototypeChart.asset), selected by
+the Gameplay scene, contains tap/hold notes over the opening roughly one minute. The full-song
+audio reference is not a completed full-song chart or an all-interaction validation section.
+Preparing representative content remains part of the validation work below.
 
 ## Validation Hypotheses
 
@@ -61,7 +70,8 @@ The current milestone includes:
 - tap, hold, lane-based slide, horizontal flick, and banana interactions using the accepted rules
   in `NOTE_INTERACTIONS.md`
 - overlapping musical-part activation windows and inactive-note presentation
-- score, combo, miss, progress, pause, restart, and a clear end-of-song state
+- explicit start and chart-tempo preparation, score, combo, miss, progress, pause, restart, and
+  a clear end-of-song state
 - authoring, validation, saving, and replaying the chart
 - automated checks for deterministic timing and isolated chart logic
 - Play Mode verification of the complete gameplay path
@@ -75,7 +85,8 @@ The current milestone includes:
 P1 work may start only when it directly improves a failed P0 hypothesis or after the P0 gates pass.
 
 - anticipation UI for upcoming musical-part changes
-- improved multi-selection and drag editing in the chart authoring tool
+- multi-note selection/editing and activation-window handle dragging beyond existing individual
+  note/path dragging
 - variable-tempo authoring UX beyond direct tempo-section data
 - user-facing calibration UI
 - additional reversible spatial-layout experiments
@@ -97,7 +108,8 @@ P1 work may start only when it directly improves a failed P0 hypothesis or after
 ```text
 Open the gameplay prototype with a selected chart
   -> validate chart data and prepare its FMOD event
-  -> begin or restart from one synchronized timeline origin
+  -> wait at Ready, then explicitly start chart-tempo preparation
+  -> show the full first-note approach and enter play from one synchronized origin
   -> present upcoming notes from chart time
   -> receive touch or development input with an explicit timestamp
   -> judge playable notes and update feedback
@@ -143,11 +155,19 @@ rules are intentionally finalized.
 - saved data validates and can be replayed without manual scene-note placement
 - the next authoring investment is selected from evidence rather than feature count
 
+### Gate M5 — Interaction Set
+
+- the accepted tap, hold, step-slide, horizontal-flick, and banana set has representative chart content
+- data, timing, contact ownership, rewards, failure, and authoring follow their owning contracts
+- each interaction has physical-device/readability evidence and a retain/revise/remove recommendation
+- required evidence for `IT-P0-013` through `IT-P0-019` is recorded; automated coverage alone does
+  not close this gate
+
 ## Milestone Exit Criteria
 
 The milestone is complete only when:
 
-1. gates M1 through M4 have evidence in `Playtests/`
+1. gates M1 through M5 have evidence in `Playtests/`
 2. P0 backlog items are complete or intentionally removed with a recorded reason
 3. relevant automated tests and Play Mode checks have actually been run
 4. physical-device limitations are recorded rather than inferred from Editor behavior

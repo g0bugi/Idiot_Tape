@@ -1,394 +1,97 @@
 # Idiot_Tape — Development Workflow
 
 > Status: Current
-> Last reviewed: 2026-08-25
-> Applies to: All repository changes
-> Authority: Engineering workflow, verification, Unity safety, and completion reporting
-
-## Document Purpose
-
-This document defines the expected workflow for repository changes.
-
-The goal is to prevent:
-
-- accidental unrelated changes
-- unverified implementations
-- broken Unity serialization
-- duplicate systems
-- destructive Git operations
-- false claims that something was tested
-
-
-# 1. Preflight
-
-Before implementation:
-
-1. inspect the repository status
-2. identify user changes already present
-3. inspect relevant existing files
-4. search for related implementations and references
-5. read the relevant project documentation
-6. determine the smallest reasonable change scope
-7. when the work belongs to the current milestone, identify the owning `BACKLOG.md` item and required evidence
-
-Do not assume a clean working tree.
-
-Do not overwrite existing changes simply because they are unrelated to the current task.
-
-
-# 2. Understand Before Replacing
-
-Before replacing an existing implementation:
-
-1. identify what calls it
-2. identify what references it
-3. inspect related serialized Unity assets
-4. determine whether the old behavior is still required
-5. determine whether migration is needed
-
-Do not delete old code first and investigate dependencies afterward.
-
-
-# 3. Implementation Scope
-
-Prefer the smallest coherent implementation.
-
-A coherent change may include multiple files when those files form one responsibility.
-
-Do not artificially restrict a task to one file when doing so would create bad architecture.
-
-However, do not use a small feature request as an excuse for a broad cleanup.
-
-
-# 4. Existing User Changes
-
-Existing local modifications belong to the user unless the task explicitly concerns them.
-
-Do not:
-
-- reset them
-- revert them
-- overwrite them blindly
-- stash them without a reason
-- include them in unrelated cleanup
-
-If the requested change must touch a file that already contains user modifications,
-preserve those modifications carefully.
-
-
-# 5. Unity Asset Safety
-
-When modifying Unity assets:
-
-- preserve `.meta` files
-- preserve GUID relationships
-- preserve unrelated serialized fields
-- avoid unnecessary asset moves
-- avoid unnecessary asset renames
-- avoid unnecessary hierarchy reorganization
-
-After serialized changes, check for:
-
-- missing references
-- lost Inspector values
-- unexpected prefab overrides
-- broken ScriptableObject references
-
-
-# 6. Serialized C# Fields
-
-Treat serialized fields as persistent project data.
-
-Before renaming or changing the type of a serialized field, consider existing:
-
-- prefabs
-- scenes
-- ScriptableObjects
-
-If existing serialized values must survive, use an appropriate migration strategy.
-
-Do not treat a private `[SerializeField]` rename as a purely internal code rename.
-
-
-# 7. Unity Version and Packages
-
-Do not change the Unity version unless explicitly requested.
-
-Do not add or upgrade a package simply because it makes implementation easier.
-
-When a new dependency is genuinely required:
-
-1. confirm the project does not already provide equivalent functionality
-2. explain why the dependency is needed
-3. keep the dependency change limited to the task
-
-
-# 8. Generated Files
-
-Do not intentionally modify or commit Unity-generated caches and IDE project files such as:
-
-```text
-Library/
-Temp/
-Logs/
-obj/
-*.csproj
-*.sln
-```
-
-unless a specific task explicitly concerns those files.
-
-
-# 9. Coding
-
-During implementation:
-
-- follow project naming and formatting conventions
-- preserve responsibility boundaries
-- avoid duplicate sources of truth
-- avoid introducing timing behavior into unrelated visual components
-- avoid unnecessary per-frame allocations
-- keep magic timing constants centralized or configurable where appropriate
-
-Do not add defensive complexity for impossible hypothetical conditions without evidence
-the project needs it.
-
-
-# 10. Compilation
-
-After C# changes, verify that the project has no new compilation errors.
-
-Do not consider a code change complete while known compile errors caused by that change remain.
-
-If compilation cannot actually be executed in the current environment, report that fact explicitly.
-
-Example:
-
-```text
-Not verified: Unity compilation could not be executed in the current environment.
-```
-
-
-# 11. Automated Tests
-
-Run relevant existing tests after changing covered behavior.
-
-Add or update tests when:
-
-- changing deterministic timing calculations
-- changing judgement rules
-- fixing a reproducible regression
-- changing data validation
-- changing isolated logic that can reasonably be tested
-
-Do not create meaningless tests only to increase test count.
-
-After automated Unity tests finish:
-
-- confirm the Unity process exited normally
-- check that `Assets/_Recovery` was not created from an interrupted Test Runner scene
-- do not commit `Assets/_Recovery` or its `.meta` file
-- inspect recovery scenes in Unity before deleting them, because an interactive editor crash can place
-  unsaved user work there
-- `Temp/__Backupscenes` is generated editor state and must remain outside version control
-
-
-# 12. Unity Play Mode Verification
-
-When gameplay behavior changes and the environment supports Unity execution:
-
-1. enter the relevant scene
-2. reproduce or exercise the affected behavior
-3. check expected behavior
-4. check nearby existing behavior for regression
-5. inspect the Unity Console afterward
-
-A successful compile is not equivalent to a successful gameplay test.
-
-
-# 13. Rhythm-System Verification
-
-Changes involving timing require additional care.
-
-Read `RHYTHM_SYSTEM.md`.
-
-At minimum, consider:
-
-- exact timing behavior
-- early / late behavior
-- frame-rate independence
-- pause / resume
-- restart
-- offset behavior
-- frame hitch recovery
-- synchronization later in the song
-
-Do not validate a synchronization change using only the first few seconds when full-song drift
-could be relevant.
-
-
-# 14. Chart Changes
-
-When chart data or chart parsing changes:
-
-verify, where relevant:
-
-- old supported chart data still loads
-- invalid data fails clearly
-- note ordering remains valid
-- timing values remain unchanged unless intentionally migrated
-- musical-part references remain valid
-- schema changes are intentional
-
-Do not silently reinterpret existing chart files after a breaking format change.
-
-
-# 15. Performance Work
-
-Do not describe something as a performance improvement solely because the code looks faster.
-
-When the task specifically concerns performance, use measurable evidence when practical.
-
-Relevant evidence may include:
-
-- Unity Profiler
-- allocation measurements
-- frame timing
-- active GameObject counts
-- reproduction with a dense chart
-
-Do not optimize unrelated code without evidence or a clear scaling problem.
-
-
-# 16. Final Diff Review
-
-Before considering the task finished, review the final changes.
-
-Check:
-
-- which files changed
-- whether every change belongs to the task
-- whether user changes were accidentally overwritten
-- whether debug code remains
-- whether temporary files were added
-- whether serialized assets changed unexpectedly
-- whether documentation should be updated
-
-If command-line Git is available, useful checks may include:
-
-```text
-git status --short
-git diff --check
-git diff
-```
-
-Use them as inspection tools, not as permission to modify unrelated work.
-
-
-# 17. Git Safety
-
-Do not perform destructive Git operations without explicit user intent.
-
-Do not:
-
-- force-push
-- rewrite history
-- hard-reset user work
-- delete branches
-- discard unrelated changes
-- automatically clean untracked user files
-
+> Last reviewed: 2026-09-05
+> Authority: Change procedure, verification, and completion evidence
+
+## Preflight and Scope
+
+Follow [../AGENTS.md](../AGENTS.md) for durable Unity, Git, C#, and gameplay rules.
+
+1. Inspect `git status --short`; identify and preserve existing user changes.
+2. Inspect affected code, callers, tests, and asset references before replacing behavior.
+3. Select the relevant contract via [README.md](README.md); define the smallest coherent change.
+4. For milestone work, read the owning backlog item and its acceptance conditions. A small
+   request does not require a new task brief or backlog entry.
+
+Existing user modifications must not be reset, reverted, blindly overwritten, stashed without
+reason, or included in unrelated cleanup. When changing serialized fields, inspect existing
+scene/prefab/ScriptableObject values and plan compatibility before editing.
+
+For a broad change, state the outcome, scope, dependencies or open decisions, and intended
+verification. Reuse existing contracts and backlog IDs rather than repeating them in a plan.
+Investigate repository-answerable questions directly.
+
+## Choose Verification by Change
+
+Run all applicable checks that the environment allows. These rows select relevant checks;
+they do not waive timing, device, or acceptance requirements.
+
+| Change | Required verification |
+|---|---|
+| Documentation only | Check claims against code/evidence, internal links, referenced paths/symbols, statuses, and final diff. Unity compilation, Play Mode, and builds are not required when code, assets, packages, and settings are unchanged. |
+| C# behavior | Check Unity compilation, run relevant existing automated tests, exercise affected behavior and nearby regression cases in Play Mode when available, inspect Console/logs. |
+| Scene, prefab, or serialized data | Validate references, GUIDs, Inspector values, unexpected overrides, load/save compatibility, and affected runtime behavior. |
+| Timing or judgement | Also follow [RHYTHM_SYSTEM.md](RHYTHM_SYSTEM.md#timing-change-verification), including appropriate boundary, restart/pause/hitch, later-song, and output-phase checks. |
+| Chart or authoring | Validate supported old data, ordering, IDs, parts, absolute times, buffer/apply/Undo/save, and replay; use [CHART_AUTHORING.md](CHART_AUTHORING.md#authoring-verification). |
+| Performance or mobile feel | Use relevant profiler/allocation/frame evidence and physical hardware where needed. Code appearance or Editor success does not prove improvement or device behavior. |
+
+Add or update meaningful tests for deterministic timing, judgement, data validation, and
+reproducible regressions. Do not add tests that only mirror the implementation or pad counts.
+Start with affected coverage; run full suites when shared-system impact, a regression, or
+milestone acceptance warrants them. After required checks pass, repeat or broaden testing
+only for new changes, failures, or unresolved concerns.
+
+A compile is not a gameplay test. Do not call a performance or workflow-speed claim verified
+without measurement. A documentation review of old test results is not a new test run.
+
+## Unity Test Execution
+
+Use the editor version in `ProjectSettings/ProjectVersion.txt` and the existing test assemblies
+under `Assets/Tests/EditMode` and `Assets/Tests/PlayMode`. Do not edit generated project files
+to make a build pass or upgrade Unity/packages for test convenience.
+
+- Use an available interactive Test Runner, or batch Unity with `-batchmode -projectPath`,
+  `-runTests`, `-testPlatform EditMode|PlayMode`, `-testResults`, and `-logFile`.
+  Add `-testFilter` for a targeted run. Supply actual paths and one platform per run.
+- Do not launch a second Unity instance against a project already open in the Editor, or
+  interrupt/close the user's live editing session to free it. Inspect the available environment.
+- Record exact commands/selections, test XML, logs, and process exit status. Keep generated
+  results outside tracked content. Existing dated records provide reproducible examples,
+  not a guarantee that machine-specific artifact paths are still available.
+- After batch runs, confirm normal exit and inspect the working tree for generated scenes,
+  `Assets/_Recovery`, and automatic settings changes. Do not commit recovery content or caches.
+  Inspect recovery scenes in Unity before deleting them; they may contain unsaved user work.
+  `Temp/__Backupscenes` remains generated editor state outside version control.
+- Restore only changes proven to be generated by this run, using the preflight state;
+  never overwrite pre-existing user settings or assets to match an older test baseline.
+
+## Behavior and Evidence
+
+In Play Mode, exercise the affected scene and normal/failure paths, check adjacent behavior,
+then inspect the Console. Chart changes must preserve supported old data and absolute times
+unless intentionally migrated, and reject invalid data clearly.
+
+Use a dated record under `Playtests/` for meaningful manual validation or regression evidence.
+Record build/commit, environment, relevant settings, exact procedure, actual results, and
+remaining limits. Only fill the applicable parts of [Playtests/TEMPLATE.md](Playtests/TEMPLATE.md).
+A checkbox or code diff cannot substitute for human/device evidence required by a gate.
+
+A dependency is justified only after checking existing functionality and explaining its task
+need. Intentional timing, chart, gameplay, or ownership changes update the owning contract;
+a defect must be identified as a defect. See [README.md](README.md#maintenance).
+
+## Final Review and Completion
+
+Run `git diff --check`, inspect `git diff` and `git status --short`, including new files.
+Confirm every change belongs to the task, user work is preserved, temporary/debug content is
+absent, and serialized assets/settings did not change unexpectedly.
+
+Finish the requested scope, resolve known errors introduced by it, and report only verification
+actually performed. Use `Not verified: <reason>` for required checks that could not run;
+omit irrelevant checks instead of implying they are blockers.
+
+Give a concise report of the outcome and how it works, important files, checks performed,
+and material unverified behavior or follow-up work. Combine these naturally; fixed six-section
+reports, empty headings, repeated plans, and speculative issue lists are unnecessary.
 Do not commit unless explicitly requested.
-
-A successful local implementation does not require creating a commit.
-
-
-# 18. Documentation Updates
-
-Update project documentation when the task intentionally changes a documented contract.
-
-Examples:
-
-- rhythm clock architecture changed
-- chart schema intentionally changed
-- a design decision became final
-- ownership of a major system changed
-
-Do not rewrite documentation to legitimize an accidental implementation discrepancy.
-
-
-# 19. Task Briefs and Evidence
-
-For milestone work, prefer referencing an existing `BACKLOG.md` item instead of repeating its full
-scope in every request. The user's current instruction remains authoritative and may intentionally
-change that scope.
-
-When a new task is large enough to require planning, define:
-
-- player or chart-author goal
-- included and excluded behavior
-- relevant design, timing, chart, and architecture contracts
-- dependencies and blocking open-decision IDs
-- expected data input and output
-- normal and failure behavior
-- serialized asset or package impact
-- automated verification
-- manual verification, including physical device requirements
-- observable completion conditions
-
-Use the work-item template in `BACKLOG.md` for recurring milestone work.
-
-Manual validation evidence belongs under `Playtests/`. A backlog checkbox, implementation diff, or
-successful compilation does not replace a playtest record when the acceptance condition depends on
-feel, readability, synchronization, authoring speed, or physical-device behavior.
-
-
-# 20. Required Completion Report
-
-At the end of the task, report:
-
-## Changed
-
-Describe the behavior that changed.
-
-
-## Important Files
-
-List the important files modified.
-
-
-## Implementation
-
-Briefly explain how the new behavior works.
-
-
-## Verified
-
-List only checks that were actually executed.
-
-
-## Not Verified
-
-List relevant checks that could not be executed.
-
-If everything relevant was verified, say so.
-
-
-## Remaining Issues
-
-Describe known limitations, risks, TODOs, or follow-up work.
-
-Do not invent remaining issues merely to populate this section.
-
-
-# 21. Definition of Done
-
-A task is done when:
-
-- the requested behavior exists
-- the implementation fits the existing project
-- known errors introduced by the task are resolved
-- relevant testing has been performed where available
-- the final diff has been reviewed
-- unrelated work was preserved
-- unperformed verification has been reported accurately

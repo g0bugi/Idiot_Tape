@@ -1,7 +1,7 @@
 # Idiot_Tape — Chart Authoring
 
 > Status: Current
-> Last reviewed: 2026-09-04
+> Last reviewed: 2026-09-05
 > Applies to: The current Play Mode prototype authoring tool
 > Authority: Current authoring workflow and tool limitations
 
@@ -19,7 +19,8 @@ The chart data contract remains in `CHART_FORMAT.md`. The rhythm and timestamp c
 - a temporary recording buffer does not modify the chart until the author explicitly applies it
 - quantization changes authoring data only and preserves the original recorded timestamp for restoration
 - chart changes use Unity Undo where supported and require explicit asset saving
-- tempo calibration previews do not change note times until the author explicitly applies the result
+- tempo calibration preview never changes chart data; apply changes the tempo map while preserving
+  absolute note times and existing explicit banana checkpoints
 - the tool does not manually place runtime note GameObjects into the gameplay scene
 
 ## Opening the Tool
@@ -29,8 +30,9 @@ The Editor menu `Tools > Idiot Tape > 채보 제작 도구` opens the current Pl
 It uses the Gameplay scene's FMOD playback component so number-key recording is converted to the
 same DSP-backed song timeline used by runtime judgement.
 
-The recorder intentionally disables the live gameplay session while recording. Seeking and looping
-must not leave runtime scheduling state active behind the authoring session.
+The tool disables the live gameplay session when it takes playback ownership, including event
+preparation, audition, seeking, and recording. Runtime scheduling must not remain active behind
+the authoring transport. Re-enter Play Mode to restore gameplay from applied chart data.
 
 ## Recommended Working Loop
 
@@ -45,22 +47,16 @@ must not leave runtime scheduling state active behind the authoring session.
 8. validate the chart and save explicitly with the top `저장 필요` button
 9. exit and re-enter Play Mode before validating runtime scheduling from the edited chart
 
-Do not bypass validation or direct serialized-asset edits merely to shorten this loop.
+Do not bypass validation or edit serialized assets directly merely to shorten this loop.
 
 ## Current Workspace Layout
 
-Implementation status: `Implemented; verification pending`. The workspace replaces the long
-whole-window control stack. The latest 2026-09-04 automated runs passed **230/230 EditMode** and **9/9
-PlayMode** tests. Coverage includes real-click navigation, buffer Undo/Redo, boundary-value
-preservation, repeated Synth holds through the FMOD-backed recording path, unresolved-part
-preservation, and apply rejection without partial chart changes; see
-[the recording verification record](Playtests/2026-09-04-recording-serialization-verification.md)
-and [the earlier stability verification record](Playtests/2026-09-04-authoring-stability-verification.md).
-Native window captures
-were inspected at 150% display scaling in full-width and compact layouts. Representative interactive
-verification and timed throughput evidence are still required; see
-[the workspace verification record](Playtests/2026-09-04-authoring-workspace-verification.md).
-Existing timing, buffering, apply, Undo, validation, and save responsibilities remain unchanged.
+Implementation status: `Implemented; verification pending`. Automated coverage and sampled
+native-window inspection exist; representative interactive operation and timed throughput remain
+pending. Use the [backlog evidence snapshot](BACKLOG.md#current-evidence-snapshot) for the latest
+recorded suites and the [workspace record](Playtests/2026-09-04-authoring-workspace-verification.md)
+for layout evidence. Timing, buffering, apply, Undo, validation, and save responsibilities remain
+independent of the panel layout.
 
 | Area | Controls and purpose |
 |---|---|
@@ -160,7 +156,8 @@ Reapplying an unchanged retained buffer still requires the existing duplicate-ap
 - least-squares BPM and first-downbeat derivation across captured anchors
 - candidate-grid metronome preview
 - millisecond phase adjustment
-- an explicit Undo-supported tempo-map apply step that preserves absolute note times
+- an explicit Undo-supported tempo-map apply step for a chart with exactly one tempo section;
+  it preserves absolute note times and explicit banana checkpoints while changing the musical grid
 
 ### Data Safety
 
@@ -179,8 +176,9 @@ Reapplying an unchanged retained buffer still requires the existing duplicate-ap
 
 ## Metronome and Count-In Timing
 
-The metronome is an Editor-only guide and never replaces FMOD song time as the input-recording
-source. Its scheduling rules are defined in `RHYTHM_SYSTEM.md`.
+The authoring metronome is an Editor guide backed by the shared runtime `FmodMetronome`;
+it never replaces FMOD song time as the input-recording source. Its scheduling rules are defined
+in `RHYTHM_SYSTEM.md`.
 
 When count-in extends before song time zero, virtual negative chart time is used only to place guide
 clicks and schedule the real song start on one FMOD DSP clock. It does not create negative runtime
@@ -346,6 +344,11 @@ a slide that starts with a flick. This is a future possibility only; the current
 must not add speculative merge UI or a generic composition system.
 
 ## Current Limitations
+
+The live `Seek` transport exists but has a recorded stale-anchor/streaming finding. Corrected
+scheduled starts do not establish live/paused seek correctness; see
+[IT-P0-003](BACKLOG.md#it-p0-003--verify-pause-resume-restart-and-seek-boundaries).
+Do not treat authoring navigation availability as proof of synchronization.
 
 The current tool does not provide:
 

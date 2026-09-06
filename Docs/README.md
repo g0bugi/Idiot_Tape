@@ -1,76 +1,70 @@
 # Idiot_Tape — Documentation Guide
 
 > Status: Current
-> Last reviewed: 2026-08-27
-> Applies to: The current Unity prototype
-> Authority: Documentation routing and precedence
+> Last reviewed: 2026-09-05
+> Authority: Document ownership, routing, and interpretation
 
-## Purpose
+## Start Here
 
-This file explains which project document to read and what kind of decision each document owns.
+Use the row matching the requested change. Read the owning sections and affected code first;
+follow another document only when the task crosses its boundary. This is a routing table,
+not an instruction to read every listed file. Already-read, unchanged context need not be
+loaded again.
 
-The documents are intentionally separated by responsibility. A backlog item does not override a
-game-design or timing contract, and a temporary implementation detail does not silently become a
-permanent design decision.
-
-## Authority Order
-
-For a development task, use the following order:
-
-1. the user's current request defines the requested change
-2. accepted design and technical contracts define the intended behavior
-3. the current repository defines the implementation that must be preserved or migrated
-4. the current milestone and backlog define delivery priority and task scope
-5. playtest records and ADRs provide supporting evidence and decision history
-
-If these disagree, report the discrepancy and make the smallest change required by the task.
-
-## Document Map
-
-| Document | Responsibility | Read when |
+| Task | Owning document | Implementation entry points |
 |---|---|---|
-| `GAME_DESIGN.md` | Player experience, design pillars, non-goals, open design decisions | Changing player-visible gameplay |
-| `NOTE_INTERACTIONS.md` | Accepted prototype rules for tap, hold, slide, flick, and banana notes | Changing note behavior, rewards, failure, or contact rules |
-| `PROTOTYPE_MILESTONE.md` | Current validation target, scope, gates, exit criteria | Choosing or evaluating current work |
-| `RHYTHM_SYSTEM.md` | Authoritative timing and synchronization contract | Changing any rhythm-sensitive behavior |
-| `CHART_FORMAT.md` | Chart data contract and runtime interpretation | Changing chart data or validation |
-| `CHART_AUTHORING.md` | Current chart-authoring workflow and tool limitations | Changing or using the authoring tool |
-| `ARCHITECTURE.md` | System boundaries, ownership, dependencies, current implementation map | Changing system responsibilities |
-| `BACKLOG.md` | Small executable work items and their acceptance evidence | Starting or completing a milestone task |
-| `DEVELOPMENT_WORKFLOW.md` | Repository change, verification, Unity, and Git procedure | Making any repository change |
-| `Playtests/` | Session-specific observations and evidence | Running or reviewing manual tests |
-| `ADR/` | Accepted technical decisions and reconsideration conditions | Revisiting a consequential technical choice |
+| Player experience, layout, or scope | [GAME_DESIGN.md](GAME_DESIGN.md) | `GameplaySession`, `PlayfieldPresenter` |
+| Note rules, score, contact ownership | [NOTE_INTERACTIONS.md](NOTE_INTERACTIONS.md) | `GameplaySession`, `JudgementEvaluator`, `NoteInteractionMath` |
+| Playback, start/count-in, input timing, pause, seek, offsets | [RHYTHM_SYSTEM.md](RHYTHM_SYSTEM.md) | `FmodSongPlayback`, `SongTimelineMath`, `GameplayStartPlan`, `FmodMetronome` |
+| Chart fields, compatibility, validation | [CHART_FORMAT.md](CHART_FORMAT.md) | `PrototypeChart`, `ChartTempoMap` |
+| Recorder, workspace, correction, Undo/apply/save | [CHART_AUTHORING.md](CHART_AUTHORING.md) | `PrototypeChartRecorderWindow` partials and `Chart*Utility` helpers |
+| Core ownership or dependencies | [ARCHITECTURE.md](ARCHITECTURE.md) | Current implementation and assembly maps |
+| Choosing work or judging milestone completion | [PROTOTYPE_MILESTONE.md](PROTOTYPE_MILESTONE.md), relevant [BACKLOG.md](BACKLOG.md) item | Gate, hypothesis, and work-item IDs |
+| Verification and repository procedure | [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md) | `Assets/Tests/EditMode`, `Assets/Tests/PlayMode` |
+| A specific regression or manual session | Linked record under [Playtests/](Playtests/) | Commands, observations, and artifact paths in that record |
+| Revisiting a consequential decision | Relevant [ADR/](ADR/) entry | FMOD clock (0001), ScriptableObject charts (0002), hidden lanes (0003) |
 
-Repository-wide Codex rules remain in `../AGENTS.md`.
+Runtime sources live under `Assets/Scripts/Audio` and `Assets/Scripts/Gameplay`; authoring
+sources live under `Assets/Editor`. For a narrow change, search headings or symbols before
+reading large files. Full-document review is appropriate when changing the document itself
+or a contract that spans its sections.
 
-## Status Vocabulary
+Repository-wide rules live in [../AGENTS.md](../AGENTS.md). Do not duplicate the routing
+table or detailed procedures there.
 
-Documents and decisions use these terms consistently:
+## Authority and Status
 
-- `Current`: describes the contract or process currently in force
-- `Draft`: usable for discussion but not yet an accepted contract
-- `Proposed`: a candidate that must not be implemented as settled without approval
-- `Accepted for current prototype`: intentionally chosen for the prototype but open to later replacement
-- `Open`: not yet decided
-- `Superseded`: retained only for decision history
+The user's request defines scope. Accepted design/technical contracts define intended
+behavior; the repository shows implementation. Milestone and backlog documents define
+priority and acceptance, while playtests record evidence. ADRs explain accepted decisions
+and reconsideration conditions; they are not optional advice or a reason to create a new
+system. Report conflicts and make the smallest requested change.
 
-## Current, Contract, and Future
+| Label | Meaning |
+|---|---|
+| `Current` | Contract or process currently in force; not proof that every feature is verified |
+| `Accepted for current prototype` | Chosen for this prototype; replace only through an intentional decision |
+| `Draft` / `Proposed` | Discussion or candidate direction, not settled implementation scope |
+| `Open` | Unresolved decision, not an automatic request to implement it |
+| `Superseded` | Historical material; follow the linked replacement |
 
-When a document contains more than one time horizon, prefer explicit labels:
+Within a document, distinguish `Current implementation`, `Contract`, `Current milestone`,
+`Future possibility`, and `Open decision`. Work-item statuses, including
+`Implemented; verification pending`, are defined in [BACKLOG.md](BACKLOG.md#status-vocabulary).
+An automated pass does not establish feel, authoring speed, full-song stability, or device latency.
 
-- `Current implementation`: what exists in the repository now
-- `Contract`: behavior that changes must preserve
-- `Current milestone`: what is being validated next
-- `Future possibility`: non-binding design space
-- `Open decision`: a choice Codex must not silently finalize
+## Maintenance
 
-## Maintenance Rules
-
-- Update `PROTOTYPE_MILESTONE.md` when the validation target changes.
-- Update `BACKLOG.md` when task scope, status, dependencies, or evidence changes.
-- Add a playtest record for each meaningful manual validation session.
-- Update a durable contract only when the project intentionally changes that contract.
-- Add or supersede an ADR when a consequential technical decision changes.
-- Prefer Git history over manually synchronized cross-document version numbers.
-- When adding a document, add it to this map and to `../AGENTS.md` if Codex needs an explicit routing rule.
+- Keep each rule in its owning document; link to it instead of copying its full explanation.
+- Update implementation descriptions from inspected code. Preserve intended rules and mark
+  known gaps rather than rewriting a contract to legitimize a defect.
+- Keep acceptance status and an evidence index in `BACKLOG.md`. Detailed test counts,
+  commands, measurements, and failure history belong in dated `Playtests/` records.
+  Cite a historical run as historical; never imply it was rerun for a documentation edit.
+- Preserve dated playtest evidence. Add a new record or explicit correction/supersession
+  when evidence changes; use [Playtests/TEMPLATE.md](Playtests/TEMPLATE.md) selectively.
+- Update milestone gates when scope changes and ADRs when consequential decisions change.
+  Retain stable decision/work-item IDs and use Git for ordinary edit history.
+- Add new documents to this routing table only when they own a distinct responsibility.
+  Do not add summary copies that create another status source.
 
