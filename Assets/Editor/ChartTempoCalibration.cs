@@ -78,13 +78,23 @@ namespace IdiotTape.EditorTools
         public static ChartTempoCalibrationResult Calculate(
             IReadOnlyList<ChartTempoAnchor> anchors,
             int beatsPerBar,
-            int beatUnit)
+            int beatUnit,
+            double? fixedBeatsPerMinute = null)
         {
 
             if (beatsPerBar < 1 || beatUnit < 1)
             {
 
                 return Invalid("박자표가 올바르지 않습니다.");
+
+            }
+
+            if (fixedBeatsPerMinute.HasValue &&
+                (!double.IsFinite(fixedBeatsPerMinute.Value) || fixedBeatsPerMinute.Value < 1d ||
+                 fixedBeatsPerMinute.Value > 1000d))
+            {
+
+                return Invalid("고정 BPM은 1~1000 사이의 유한한 값이어야 합니다.");
 
             }
 
@@ -161,8 +171,13 @@ namespace IdiotTape.EditorTools
 
             }
 
-            double secondsPerBeat = beatTimeCovariance / beatVariance;
-            double beatsPerMinute = 60d * (4d / beatUnit) / secondsPerBeat;
+            // With a fixed slope, the least-squares origin is the mean of each
+            // measured time minus its musical distance from bar 1. Keep raw taps
+            // so their scatter remains visible instead of fitting the BPM to them.
+            double secondsPerBeat = fixedBeatsPerMinute.HasValue
+                ? 60d / fixedBeatsPerMinute.Value * (4d / beatUnit)
+                : beatTimeCovariance / beatVariance;
+            double beatsPerMinute = fixedBeatsPerMinute ?? 60d * (4d / beatUnit) / secondsPerBeat;
             double firstDownbeatTime = meanSongTime - meanBeatIndex * secondsPerBeat;
 
             if (beatsPerMinute < 1d || beatsPerMinute > 1000d)
@@ -224,7 +239,7 @@ namespace IdiotTape.EditorTools
             return anchor.Bar >= 1 &&
                    anchor.Beat >= 1 &&
                    anchor.Beat <= beatsPerBar &&
-                   anchor.SongTime >= 0d;
+                   double.IsFinite(anchor.SongTime) && anchor.SongTime >= 0d;
 
         }
 

@@ -1,7 +1,7 @@
 # Idiot_Tape — Chart Authoring
 
 > Status: Current
-> Last reviewed: 2026-09-05
+> Last reviewed: 2026-09-07
 > Applies to: The current Play Mode prototype authoring tool
 > Authority: Current authoring workflow and tool limitations
 
@@ -141,6 +141,11 @@ Reapplying an unchanged retained buffer still requires the existing duplicate-ap
 ### Count-In, Metronome, and Quantization
 
 - one- or multi-bar count-in with weak clicks and accented downbeats
+- the top `메트로놈` checkbox controls ongoing recording clicks; count-in clicks play independently
+- starting another take or a standalone-count-in loop resets the metronome cursor;
+  its first recording click is scheduled ahead with the count-in on the same DSP clock
+- metronome beats continue through audio time zero before a delayed bar-1 downbeat, preserving
+  beat spacing and accents without changing the chart's first-downbeat time
 - musical pre-roll when enough earlier song time exists
 - virtual negative-song-time count-in when requested pre-roll extends before song time zero
 - loop recording that repeats through pre-roll rather than jumping directly to the first note
@@ -151,6 +156,8 @@ Reapplying an unchanged retained buffer still requires the existing duplicate-ap
 
 ### Tempo Calibration
 
+- default `현재 BPM 고정 · 시작점만 보정` mode preserves the selected chart's BPM;
+  disable it to estimate BPM and origin together
 - manual two-anchor calibration
 - successive-bar downbeat tapping
 - least-squares BPM and first-downbeat derivation across captured anchors
@@ -158,6 +165,20 @@ Reapplying an unchanged retained buffer still requires the existing duplicate-ap
 - millisecond phase adjustment
 - an explicit Undo-supported tempo-map apply step for a chart with exactly one tempo section;
   it preserves absolute note times and explicit banana checkpoints while changing the musical grid
+
+For fixed-BPM origin calibration, set `시작 마디` to the first bar you will tap and
+`탭 간격(마디)` to the number of bars between taps (1 for every bar, 4 for every fourth bar).
+Start playback/capture and press Space on each requested bar's first beat. After at least two
+taps, the tool averages `measured song time - beat index * seconds per beat` across all taps;
+it reports the fixed BPM, candidate first-downbeat time, and RMS residual. Stop capture, audition
+the candidate metronome, optionally adjust the millisecond phase, apply, then save the chart.
+Capture numbering is locked while measuring. Use a constant-tempo section before a song's
+tempo change. RMS measures disagreement between taps, not absolute accuracy: consistent human
+reaction delay remains and needs listening/phase verification. Applying fixed-BPM calibration
+does not write the BPM field. Manual A/B anchors remain available in a foldout.
+
+The tempo pane stacks labeled inputs, transport actions, and wrapped summaries vertically within
+the available inspector width, reserving room for its vertical scrollbar.
 
 ### Data Safety
 

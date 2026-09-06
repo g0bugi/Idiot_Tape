@@ -10,6 +10,46 @@ namespace IdiotTape.Gameplay.Tests
     {
 
         [Test]
+        public void MetronomeContinuesFromCountInThroughDelayedFirstDownbeat()
+        {
+
+            ChartTempoSection tempo = JsonUtility.FromJson<ChartTempoSection>(
+                "{\"startBar\":1,\"startTime\":0.5773379970760288,\"beatsPerMinute\":128,\"beatsPerBar\":4,\"beatUnit\":4}");
+            var sections = new[] { tempo };
+            var countIn = ChartAuthoringCountIn.BuildBeats(tempo, 0d, 2);
+            double beat = ChartAuthoringMetronome.GetBeatTimeAtOrAfter(sections, 0d);
+
+            Assert.That(beat, Is.EqualTo(0.1085879970760288d).Within(0.000001d));
+            Assert.That(beat - countIn[^1].SongTime, Is.EqualTo(60d / 128d).Within(0.000001d));
+            Assert.That(ChartAuthoringMetronome.IsDownbeat(sections, beat), Is.False);
+            double firstDownbeat = ChartAuthoringMetronome.GetBeatTimeAfter(sections, beat);
+            Assert.That(firstDownbeat, Is.EqualTo(tempo.StartTime).Within(0.000001d));
+            Assert.That(ChartAuthoringMetronome.IsDownbeat(sections, firstDownbeat), Is.True);
+            Assert.That(ChartAuthoringMetronome.GetBeatTimeAfter(sections, firstDownbeat),
+                Is.EqualTo(tempo.StartTime + tempo.SecondsPerBeat).Within(0.000001d));
+
+        }
+
+        [Test]
+        public void MetronomeBeforeLateBarOnePreservesAccentsAndLaterTempoSections()
+        {
+
+            ChartTempoSection first = JsonUtility.FromJson<ChartTempoSection>(
+                "{\"startBar\":1,\"startTime\":4,\"beatsPerMinute\":120,\"beatsPerBar\":4,\"beatUnit\":4}");
+            ChartTempoSection second = JsonUtility.FromJson<ChartTempoSection>(
+                "{\"startBar\":3,\"startTime\":8,\"beatsPerMinute\":60,\"beatsPerBar\":4,\"beatUnit\":4}");
+            var sections = new[] { first, second };
+
+            Assert.That(ChartAuthoringMetronome.GetBeatTimeAtOrAfter(sections, 0.01d), Is.EqualTo(0.5d));
+            Assert.That(ChartAuthoringMetronome.IsDownbeat(sections, 2d), Is.True);
+            Assert.That(ChartAuthoringMetronome.IsDownbeat(sections, 2.5d), Is.False);
+            Assert.That(ChartAuthoringMetronome.GetBeatTimeAfter(sections, 7.5d), Is.EqualTo(8d));
+            Assert.That(ChartAuthoringMetronome.GetBeatTimeAfter(sections, 8d), Is.EqualTo(9d));
+            Assert.That(ChartAuthoringMetronome.GetBeatTimeAtOrAfter(sections, 8.1d), Is.EqualTo(9d));
+
+        }
+
+        [Test]
         public void EditorMetronomeIsPlainDisposableHelperInsteadOfEditorComponent()
         {
 

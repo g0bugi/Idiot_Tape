@@ -603,7 +603,25 @@ namespace IdiotTape.EditorTools
             workspaceInspectorScroll = EditorGUILayout.BeginScrollView(workspaceInspectorScroll, false, false);
             float previousLabelWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = Mathf.Min(108f, rect.width * 0.36f);
-            DrawWorkspaceInspector();
+            if (workspaceInspectorTab == WorkspaceInspectorTab.Tempo)
+            {
+
+                // Reserve the vertical scrollbar width. Tempo fields must wrap
+                // inside the pane rather than growing the scroll content sideways.
+                using (new EditorGUILayout.VerticalScope(GUILayout.Width(Mathf.Max(180f, rect.width - 38f))))
+                {
+
+                    DrawWorkspaceInspector();
+
+                }
+
+            }
+            else
+            {
+
+                DrawWorkspaceInspector();
+
+            }
             EditorGUIUtility.labelWidth = previousLabelWidth;
             EditorGUILayout.EndScrollView();
             GUILayout.EndArea();

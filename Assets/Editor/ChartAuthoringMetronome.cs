@@ -53,6 +53,47 @@ namespace IdiotTape.EditorTools
 
         }
 
+        public static double GetBeatTimeAtOrAfter(IReadOnlyList<ChartTempoSection> sections, double songTime)
+        {
+
+            ChartTempoSection first = sections[0];
+            if (songTime < first.StartTime)
+            {
+
+                // Audible count-in continues across audio time zero, even when
+                // bar 1 starts more than one beat into the file. Runtime chart
+                // positions still start at bar 1 and need no negative bar data.
+                double index = Math.Ceiling((songTime - first.StartTime) / first.SecondsPerBeat - 0.000001d);
+                return first.StartTime + index * first.SecondsPerBeat;
+
+            }
+
+            double before = ChartTempoMap.GetBeatTimeAtOrBefore(sections, songTime);
+            return Math.Abs(songTime - before) <= 0.000001d
+                ? before : ChartTempoMap.GetBeatTimeAfter(sections, songTime);
+
+        }
+
+        public static double GetBeatTimeAfter(IReadOnlyList<ChartTempoSection> sections, double beatTime)
+        {
+
+            ChartTempoSection first = sections[0];
+            return beatTime < first.StartTime - 0.000001d
+                ? Math.Min(first.StartTime, beatTime + first.SecondsPerBeat)
+                : ChartTempoMap.GetBeatTimeAfter(sections, beatTime + 0.000001d);
+
+        }
+
+        public static bool IsDownbeat(IReadOnlyList<ChartTempoSection> sections, double beatTime)
+        {
+
+            ChartTempoSection first = sections[0];
+            return beatTime < first.StartTime
+                ? (long)Math.Round((beatTime - first.StartTime) / first.SecondsPerBeat) % first.BeatsPerBar == 0
+                : ChartTempoMap.GetBeatPosition(sections, beatTime).Beat == 1;
+
+        }
+
         public void Dispose()
         {
 

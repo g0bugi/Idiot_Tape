@@ -22,6 +22,49 @@ namespace IdiotTape.Gameplay.Tests
         private static double captureNextUpdate;
         private static string captureFailure;
 
+        [Test]
+        public void FixedTempoPreviewUsesAllRawTapsAndLeavesChartUnchanged()
+        {
+
+            using (WorkspaceFixture fixture = new())
+            {
+
+                ConfigureFixedTempoPreview(fixture);
+                string originalChart = JsonUtility.ToJson(fixture.Chart);
+                ChartTempoCalibrationResult result = (ChartTempoCalibrationResult)
+                    typeof(PrototypeChartRecorderWindow).GetMethod("GetTempoCalibrationResult", PrivateInstance)
+                        .Invoke(fixture.Window, null);
+
+                Assert.That(result.IsValid, Is.True);
+                Assert.That(result.BeatsPerMinute, Is.EqualTo(128d));
+                Assert.That(result.AnchorCount, Is.EqualTo(3));
+                Assert.That(result.FirstDownbeatTime, Is.EqualTo(0.5d).Within(0.000001d));
+                Assert.That(result.RootMeanSquareError, Is.GreaterThan(0.01d));
+                Assert.That(JsonUtility.ToJson(fixture.Chart), Is.EqualTo(originalChart));
+
+            }
+
+        }
+
+        private static void ConfigureFixedTempoPreview(WorkspaceFixture fixture)
+        {
+
+            SerializedObject serializedChart = new(fixture.Chart);
+            serializedChart.FindProperty("tempoSections").GetArrayElementAtIndex(0)
+                .FindPropertyRelative("beatsPerMinute").doubleValue = 128d;
+            serializedChart.ApplyModifiedPropertiesWithoutUndo();
+            fixture.Set("tempoCalibrationFixedBpm", true);
+            fixture.Set("hasTempoAnchorA", true);
+            fixture.Set("hasTempoAnchorB", true);
+            fixture.Set("tempoAnchorsFromTapCapture", true);
+            List<ChartTempoAnchor> anchors = fixture.Get<List<ChartTempoAnchor>>("tempoTapAnchors");
+            anchors.Add(new ChartTempoAnchor(9, 1, 15.510d));
+            anchors.Add(new ChartTempoAnchor(13, 1, 22.980d));
+            anchors.Add(new ChartTempoAnchor(17, 1, 30.510d));
+            fixture.Set("tempoTapResult", ChartTempoCalibration.Calculate(anchors, 4, 4, 128d));
+
+        }
+
         [TestCase(700f, 600f, false)]
         [TestCase(700f, 600f, true)]
         [TestCase(999f, 720f, true)]
@@ -442,6 +485,25 @@ namespace IdiotTape.Gameplay.Tests
                 fixture.Render();
                 yield return null;
                 SaveWindowPixels(fixture.Window, Path.Combine(outputDirectory, "workspace-compact-inspector.png"));
+
+                fixture.Window.position = new Rect(80f, 80f, 1200f, 800f);
+                fixture.SetEnum("workspaceInspectorTab", "Tempo");
+                fixture.Set("workspaceShowBufferDetails", false);
+                ConfigureFixedTempoPreview(fixture);
+                fixture.Render();
+                yield return null;
+                SaveWindowPixels(fixture.Window, Path.Combine(outputDirectory, "workspace-tempo-top.png"));
+
+                fixture.Set("workspaceInspectorScroll", new Vector2(0f, 10000f));
+                fixture.Render();
+                yield return null;
+                SaveWindowPixels(fixture.Window, Path.Combine(outputDirectory, "workspace-tempo-result.png"));
+
+                fixture.Set("showManualTempoAnchors", true);
+                fixture.Set("workspaceInspectorScroll", new Vector2(0f, 370f));
+                fixture.Render();
+                yield return null;
+                SaveWindowPixels(fixture.Window, Path.Combine(outputDirectory, "workspace-tempo-manual.png"));
 
             }
 

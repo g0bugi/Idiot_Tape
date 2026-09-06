@@ -102,6 +102,72 @@ namespace IdiotTape.Gameplay.Tests
 
         }
 
+        [Test]
+        public void FixedBpmAveragesOriginsWithoutFittingTempoToTapErrors()
+        {
+
+            ChartTempoAnchor[] anchors =
+            {
+
+                new(9, 1, 15.510d),
+                new(13, 1, 22.980d),
+                new(17, 1, 30.510d)
+
+            };
+            ChartTempoCalibrationResult result = ChartTempoCalibration.Calculate(anchors, 4, 4, 128d);
+
+            Assert.That(result.IsValid, Is.True);
+            Assert.That(result.BeatsPerMinute, Is.EqualTo(128d));
+            Assert.That(result.FirstDownbeatTime, Is.EqualTo(0.5d).Within(0.000001d));
+            Assert.That(result.AnchorCount, Is.EqualTo(3));
+            Assert.That(result.RootMeanSquareError, Is.EqualTo(System.Math.Sqrt(0.0002d)).Within(0.000001d));
+
+        }
+
+        [Test]
+        public void FixedBpmUsesBeatUnitAndNonDownbeatAnchorPositions()
+        {
+
+            ChartTempoAnchor[] anchors = { new(2, 2, 1.25d), new(4, 3, 3d) };
+            ChartTempoCalibrationResult result = ChartTempoCalibration.Calculate(anchors, 3, 8, 120d);
+
+            Assert.That(result.IsValid, Is.True);
+            Assert.That(result.FirstDownbeatTime, Is.EqualTo(0.25d).Within(0.000001d));
+            Assert.That(result.BeatsPerMinute, Is.EqualTo(120d));
+
+        }
+
+        [TestCase(0d)]
+        [TestCase(double.NaN)]
+        [TestCase(double.PositiveInfinity)]
+        public void FixedBpmRejectsInvalidTempo(double bpm)
+        {
+
+            ChartTempoAnchor[] anchors = { new(1, 1, 0.5d), new(2, 1, 2.375d) };
+            Assert.That(ChartTempoCalibration.Calculate(anchors, 4, 4, bpm).IsValid, Is.False);
+
+        }
+
+        [Test]
+        public void FixedBpmRejectsIncorrectBarNumberProducingNegativeOrigin()
+        {
+
+            ChartTempoAnchor[] anchors = { new(9, 1, 0.5d), new(10, 1, 2.375d) };
+            Assert.That(ChartTempoCalibration.Calculate(anchors, 4, 4, 128d).IsValid, Is.False);
+
+        }
+
+        [TestCase(double.NaN)]
+        [TestCase(double.PositiveInfinity)]
+        public void RejectsNonFiniteMeasuredTime(double time)
+        {
+
+            ChartTempoAnchor[] anchors = { new(1, 1, 0.5d), new(2, 1, time) };
+            Assert.That(ChartTempoCalibration.Calculate(anchors, 4, 4, 128d).IsValid, Is.False);
+            Assert.That(ChartTempoCalibration.Calculate(anchors, 4, 4).IsValid, Is.False);
+
+        }
+
     }
 
 }

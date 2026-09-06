@@ -206,6 +206,8 @@ namespace IdiotTape.EditorTools
         [SerializeField, Min(0f)] private double tempoAnchorBTime;
         [SerializeField] private bool hasTempoAnchorB;
         [SerializeField, Range(-250f, 250f)] private float tempoCalibrationFineOffsetMilliseconds;
+        [SerializeField] private bool tempoCalibrationFixedBpm = true;
+        [SerializeField] private bool showManualTempoAnchors;
         [SerializeField, Min(1)] private int tempoTapStartBar = 1;
         [SerializeField, Min(1)] private int tempoTapBarInterval = 1;
 
@@ -355,7 +357,7 @@ namespace IdiotTape.EditorTools
 
             showTempoCalibration = EditorGUILayout.Foldout(
                 showTempoCalibration,
-                "박자 설정 · 두 앵커 캘리브레이션",
+                "박자 설정 · 시작점 보정",
                 true);
 
             if (!showTempoCalibration)
@@ -377,37 +379,56 @@ namespace IdiotTape.EditorTools
                 }
 
                 ChartTempoSection currentTempo = chart.TempoSections[0];
-                EditorGUILayout.LabelField(
+                DrawTempoSummary(
                     "현재 기준",
                     $"1마디 1박 {currentTempo.StartTime:0.000000}초 · " +
                     $"{currentTempo.BeatsPerMinute:0.######} BPM · " +
                     $"{currentTempo.BeatsPerBar}/{currentTempo.BeatUnit}");
-                EditorGUILayout.HelpBox(
-                    "서로 멀리 떨어진 확실한 다운비트 두 곳을 지정하세요. 절대 노트 시간은 변경되지 않습니다.",
-                    MessageType.None);
+                EditorGUI.BeginChangeCheck();
+                bool fixedBpm = EditorGUILayout.ToggleLeft("현재 BPM 고정 · 시작점만 보정", tempoCalibrationFixedBpm);
+
+                if (EditorGUI.EndChangeCheck())
+                {
+
+                    ClearTempoTapCapture();
+                    StopTempoCalibrationPreview();
+                    tempoCalibrationFixedBpm = fixedBpm;
+                    tempoCalibrationFineOffsetMilliseconds = 0f;
+
+                }
+
+                EditorGUILayout.HelpBox(tempoCalibrationFixedBpm
+                    ? $"{currentTempo.BeatsPerMinute:0.######} BPM을 유지합니다. 알고 있는 마디의 첫 박을 여러 번 찍으면 1마디 시작 시간을 계산합니다."
+                    : "여러 마디의 첫 박으로 BPM과 시작 시간을 함께 계산합니다.", MessageType.None);
                 DrawTempoTapCalibration();
 
-                DrawTempoAnchor(
-                    "기준 A",
-                    ref tempoAnchorABar,
-                    ref tempoAnchorABeat,
-                    ref tempoAnchorATime,
-                    ref hasTempoAnchorA,
-                    currentTempo.BeatsPerBar);
-                DrawTempoAnchor(
-                    "기준 B",
-                    ref tempoAnchorBBar,
-                    ref tempoAnchorBBeat,
-                    ref tempoAnchorBTime,
-                    ref hasTempoAnchorB,
-                    currentTempo.BeatsPerBar);
+                showManualTempoAnchors = EditorGUILayout.Foldout(showManualTempoAnchors, "수동 기준 A / B", true);
+                if (showManualTempoAnchors)
+                {
+
+                    DrawTempoAnchor(
+                        "기준 A",
+                        ref tempoAnchorABar,
+                        ref tempoAnchorABeat,
+                        ref tempoAnchorATime,
+                        ref hasTempoAnchorA,
+                        currentTempo.BeatsPerBar);
+                    DrawTempoAnchor(
+                        "기준 B",
+                        ref tempoAnchorBBar,
+                        ref tempoAnchorBBeat,
+                        ref tempoAnchorBTime,
+                        ref hasTempoAnchorB,
+                        currentTempo.BeatsPerBar);
+
+                }
 
                 ChartTempoCalibrationResult result = GetTempoCalibrationResult();
 
                 if (!result.IsValid)
                 {
 
-                    if (hasTempoAnchorA && hasTempoAnchorB)
+                    if ((hasTempoAnchorA && hasTempoAnchorB) || tempoTapAnchors.Count >= 2)
                     {
 
                         EditorGUILayout.HelpBox(result.Error, MessageType.Error);
@@ -418,8 +439,8 @@ namespace IdiotTape.EditorTools
 
                 }
 
+                GUILayout.Label("전체 박자 미세 이동(ms)", EditorStyles.wordWrappedLabel);
                 tempoCalibrationFineOffsetMilliseconds = EditorGUILayout.Slider(
-                    "전체 박자 미세 이동(ms)",
                     tempoCalibrationFineOffsetMilliseconds,
                     -250f,
                     250f);
@@ -428,16 +449,18 @@ namespace IdiotTape.EditorTools
                 double bpmDifference = result.BeatsPerMinute - currentTempo.BeatsPerMinute;
                 double downbeatDifferenceMilliseconds =
                     (adjustedFirstDownbeat - currentTempo.StartTime) * 1000d;
-                EditorGUILayout.LabelField(
+                DrawTempoSummary(
                     "계산 결과",
                     $"{result.BeatsPerMinute:0.######} BPM · 1마디 1박 {adjustedFirstDownbeat:0.000000}초");
-                EditorGUILayout.LabelField(
+                DrawTempoSummary(
                     "현재 설정과 차이",
                     $"BPM {bpmDifference:+0.######;-0.######;0} · " +
                     $"박자 원점 {downbeatDifferenceMilliseconds:+0.0;-0.0;0.0}ms");
-                EditorGUILayout.LabelField(
+                DrawTempoSummary(
                     "측정 간격",
                     $"{result.BeatDistance}박 · {result.TimeDistance:0.000}초");
+                DrawTempoSummary("측정 오차", $"{result.AnchorCount}회 · RMS {result.RootMeanSquareError * 1000d:0.0}ms");
+                EditorGUILayout.HelpBox("변속 전 일정한 구간에서 측정하세요. 오차가 작아도 탭 반응 지연은 남을 수 있으니 메트로놈으로 확인하세요.", MessageType.None);
 
                 if (songPlayback != null && songPlayback.IsPrepared)
                 {
@@ -448,13 +471,13 @@ namespace IdiotTape.EditorTools
                         result.BeatsPerMinute,
                         currentTempo.BeatUnit);
                     double currentErrorMilliseconds = (songPlayback.SongTime - nearestBeat) * 1000d;
-                    EditorGUILayout.LabelField(
+                    DrawTempoSummary(
                         "현재 위치와 가까운 계산 박자",
                         $"{currentErrorMilliseconds:+0.0;-0.0;0.0}ms");
 
                 }
 
-                using (new EditorGUILayout.HorizontalScope())
+                using (new EditorGUILayout.VerticalScope())
                 {
 
                     GUI.enabled = Application.isPlaying && songPlayback != null && songPlayback.IsPrepared;
@@ -503,6 +526,14 @@ namespace IdiotTape.EditorTools
 
         }
 
+        private static void DrawTempoSummary(string label, string value)
+        {
+
+            GUILayout.Label(label, EditorStyles.miniBoldLabel);
+            GUILayout.Label(value, EditorStyles.wordWrappedLabel);
+
+        }
+
         private void DrawTempoTapCalibration()
         {
 
@@ -510,10 +541,10 @@ namespace IdiotTape.EditorTools
             EditorGUILayout.LabelField("여러 마디 다운비트 연속 측정", EditorStyles.miniBoldLabel);
             EditorGUILayout.HelpBox(
                 "시작 마디를 지정한 뒤 음악을 들으며 각 마디의 1박에 스페이스바를 누르세요. " +
-                "두 번째 입력부터 모든 탭을 함께 계산해 BPM과 박자 원점을 계속 갱신합니다.",
+                "두 번째 입력부터 모든 탭으로 시작점을 계산합니다. 탭 간격 1은 매 마디, 4는 네 마디마다입니다.",
                 MessageType.None);
 
-            using (new EditorGUILayout.HorizontalScope())
+            using (new EditorGUI.DisabledScope(tempoTapCapture))
             {
 
                 tempoTapStartBar = Math.Max(1, EditorGUILayout.IntField("시작 마디", tempoTapStartBar));
@@ -523,7 +554,7 @@ namespace IdiotTape.EditorTools
 
             }
 
-            using (new EditorGUILayout.HorizontalScope())
+            using (new EditorGUILayout.VerticalScope())
             {
 
                 GUI.enabled = Application.isPlaying && songPlayback != null && songPlayback.IsPrepared;
@@ -573,7 +604,7 @@ namespace IdiotTape.EditorTools
             if (tempoTapAnchors.Count > 0)
             {
 
-                EditorGUILayout.LabelField(
+                DrawTempoSummary(
                     "연속 탭",
                     $"{tempoTapAnchors.Count}개 · " +
                     $"{tempoTapAnchors[0].Bar}~{tempoTapAnchors[^1].Bar}마디");
@@ -583,10 +614,10 @@ namespace IdiotTape.EditorTools
             if (tempoTapResult.IsValid)
             {
 
-                EditorGUILayout.LabelField(
+                DrawTempoSummary(
                     "다중 앵커 오차",
                     $"RMS {tempoTapResult.RootMeanSquareError * 1000d:0.0}ms · " +
-                    $"{tempoTapResult.AnchorCount}개 앵커 회귀");
+                    $"{tempoTapResult.AnchorCount}개 측정값");
 
             }
 
@@ -613,6 +644,9 @@ namespace IdiotTape.EditorTools
             StopTempoCalibrationPreview();
             tempoTapAnchors.Clear();
             tempoTapResult = default;
+            hasTempoAnchorA = false;
+            hasTempoAnchorB = false;
+            tempoAnchorsFromTapCapture = false;
             tempoTapCapture = true;
             tempoTapSpacePressed = false;
             lastTempoTapInputTimestamp = double.NegativeInfinity;
@@ -676,7 +710,8 @@ namespace IdiotTape.EditorTools
             ChartTempoCalibrationResult result = ChartTempoCalibration.Calculate(
                 tempoTapAnchors,
                 currentTempo.BeatsPerBar,
-                currentTempo.BeatUnit);
+                currentTempo.BeatUnit,
+                tempoCalibrationFixedBpm ? currentTempo.BeatsPerMinute : null);
 
             if (!result.IsValid)
             {
@@ -712,7 +747,7 @@ namespace IdiotTape.EditorTools
             hasTempoAnchorB = true;
             tempoAnchorsFromTapCapture = true;
             statusMessage =
-                $"{tempoTapAnchors.Count}개 다운비트로 {result.BeatsPerMinute:0.######} BPM을 계산했습니다.";
+                $"{tempoTapAnchors.Count}회 측정 · {result.BeatsPerMinute:0.######} BPM · 첫 박 {result.FirstDownbeatTime:0.000000}초";
 
         }
 
@@ -878,11 +913,25 @@ namespace IdiotTape.EditorTools
             }
 
             ChartTempoSection tempo = chart.TempoSections[0];
+            if (tempoAnchorsFromTapCapture && tempoTapAnchors.Count >= 2)
+            {
+
+                return ChartTempoCalibration.Calculate(tempoTapAnchors, tempo.BeatsPerBar, tempo.BeatUnit,
+                    tempoCalibrationFixedBpm ? tempo.BeatsPerMinute : null);
+
+            }
+
             return ChartTempoCalibration.Calculate(
-                new ChartTempoAnchor(tempoAnchorABar, tempoAnchorABeat, tempoAnchorATime),
-                new ChartTempoAnchor(tempoAnchorBBar, tempoAnchorBBeat, tempoAnchorBTime),
+                new[]
+                {
+
+                    new ChartTempoAnchor(tempoAnchorABar, tempoAnchorABeat, tempoAnchorATime),
+                    new ChartTempoAnchor(tempoAnchorBBar, tempoAnchorBBeat, tempoAnchorBTime)
+
+                },
                 tempo.BeatsPerBar,
-                tempo.BeatUnit);
+                tempo.BeatUnit,
+                tempoCalibrationFixedBpm ? tempo.BeatsPerMinute : null);
 
         }
 
@@ -918,7 +967,12 @@ namespace IdiotTape.EditorTools
             SerializedProperty firstSection = tempoSections.GetArrayElementAtIndex(0);
             firstSection.FindPropertyRelative("startBar").intValue = 1;
             firstSection.FindPropertyRelative("startTime").doubleValue = adjustedFirstDownbeat;
-            firstSection.FindPropertyRelative("beatsPerMinute").doubleValue = result.BeatsPerMinute;
+            if (!tempoCalibrationFixedBpm)
+            {
+
+                firstSection.FindPropertyRelative("beatsPerMinute").doubleValue = result.BeatsPerMinute;
+
+            }
             serializedChart.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(chart);
             statusMessage =
@@ -1263,6 +1317,7 @@ namespace IdiotTape.EditorTools
             recordingPhase = RecordingPhase.Idle;
             DisableRecordingInputActions();
             metronome?.StopAll();
+            nextMetronomeSongTime = double.NaN;
             Array.Clear(lastRecordedInputTimestamps, 0, lastRecordedInputTimestamps.Length);
             draggedSlidePointIndex = int.MinValue;
             draggedSimplePointIndex = int.MinValue;
@@ -1327,6 +1382,9 @@ namespace IdiotTape.EditorTools
         private void StartStandaloneCountIn()
         {
 
+            // A new take or a short loop restarts the song clock. Discard the
+            // previous cycle's cursor or opening clicks wait for its old time.
+            nextMetronomeSongTime = double.NaN;
             ChartTempoSection tempo = ChartTempoMap.FindSectionForTime(
                 chart.TempoSections,
                 recordingTargetTime);
@@ -1389,6 +1447,31 @@ namespace IdiotTape.EditorTools
                     return;
 
                 }
+
+            }
+
+            if (metronomeDuringRecording)
+            {
+
+                // In loop mode recording can begin exactly on a beat. Waiting
+                // for ActivateRecording would miss the minimum DSP scheduling lead.
+                double firstRecordingBeat = ChartAuthoringMetronome.GetBeatTimeAtOrAfter(
+                    chart.TempoSections, recordingTargetTime);
+                ulong firstRecordingClock = AddSongTimeToDspClock(songStartDspClock,
+                    firstRecordingBeat + metronomeOutputOffsetMilliseconds / 1000d, sampleRate);
+                if (!metronome.ScheduleAtDspClock(firstRecordingClock,
+                    ChartAuthoringMetronome.IsDownbeat(chart.TempoSections, firstRecordingBeat), metronomeVolume))
+                {
+
+                    metronome.StopAll();
+                    songPlayback.Stop();
+                    statusMessage = "녹화 첫 박을 충분히 미리 예약하지 못했습니다. 다시 시도하세요.";
+                    recordingPhase = RecordingPhase.Idle;
+                    return;
+
+                }
+
+                nextMetronomeSongTime = ChartAuthoringMetronome.GetBeatTimeAfter(chart.TempoSections, firstRecordingBeat);
 
             }
 
@@ -1571,9 +1654,6 @@ namespace IdiotTape.EditorTools
             while (nextMetronomeSongTime <= scheduleLimit + 0.000001d)
             {
 
-                ChartBeatPosition position = ChartTempoMap.GetBeatPosition(
-                    chart.TempoSections,
-                    nextMetronomeSongTime);
                 double adjustedClickTime = nextMetronomeSongTime +
                     metronomeOutputOffsetMilliseconds / 1000d;
 
@@ -1585,14 +1665,14 @@ namespace IdiotTape.EditorTools
 
                     metronome.Schedule(
                         delay,
-                        position.Beat == 1,
+                        ChartAuthoringMetronome.IsDownbeat(chart.TempoSections, nextMetronomeSongTime),
                         metronomeVolume);
 
                 }
 
-                nextMetronomeSongTime = ChartTempoMap.GetBeatTimeAfter(
+                nextMetronomeSongTime = ChartAuthoringMetronome.GetBeatTimeAfter(
                     chart.TempoSections,
-                    nextMetronomeSongTime + 0.000001d);
+                    nextMetronomeSongTime);
 
             }
 
@@ -1601,10 +1681,7 @@ namespace IdiotTape.EditorTools
         private void ResetSongMetronomeScheduler(double songTime)
         {
 
-            double beatTime = ChartTempoMap.GetBeatTimeAtOrBefore(chart.TempoSections, songTime);
-            nextMetronomeSongTime = songTime - beatTime <= 0.025d
-                ? beatTime
-                : ChartTempoMap.GetBeatTimeAfter(chart.TempoSections, songTime);
+            nextMetronomeSongTime = ChartAuthoringMetronome.GetBeatTimeAtOrAfter(chart.TempoSections, songTime);
 
         }
 
