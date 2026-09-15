@@ -1,11 +1,32 @@
 # Idiot_Tape — Chart Format
 
 > Status: Current
-> Last reviewed: 2026-09-05
+> Last reviewed: 2026-09-15
 > Applies to: Current prototype chart data and future-compatible chart contracts
 > Authority: Chart data semantics, validation, and runtime interpretation
 
 ## Scope and Invariants
+
+### Shared song metadata and catalog migration
+
+Library charts reference a `SongDefinition` for shared song identity, title/artist, optional
+cover resource path, FMOD event/stem definitions and preview range. Cover paths refer to Sprite
+assets beneath a Resources folder, without the extension; blank/missing covers use a typographic
+fallback. `chartId` is initially assigned from the
+existing Unity asset GUID; it must remain stable across renames. `revision` identifies authored
+chart revisions and must be advanced intentionally for record compatibility when records are
+introduced. `difficultyLabel` is free-form; blank displays `미지정` and implies no difficulty rating.
+
+The old song metadata fields remain serialized for unmigrated assets/test fixtures. Resolved
+accessors use the SongDefinition whenever present, otherwise the old data. Runtime/recorder code
+must use those accessors, not read legacy serialized fields. Setup tools explicitly route audio
+default changes to the new owner. Notes, tempo, part IDs and activation times are not migrated.
+
+`Assets/Data/SongCatalog.asset` is the explicit enrollment list. Add a chart reference there and
+run **Tools > Idiot Tape > Rebuild Song Library** to migrate its song reference/ID and regenerate
+summaries. Rebuild also runs before a player build. Missing/duplicate identities and invalid charts
+fail validation. Empty charts may remain visible but cannot be launched from the library.
+Multiple charts may reference one song. Filtering applies to charts before songs are deduplicated.
 
 The current format is a `PrototypeChart` ScriptableObject. Its data is independent of live
 scene objects and runtime note lifetimes; permanent production serialization remains open.
@@ -14,6 +35,11 @@ Chart data owns note identity, timing, type, musical part, spatial data, duratio
 activation, and song/stem selection. Never derive authored timing from render frames, spawn
 time, world position, or accumulated gameplay time. Runtime interpretation follows
 [RHYTHM_SYSTEM.md](RHYTHM_SYSTEM.md). Add fields only for actual gameplay or authoring needs.
+
+Optional `songTitle` and `artistName` fields provide display metadata for the start and results
+screens. An absent/blank title falls back to the asset name, and an absent artist displays nothing.
+These fields do not change song event identity, timing, note data, or chart validation. Existing
+assets remain readable without migration; the Snow and Pluto assets include their display names.
 
 ## Absolute Runtime Timing
 

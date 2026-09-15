@@ -150,6 +150,7 @@ namespace IdiotTape.EditorTools
             }
 
             serializedChart.ApplyModifiedPropertiesWithoutUndo();
+            SongLibrarySetup.ApplySetupAudio(chart);
             EditorUtility.SetDirty(chart);
             return chart;
 

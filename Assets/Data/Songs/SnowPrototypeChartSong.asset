@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c4b262e367863144a0b755edfecb823, type: 3}
+  m_Name: SnowPrototypeChartSong
+  m_EditorClassIdentifier: IdiotTape.Gameplay::IdiotTape.Gameplay.SongDefinition
+  id: 2c3799b77ed9cfe45be9f94add1c1b2e
+  title: Snow
+  artist: KIRARA
+  cover: {fileID: 0}
+  eventPath: event:/Music/KIRARA/Snow
+  stems:
+  - stemId: drum
+    parameterName: stems_drum_volume
+  - stemId: bass
+    parameterName: stems_bass_volume
+  - stemId: synth
+    parameterName: stems_synth1_volume
+  - stemId: etc
+    parameterName: stems_etc_volume
+  previewStart: 0.23329312
+  previewDuration: 15

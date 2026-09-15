@@ -36,6 +36,21 @@ namespace IdiotTape.Gameplay.Tests
             {
 
                 canvasObject.SetActive(true);
+                Text instrument = canvasObject.transform.Find("Instrument").GetComponent<Text>();
+                hud.ShowInstrument("Drum", Color.cyan);
+                yield return new WaitForSecondsRealtime(1.1f);
+                Assert.That(instrument.text, Is.EqualTo("Drum"));
+                Assert.That(instrument.color.a, Is.GreaterThan(0.9f));
+                hud.SetPaused(true);
+                yield return null;
+                hud.SetPaused(false);
+                Assert.That(instrument.text, Is.EqualTo("Drum"));
+                hud.ShowInstrument("Drum + Synth", Color.white);
+                yield return new WaitForSecondsRealtime(1.1f);
+                Assert.That(instrument.text, Is.EqualTo("Drum + Synth"));
+                Assert.That(instrument.color.a, Is.GreaterThan(0.9f));
+                hud.ShowInstrument(string.Empty, Color.white);
+                Assert.That(instrument.text, Is.Empty);
                 yield return null;
                 hud.ShowStartPrompt("Another Song <Live>");
                 Canvas.ForceUpdateCanvases();

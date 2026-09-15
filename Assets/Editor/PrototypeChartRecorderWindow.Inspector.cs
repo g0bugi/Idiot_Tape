@@ -84,6 +84,14 @@ namespace IdiotTape.EditorTools
             using (new EditorGUI.DisabledScope(recordingPhase != RecordingPhase.Idle))
             {
 
+                if (GetWorkspaceSelectionCount() > 1)
+                {
+
+                    DrawWorkspaceBulkInspector();
+                    return;
+
+                }
+
                 if (selectedRecordedNoteIndex >= 0 && selectedRecordedNoteIndex < recordedNotes.Count)
                 {
 
@@ -136,6 +144,7 @@ namespace IdiotTape.EditorTools
 
             double nextTime = Math.Max(0d, EditorGUILayout.DoubleField(
                 data.NoteType == ChartNoteType.Flick ? "판정 시간(초)" : "시작 시간(초)", data.HitTime));
+            CaptureWorkspaceActionRect("startTimeField");
 
             if (Math.Abs(nextTime - data.HitTime) > ScheduleToleranceSeconds)
             {
@@ -250,6 +259,7 @@ namespace IdiotTape.EditorTools
         {
 
             GUILayout.Space(12f);
+            DrawWorkspaceSelectionActions();
             noteNudgeMilliseconds = Math.Max(1f,
                 EditorGUILayout.FloatField("미세 이동(ms)", noteNudgeMilliseconds));
 
@@ -262,6 +272,7 @@ namespace IdiotTape.EditorTools
                     NudgeWorkspaceSelection(-noteNudgeMilliseconds / 1000d, buffered);
 
                 }
+                CaptureWorkspaceActionRect("legacyForward");
 
                 if (GUILayout.Button("뒤로"))
                 {
@@ -269,6 +280,7 @@ namespace IdiotTape.EditorTools
                     NudgeWorkspaceSelection(noteNudgeMilliseconds / 1000d, buffered);
 
                 }
+                CaptureWorkspaceActionRect("legacyBackward");
 
                 if (GUILayout.Button("삭제"))
                 {
@@ -557,9 +569,7 @@ namespace IdiotTape.EditorTools
                             EditorStyles.miniButton, GUILayout.Width(38f)) && !wasSelected)
                     {
 
-                        selectedRecordedNoteIndex = index;
-                        selectedChartNoteId = string.Empty;
-                        OpenWorkspaceInspector(WorkspaceInspectorTab.Note);
+                        SetWorkspaceNoteSelection(null, index, false);
 
                     }
 

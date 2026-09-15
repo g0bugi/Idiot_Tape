@@ -12,7 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30c79ae61a0853047a022f5c1103936c, type: 3}
   m_Name: SnowPrototypeChart
   m_EditorClassIdentifier: IdiotTape.Gameplay::IdiotTape.Gameplay.PrototypeChart
+  song: {fileID: 11400000, guid: 2c3799b77ed9cfe45be9f94add1c1b2e, type: 2}
+  chartId: d9eba15d3ccb5a0488a88e8daf02e0b6
+  revision: 1
+  difficultyLabel:
   songEventPath: event:/Music/KIRARA/Snow
+  songTitle: Snow
+  artistName: KIRARA
   stemParameters:
   - stemId: drum
     parameterName: stems_drum_volume

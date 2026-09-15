@@ -104,6 +104,7 @@ namespace IdiotTape.EditorTools
             {
 
                 ClampSelections();
+                PruneWorkspaceSelection();
                 RefreshSongPlayback();
 
             }
@@ -178,6 +179,7 @@ namespace IdiotTape.EditorTools
                         statusMessage = $"'{chart.name}' 차트를 저장했습니다.";
 
                     }
+                    CaptureWorkspaceActionRect("saveChart");
 
                 }
 
@@ -279,6 +281,7 @@ namespace IdiotTape.EditorTools
             }
 
             GUILayout.Label(new GUIContent(GetWorkspaceMusicalPosition(), "FMOD 곡 시간에서 계산한 현재 마디와 박"), WorkspaceLabelStyle(), GUILayout.Width(102f));
+            DrawWorkspaceTakeRetry();
 
         }
 
@@ -667,6 +670,7 @@ namespace IdiotTape.EditorTools
                         }
 
                     }
+                    CaptureWorkspaceActionRect("applyBuffer");
 
                 }
 
@@ -699,7 +703,7 @@ namespace IdiotTape.EditorTools
             string state = recordingPhase != RecordingPhase.Idle && chart != null && chart.MusicalParts.Count > 0
                 ? GetRecordingPhaseMessage()
                 : statusMessage;
-            GUI.Label(new Rect(rect.x + 10f, rect.y + 4f, rect.width - 20f, 18f), new GUIContent(state, state + "\nSpace 재생/일시정지 · R 현재 위치 녹화 · Esc 중지 · Delete 선택 삭제 · Ctrl/⌘+휠 확대"), WorkspaceLabelStyle(true));
+            GUI.Label(new Rect(rect.x + 10f, rect.y + 4f, rect.width - 20f, 18f), new GUIContent(state, state + "\nSpace 재생/일시정지 · R 선택 방식 녹화 · Shift+R 이번 테이크 재녹화 · Esc 중지\nShift+클릭/빈 곳 드래그: 다중 선택 · 방향키: 박자/위치 이동 · Alt: ms 이동 · Ctrl/⌘+A: 현재 파트 전체"), WorkspaceLabelStyle(true));
 
         }
 
@@ -809,6 +813,8 @@ namespace IdiotTape.EditorTools
 
         private void SelectWorkspacePart(int index)
         {
+
+            ClearWorkspaceMultiSelection();
 
             selectedPartIndex = index;
             string partId = chart.MusicalParts[index].Id;

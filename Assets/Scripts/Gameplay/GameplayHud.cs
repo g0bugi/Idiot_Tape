@@ -4,7 +4,7 @@ using UnityEngine.UI;
 namespace IdiotTape.Gameplay
 {
 
-    public sealed class GameplayHud : MonoBehaviour
+    public sealed partial class GameplayHud : MonoBehaviour
     {
 
         private sealed class RisingTextAnimation
@@ -217,6 +217,7 @@ namespace IdiotTape.Gameplay
             comboAnimation.Update(deltaTime);
             judgementAnimation.Update(deltaTime);
             instrumentAnimation.Update(deltaTime);
+            UpdateMenuLayout();
 
             if (countInDisplay.activeSelf)
             {
@@ -262,12 +263,22 @@ namespace IdiotTape.Gameplay
         public float NoteSpeedMultiplier => noteSpeedMultiplier;
         public bool ShortPreparation => shortPreparation;
 
-        public void ShowStartPrompt(string songName)
+        public void ApplyPlaySettings(float speed, bool useShortPreparation)
+        {
+
+            shortPreparation = useShortPreparation;
+            SetNoteSpeedMultiplier(speed);
+            UpdatePreparationText();
+
+        }
+
+        public void ShowStartPrompt(string songName, string artistName = "")
         {
 
             CreateStartFlowControls();
             songTitleText.text = string.IsNullOrWhiteSpace(songName) ? "READY TO PLAY" : songName;
-            startPrompt.SetActive(true);
+            startArtistText.text = artistName;
+            SetMenuVisibility(true, false);
             countInDisplay.SetActive(false);
             displayedRemainingBeats = -1;
             SetPreparationControlsLocked(false);
@@ -279,7 +290,7 @@ namespace IdiotTape.Gameplay
         {
 
             CreateStartFlowControls();
-            startPrompt.SetActive(false);
+            SetMenuVisibility(false, false);
             countInDisplay.SetActive(true);
             SetPreparationControlsLocked(true);
             SetPauseButtonVisible(false);
@@ -300,7 +311,7 @@ namespace IdiotTape.Gameplay
         {
 
             CreateStartFlowControls();
-            startPrompt.SetActive(false);
+            SetMenuVisibility(false, false);
             countInDisplay.SetActive(false);
             displayedRemainingBeats = -1;
             SetPreparationControlsLocked(false);
@@ -350,7 +361,8 @@ namespace IdiotTape.Gameplay
             bool requireInside = true)
         {
 
-            if (preparationControlsLocked || noteSpeedSliderArea == null)
+            if (preparationControlsLocked || noteSpeedSliderArea == null ||
+                !noteSpeedSliderArea.gameObject.activeInHierarchy)
             {
 
                 return false;
@@ -431,7 +443,15 @@ namespace IdiotTape.Gameplay
         {
 
             color.a = 0.95f;
-            instrumentAnimation.Play(displayName, color, false);
+            if (string.IsNullOrEmpty(displayName))
+            {
+
+                instrumentAnimation.Stop();
+                return;
+
+            }
+
+            instrumentAnimation.Play(displayName, color, true);
 
         }
 
@@ -510,8 +530,8 @@ namespace IdiotTape.Gameplay
         {
 
             preparationText.text = shortPreparation
-                ? "COUNT-IN   [ SHORT ]    DEFAULT"
-                : "COUNT-IN     SHORT    [ DEFAULT ]";
+                ? $"COUNT-IN     {shortPreparationBarCount}마디  ·  짧게"
+                : $"COUNT-IN     {defaultPreparationBarCount}마디  ·  기본";
 
         }
 
@@ -525,69 +545,7 @@ namespace IdiotTape.Gameplay
 
             }
 
-            startPrompt = CreateImageObject(
-                "StartPrompt",
-                transform,
-                new Color(0.025f, 0.035f, 0.045f, 0.88f),
-                new Vector2(0.3f, 0.61f),
-                new Vector2(0.7f, 0.87f));
-            songTitleText = CreateTextObject(
-                "SongTitle",
-                startPrompt.transform,
-                string.Empty,
-                34,
-                TextAnchor.MiddleCenter,
-                new Vector2(0.05f, 0.72f),
-                new Vector2(0.95f, 0.96f));
-            songTitleText.supportRichText = false;
-            songTitleText.resizeTextForBestFit = true;
-            songTitleText.resizeTextMinSize = 18;
-            songTitleText.resizeTextMaxSize = 34;
-            Text hint = CreateTextObject(
-                "StartHint",
-                startPrompt.transform,
-                "Adjust SPEED on the left, then press START",
-                20,
-                TextAnchor.MiddleCenter,
-                new Vector2(0.05f, 0.55f),
-                new Vector2(0.95f, 0.73f));
-            hint.color = new Color(0.7f, 0.77f, 0.8f, 1f);
-
-            GameObject preparationButton = CreateImageObject(
-                "PreparationButton",
-                startPrompt.transform,
-                new Color(1f, 1f, 1f, 0.055f),
-                new Vector2(0.08f, 0.34f),
-                new Vector2(0.92f, 0.53f));
-            preparationButtonArea = preparationButton.GetComponent<RectTransform>();
-            preparationText = CreateTextObject(
-                "PreparationChoice",
-                preparationButton.transform,
-                string.Empty,
-                21,
-                TextAnchor.MiddleCenter,
-                Vector2.zero,
-                Vector2.one);
-            preparationText.color = new Color(0.76f, 0.91f, 0.95f, 1f);
-            UpdatePreparationText();
-
-            GameObject startButton = CreateImageObject(
-                "StartButton",
-                startPrompt.transform,
-                new Color(0.18f, 0.72f, 0.82f, 1f),
-                new Vector2(0.26f, 0.07f),
-                new Vector2(0.74f, 0.29f));
-            startButtonArea = startButton.GetComponent<RectTransform>();
-            Text startCaption = CreateTextObject(
-                "StartCaption",
-                startButton.transform,
-                "START",
-                29,
-                TextAnchor.MiddleCenter,
-                Vector2.zero,
-                Vector2.one);
-            startCaption.fontStyle = FontStyle.Bold;
-            startCaption.color = new Color(0.015f, 0.075f, 0.09f, 1f);
+            BuildStartPrompt();
 
             countInDisplay = CreateImageObject(
                 "CountInDisplay",

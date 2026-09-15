@@ -12,7 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30c79ae61a0853047a022f5c1103936c, type: 3}
   m_Name: PlutoPrototypeChart
   m_EditorClassIdentifier: IdiotTape.Gameplay::IdiotTape.Gameplay.PrototypeChart
+  song: {fileID: 11400000, guid: 32ea5ff35e02ffc4ba4f2a837d91d8cb, type: 2}
+  chartId: e823d799ca2a60444b534f26c38e7fd0
+  revision: 1
+  difficultyLabel:
   songEventPath: event:/Music/Idiotape/Pluto
+  songTitle: Pluto
+  artistName: IDIOTAPE
   stemParameters:
   - stemId: drum
     parameterName: stems_drum_volume

@@ -1,7 +1,7 @@
 # Idiot_Tape — Game Design
 
 > Status: Current
-> Last reviewed: 2026-09-05
+> Last reviewed: 2026-09-15
 > Applies to: The current prototype and durable game-design direction
 > Authority: Player experience, design principles, and player-visible rules
 
@@ -16,6 +16,26 @@ The prototype must establish fun, readability, technical/mobile viability, and r
 authoring speed before expanding into a commercial production system. Its executable scope
 and pass conditions live in [PROTOTYPE_MILESTONE.md](PROTOTYPE_MILESTONE.md).
 Editor/PC playtesting is useful but cannot prove physical-device latency or performance.
+
+## Song Selection and Repeated Play
+
+The player entry is a landscape library with a scrollable song list and a simultaneous detail/
+preparation panel. Title/artist search and title/artist ordering operate on songs; difficulty
+filtering first selects matching charts, then deduplicates songs. Selecting a song previews it;
+only the explicit Play action commits a chart and settings. Empty charts show a preparation
+message and disable Play. Unknown difficulty is shown as unspecified, never assigned a rating.
+
+The detail panel shows title/artist, cover or typographic fallback, selected chart, playable
+duration when audio metadata is available, a part-order summary with activation bands, note
+speed and count-in choice. The bands describe authored activation ranges and are not an
+instrument-selection control. The existing start-screen palette and curved musical motif are
+shared. No personal-best values are invented; persistent scores are outside this increment.
+
+Library launches skip the separate Ready prompt. Results retain retry and back: retry uses the
+committed settings; back returns to the same query/filter/scroll/selection. Cancelling count-in
+or loading returns to the library too. Direct Gameplay scene entry retains the standalone Ready
+screen for chart authoring and existing tests. Preview failure does not prevent playing a valid
+chart. Preparation failure returns to selection with an explanation and permits another attempt.
 
 ## Design Pillars
 
@@ -56,6 +76,29 @@ contacts. Note speed is locked until preparation finishes. A pause/cancel reques
 preparation returns to the ready screen and cancels both scheduled music and clicks. Restart
 during play clears the previous attempt and uses the same preparation flow. Repeated start or
 restart requests during an existing preparation do not stack additional starts.
+
+### Start and Results Presentation
+
+The start screen uses the accepted record-sleeve design: a dark full-screen surface, restrained
+off-white text, cyan primary action, song title and artist, note-speed slider, and preparation
+choice. The existing slider is shared with play; settings survive returning from results and
+restarting. Menus place controls within the device safe area. Korean screen text uses the bundled
+OFL-licensed Nanum Gothic font rather than depending on an operating-system font.
+
+After the audio duration and the chart's final judgement tail have elapsed, and all notes have
+resolved, the session freezes the attempt and displays results. A short authored chart retains
+the full audio outro. The result screen shows song/artist, final score, maximum combo, emitted
+Perfect/Good/Miss counts, and part-colored judgement distributions. It retains the curved-line
+motif from gameplay. Counts follow the existing interaction rewards; they are not percentages of
+authored notes or a new accuracy formula. Parts with no judgement events are omitted. Part rows
+can be selected to inspect their counts, with an action to return to the overall count; more than
+three judged parts are paged without assuming a permanent instrument list.
+
+`다시 하기` or Enter/Space/R starts a fresh count-in with the same settings. `시작 화면` or
+Escape/P returns to the ready screen for adjustment. Gameplay input cannot change a completed
+result. Returning or retrying resets all attempt statistics and contacts. Empty charts produce
+zero results after the audio finishes. Personal-best persistence, accuracy percentages, letter
+grades, health, and progression remain outside this screen's scope.
 
 ## Lane Philosophy
 
@@ -109,7 +152,7 @@ Activation windows may overlap. This supports structures such as:
 - drums and synthesizer together
 - bass and synthesizer together
 
-The current HUD displays the part of the note that was just judged. A later anticipation UI may
+The current HUD displays the musical parts active at the song timeline position. It animates only when the displayed part IDs change and remains visible between transitions, independently of hits or misses. Overlapping parts appear together in chart definition order; gaps retain the preceding section, and restart clears the display. A later anticipation UI may
 look ahead to upcoming activation-window boundaries without changing note timing or judgement.
 
 ## Notes and Interaction Types

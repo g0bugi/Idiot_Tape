@@ -17,7 +17,8 @@ namespace IdiotTape.Gameplay
             Preparing,
             Ready,
             CountIn,
-            Playing
+            Playing,
+            Results
 
         }
 
@@ -389,9 +390,31 @@ namespace IdiotTape.Gameplay
         private SessionPhase phase;
         private GameplayStartPlan startPlan;
         private FmodMetronome countInMetronome;
+        private readonly GameplayPerformance performance = new();
+        private double sessionEndTime;
+        private PlayRequest playRequest;
+        public event Action ReturnToLibraryRequested;
+        public event Action<string> PreparationFailed;
+
+        // The scene loader supplies the request before Start, so no default song is prepared.
+        public void ConfigureRequest(PlayRequest request)
+        {
+
+            if (startCalled)
+            {
+
+                throw new InvalidOperationException("Configure a session before Start.");
+
+            }
+            playRequest = request ?? throw new ArgumentNullException(nameof(request));
+            chart = request.Chart;
+
+        }
 
         public bool IsWaitingForStart => isActiveAndEnabled && isReady && phase == SessionPhase.Ready;
         public bool IsCountingIn => phase == SessionPhase.CountIn;
+        public bool HasStartedAttempt => phase == SessionPhase.CountIn || phase == SessionPhase.Playing || phase == SessionPhase.Results;
+        public bool IsShowingResults => phase == SessionPhase.Results;
 
         private void OnEnable()
         {
@@ -478,6 +501,15 @@ namespace IdiotTape.Gameplay
             if (!chart.TryValidate(out string error))
             {
 
+                if (playRequest != null)
+                {
+
+                    PreparationFailed?.Invoke(error);
+                    enabled = false;
+                    yield break;
+
+                }
+
                 Debug.LogError($"Cannot start prototype chart: {error}", chart);
                 enabled = false;
                 yield break;
@@ -515,6 +547,15 @@ namespace IdiotTape.Gameplay
             if (!songPlayback.IsPrepared)
             {
 
+                if (playRequest != null)
+                {
+
+                    PreparationFailed?.Invoke("음원을 준비하지 못했습니다. 다시 시도해 주세요.");
+                    enabled = false;
+                    yield break;
+
+                }
+
                 Debug.LogError($"Cannot prepare FMOD song event '{chart.SongEventPath}'.", chart);
                 enabled = false;
                 yield break;
@@ -524,15 +565,25 @@ namespace IdiotTape.Gameplay
             isReady = true;
             activeLanePressCounts = new int[chart.LaneCount];
             presenter.ConfigureLaneFeedback(chart.LaneCount);
+            hud.ConfigurePreparation(preparationBars, shortPreparationBars);
             ReturnToStartPrompt();
             preparationRoutine = null;
+            if (playRequest != null)
+            {
+
+                hud.ApplyPlaySettings(playRequest.Speed, playRequest.ShortPreparation);
+                BeginSession();
+
+            }
 
         }
+
+        private readonly MusicalPartDisplayState musicalPartDisplay = new();
 
         private void Update()
         {
 
-            if (!isReady || phase == SessionPhase.Ready || songPlayback.IsPaused)
+            if (!isReady || phase == SessionPhase.Ready || phase == SessionPhase.Results || songPlayback.IsPaused)
             {
 
                 return;
@@ -541,6 +592,13 @@ namespace IdiotTape.Gameplay
 
             double songTime = songPlayback.TimelineTime;
             CompleteCountInIfStarted(songTime);
+            if (musicalPartDisplay.Update(chart, songTime))
+            {
+
+                hud.ShowInstrument(musicalPartDisplay.DisplayName, musicalPartDisplay.Color);
+
+            }
+
 
             if (phase == SessionPhase.CountIn)
             {
@@ -560,11 +618,19 @@ namespace IdiotTape.Gameplay
                 ? songPlayback.DurationSeconds
                 : chart.Duration;
             hud.SetProgress(duration <= 0d ? 0f : (float)(songTime / duration));
+            TryCompleteSession(songTime);
 
         }
 
         private void BeginSession()
         {
+
+            if (playRequest != null)
+            {
+
+                hud.ApplyPlaySettings(playRequest.Speed, playRequest.ShortPreparation);
+
+            }
 
             if (isReady)
             {
@@ -581,6 +647,7 @@ namespace IdiotTape.Gameplay
             }
 
             ClearSessionState();
+            sessionEndTime = Math.Max(songPlayback.DurationSeconds, chart.Duration);
             float visualLead = NoteSpeedMath.GetVisualLeadTime(chart.VisualLeadTime, hud.NoteSpeedMultiplier);
             startPlan = GameplayStartPlan.Create(
                 chart.TempoSections,
@@ -595,6 +662,13 @@ namespace IdiotTape.Gameplay
             if (!songPlayback.SchedulePlay(startPlan.AudioStartDelaySeconds, 0d,
                     out ulong audioStartClock, out int sampleRate))
             {
+
+                if (playRequest != null)
+                {
+
+                    PreparationFailed?.Invoke("음원 시작을 예약하지 못했습니다. 다시 시도해 주세요.");
+
+                }
 
                 ReturnToStartPrompt();
                 return;
@@ -614,7 +688,7 @@ namespace IdiotTape.Gameplay
         public void RequestStart()
         {
 
-            if (IsWaitingForStart)
+            if (IsWaitingForStart || IsShowingResults)
             {
 
                 BeginSession();
@@ -645,11 +719,50 @@ namespace IdiotTape.Gameplay
         private void ReturnToStartPrompt()
         {
 
+            bool returnToLibrary = playRequest != null && phase != SessionPhase.Preparing;
+
             songPlayback.Stop();
             countInMetronome?.StopAll();
             ClearSessionState();
             phase = SessionPhase.Ready;
-            hud.ShowStartPrompt(chart.name);
+            hud.ShowStartPrompt(chart.SongTitle, chart.ArtistName);
+            if (returnToLibrary)
+            {
+
+                ReturnToLibraryRequested?.Invoke();
+
+            }
+
+        }
+
+        private void TryCompleteSession(double songTime)
+        {
+
+            // Keep the audio timeline alive through the last judgement deadline, including
+            // charts whose tail extends beyond the audio. Short charts retain the song outro.
+            if (phase != SessionPhase.Playing || songPlayback.IsPaused ||
+                songTime < sessionEndTime || nextNoteIndex < chart.Notes.Count || activeNotes.Count > 0)
+            {
+
+                return;
+
+            }
+
+            phase = SessionPhase.Results;
+            songPlayback.Stop();
+            countInMetronome?.StopAll();
+            ClearContactsAndLanePresses();
+
+            for (int index = activeTimingGuides.Count - 1; index >= 0; index--)
+            {
+
+                activeTimingGuides[index].View.Remove();
+
+            }
+
+            activeTimingGuides.Clear();
+            hud.SetProgress(1f);
+            hud.ShowResults(chart, score, performance);
 
         }
 
@@ -714,6 +827,9 @@ namespace IdiotTape.Gameplay
                 : 0d;
             score = 0;
             combo = 0;
+            performance.Reset();
+            musicalPartDisplay.Reset();
+            hud.ShowInstrument(string.Empty, Color.white);
             hud.SetScore(score);
             hud.ShowCombo(0);
             hud.ShowJudgement(JudgementGrade.None);
@@ -805,7 +921,7 @@ namespace IdiotTape.Gameplay
                         songTime > activeNote.Note.HitTime + judgementSettings.GoodWindowSeconds)
                     {
 
-                        ShowMiss();
+                        ShowMiss(activeNote);
                         RemoveActiveNoteAt(index);
 
                     }
@@ -1112,6 +1228,7 @@ namespace IdiotTape.Gameplay
                     activeNote.Note.BananaCheckpoints.Count,
                     activeNote.Note.BananaMaximumBonusCombo);
                 combo += bonusCombo;
+                performance.ObserveCombo(combo);
                 hud.ShowCombo(combo);
                 RemoveActiveNote(activeNote, songTime);
                 return;
@@ -1121,7 +1238,7 @@ namespace IdiotTape.Gameplay
             if (songTime > activeNote.Note.EndTime + judgementSettings.GoodWindowSeconds)
             {
 
-                ShowMiss();
+                ShowMiss(activeNote);
                 RemoveActiveNote(activeNote, songTime);
 
             }
@@ -1139,6 +1256,32 @@ namespace IdiotTape.Gameplay
             }
 
             CompleteCountInIfStarted(songPlayback.TimelineTime);
+
+            if (phase == SessionPhase.Results)
+            {
+
+                if (hud.IsResultRetryPress(screenPosition))
+                {
+
+                    BeginSession();
+
+                }
+                else if (hud.IsResultBackPress(screenPosition))
+                {
+
+                    ReturnToStartPrompt();
+
+                }
+                else
+                {
+
+                    hud.TrySelectResultPart(screenPosition);
+
+                }
+
+                return;
+
+            }
 
             if (phase == SessionPhase.Ready)
             {
@@ -2080,14 +2223,14 @@ namespace IdiotTape.Gameplay
             activeNote.HasFailed = true;
             activeNote.View.SetFailed();
             ReleaseOwnedContacts(activeNote, failureTime);
-            ShowMiss();
+            ShowMiss(activeNote);
 
         }
 
         private void FailAndRemove(ActiveNote activeNote)
         {
 
-            ShowMiss();
+            ShowMiss(activeNote);
             RemoveActiveNote(activeNote);
 
         }
@@ -2113,13 +2256,12 @@ namespace IdiotTape.Gameplay
 
             combo++;
             score += grade == JudgementGrade.Perfect ? PerfectTapScore : GoodTapScore;
+            performance.Record(activeNote.Note.MusicalPartId, grade, combo);
             hud.SetScore(score);
             hud.ShowCombo(combo);
             hud.ShowJudgement(grade);
             Color partColor = chart.GetPartColor(activeNote.Note.MusicalPartId);
-            hud.ShowInstrument(
-                chart.GetPartDisplayName(activeNote.Note.MusicalPartId),
-                partColor);
+
 
             if (playFeedback)
             {
@@ -2134,10 +2276,11 @@ namespace IdiotTape.Gameplay
 
         }
 
-        private void ShowMiss()
+        private void ShowMiss(ActiveNote activeNote)
         {
 
             combo = 0;
+            performance.Record(activeNote.Note.MusicalPartId, JudgementGrade.Miss, combo);
             hud.ShowCombo(combo);
             hud.ShowJudgement(JudgementGrade.Miss);
 
@@ -2255,6 +2398,14 @@ namespace IdiotTape.Gameplay
             }
 
             CompleteCountInIfStarted(songPlayback.TimelineTime);
+
+            if (phase == SessionPhase.Results)
+            {
+
+                ReturnToStartPrompt();
+                return;
+
+            }
 
             if (phase == SessionPhase.CountIn)
             {

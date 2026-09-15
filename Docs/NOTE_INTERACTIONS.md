@@ -1,7 +1,7 @@
 # Idiot_Tape — Note Interactions
 
 > Status: Accepted for current prototype
-> Last reviewed: 2026-09-05
+> Last reviewed: 2026-09-15
 > Applies to: The implemented prototype interaction set
 > Authority: Player-visible tap, hold, slide, flick, and banana-note behavior
 
@@ -47,6 +47,15 @@ For the accepted prototype rules:
 - banana start and end each award their own tap-equivalent result; checkpoints award fractional
   score and defer their integer combo bonus to the successful end
 - these are prototype interaction rules, not a final production scoring formula
+
+### Result Counts
+
+The results screen counts emitted Perfect/Good/Miss events, overall and by musical part. Hold and
+slide continuation rewards count with their inherited grade, including separate node/tick rewards
+at the same time. A failed sustained interaction emits only its existing one Miss; unearned later
+ticks do not become extra Misses. Inactive notes contribute nothing. Banana checkpoint score is
+included in final score but is not a Perfect event; its settled bonus contributes to maximum combo
+without inventing judgement events. These counts are not an authored-note completion percentage.
 
 ### Contact Ownership
 

@@ -1,7 +1,7 @@
 # Idiot_Tape — Prototype Backlog
 
 > Status: Current
-> Last reviewed: 2026-09-05
+> Last reviewed: 2026-09-12
 > Authority: Work sequencing, scope, acceptance status, and evidence index
 
 ## Operating Rules
@@ -41,6 +41,7 @@ results, not tests rerun during the 2026-09-05 documentation review.
 | Original baseline and test fixes | [Baseline](Playtests/2026-08-26-verification-baseline.md) | Later feature acceptance is separate |
 | Interaction data/runtime | [Initial interactions](Playtests/2026-08-27-new-note-implementation.md), [step slides](Playtests/2026-09-04-step-slide-verification.md) | Representative interactive and device cases |
 | Authoring workspace | [Workspace](Playtests/2026-09-04-authoring-workspace-verification.md), [stability](Playtests/2026-09-04-authoring-stability-verification.md), [recording/apply safety](Playtests/2026-09-04-recording-serialization-verification.md) | Timed authoring, interactive Undo/save/re-entry, long sessions |
+| Requested authoring improvements | [Selection, grouped correction, and take-retry workflow record](Playtests/2026-09-12-authoring-workflow-improvements.md) | Consult the record for executed checks; human authoring throughput and representative content remain separate |
 | Start/count-in | [Corrected output phase and tests](Playtests/2026-09-04-start-sync-regression-verification.md) | Full-song and physical-device timing; separate live-seek defect |
 
 Current implementation provides all five interaction types, explicit start/preparation, and
@@ -176,6 +177,13 @@ Workspace rendering, sampled 150% captures, real-click stability, recording seri
 and transactional apply have the evidence linked above. They do not establish authoring speed.
 Pending interactive work includes all properties tabs, both chart views, expanded drawer,
 all-type correction, scoped duplication/replacement, Undo/save, and re-entered Play Mode.
+
+The 2026-09-12 user request added multi-note selection/correction, beat-step shortcuts, and last-take
+retry to current implementation. Compare these operations with the prior individual-edit workflow
+in [the workflow improvement record](Playtests/2026-09-12-authoring-workflow-improvements.md). Scripted
+workflow completion and reduced command counts are evidence about those procedures, not a measured
+human speed gain. This item's `Ready` status and `H-AUTHOR-001` acceptance remain unchanged until a
+representative authoring session is timed.
 
 ### IT-P0-010 — Record the Prototype Decision
 
@@ -329,11 +337,15 @@ build, display, and audio route. No physical-device record is currently linked.
 
 ## P1 Parking Lot
 
-Unscheduled until P0 evidence or an explicit user request justifies expansion:
+Multi-note selection/editing, last-take retry, and beat-step shortcuts were brought into current
+scope by the 2026-09-12 user request and are implemented with verification tracked in
+[the workflow record](Playtests/2026-09-12-authoring-workflow-improvements.md). Their authoring-speed
+acceptance remains under `IT-P0-009`.
+
+Remaining items are unscheduled until P0 evidence or an explicit user request justifies expansion:
 
 - musical-part anticipation UI
-- multi-note selection/editing and activation-window handle dragging (individual note/path
-  dragging is already implemented)
+- activation-window handle dragging (individual note/path dragging is already implemented)
 - variable-tempo authoring workflow and user-facing calibration UI
 - additional spatial representations or interactions
 - production results/scoring and song-selection/content-library flow

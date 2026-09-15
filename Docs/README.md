@@ -1,7 +1,7 @@
 # Idiot_Tape — Documentation Guide
 
 > Status: Current
-> Last reviewed: 2026-09-05
+> Last reviewed: 2026-09-12
 > Authority: Document ownership, routing, and interpretation
 
 ## Start Here
@@ -14,10 +14,11 @@ loaded again.
 | Task | Owning document | Implementation entry points |
 |---|---|---|
 | Player experience, layout, or scope | [GAME_DESIGN.md](GAME_DESIGN.md) | `GameplaySession`, `PlayfieldPresenter` |
+| Song selection, catalog, and game entry | [GAME_DESIGN.md](GAME_DESIGN.md), [ARCHITECTURE.md](ARCHITECTURE.md), [CHART_FORMAT.md](CHART_FORMAT.md) | `SongLibraryFlow`, `SongLibraryView`, `SongCatalog`, `SongLibrarySetup` |
 | Note rules, score, contact ownership | [NOTE_INTERACTIONS.md](NOTE_INTERACTIONS.md) | `GameplaySession`, `JudgementEvaluator`, `NoteInteractionMath` |
 | Playback, start/count-in, input timing, pause, seek, offsets | [RHYTHM_SYSTEM.md](RHYTHM_SYSTEM.md) | `FmodSongPlayback`, `SongTimelineMath`, `GameplayStartPlan`, `FmodMetronome` |
 | Chart fields, compatibility, validation | [CHART_FORMAT.md](CHART_FORMAT.md) | `PrototypeChart`, `ChartTempoMap` |
-| Recorder, workspace, correction, Undo/apply/save | [CHART_AUTHORING.md](CHART_AUTHORING.md) | `PrototypeChartRecorderWindow` partials and `Chart*Utility` helpers |
+| Recorder usage, workspace, correction, Undo/apply/save | [채보 제작 도구 설명서](CHART_AUTHORING.md): 한국어 작업 순서, 노트별 입력, 단축키, 일괄 수정·재녹음, 저장·게임 확인 | `PrototypeChartRecorderWindow` partials and `Chart*Utility` helpers |
 | Core ownership or dependencies | [ARCHITECTURE.md](ARCHITECTURE.md) | Current implementation and assembly maps |
 | Choosing work or judging milestone completion | [PROTOTYPE_MILESTONE.md](PROTOTYPE_MILESTONE.md), relevant [BACKLOG.md](BACKLOG.md) item | Gate, hypothesis, and work-item IDs |
 | Verification and repository procedure | [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md) | `Assets/Tests/EditMode`, `Assets/Tests/PlayMode` |

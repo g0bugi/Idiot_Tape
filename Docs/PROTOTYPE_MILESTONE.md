@@ -1,7 +1,7 @@
 # Idiot_Tape — Current Prototype Milestone
 
 > Status: Current
-> Last reviewed: 2026-09-05
+> Last reviewed: 2026-09-12
 > Applies to: The current full-song mobile rhythm prototype
 > Authority: Current validation scope and exit criteria
 
@@ -34,7 +34,8 @@ The repository currently contains:
 - look-ahead note activation and song-time-derived note positions
 - a panel-based chart-authoring workspace with per-type recording, temporary/applied interaction
   correction, looping, quantization, duplication, part activation, tempo calibration, transactional
-  buffer apply, Undo, and explicit save
+  buffer apply, Undo, and explicit save; grouped selection/correction, beat-step shortcuts, and
+  last-take retry extend the current authoring workflow
 - EditMode tests for timing math, judgement, geometry, tempo, quantization, and chart utilities
 - PlayMode scene/view, start-flow, authoring playback, and scheduled FMOD playback tests
 
@@ -82,11 +83,14 @@ The current milestone includes:
 
 ## P1 Scope
 
-P1 work may start only when it directly improves a failed P0 hypothesis or after the P0 gates pass.
+P1 work may start when it directly improves a failed P0 hypothesis, after the P0 gates pass, or
+through an explicit user scope change. The 2026-09-12 request brought multi-note selection/editing,
+last-take retry, and beat-step shortcuts into current authoring work. Their workflow evidence is
+tracked in [the authoring improvement record](Playtests/2026-09-12-authoring-workflow-improvements.md);
+implementation does not close the timed authoring gate. Remaining P1 scope:
 
 - anticipation UI for upcoming musical-part changes
-- multi-note selection/editing and activation-window handle dragging beyond existing individual
-  note/path dragging
+- activation-window handle dragging beyond existing individual note/path dragging
 - variable-tempo authoring UX beyond direct tempo-section data
 - user-facing calibration UI
 - additional reversible spatial-layout experiments

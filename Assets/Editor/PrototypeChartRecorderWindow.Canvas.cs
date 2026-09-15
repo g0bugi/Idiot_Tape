@@ -101,6 +101,7 @@ namespace IdiotTape.EditorTools
             string selectedPart = GetWorkspaceSelectedPartId();
             DrawWorkspaceNotes(localPlot, true, selectedPart, false);
             DrawWorkspaceGhostNotes(localPlot, true, selectedPart);
+            DrawWorkspaceSelectionPreview(localPlot, true, selectedPart);
             DrawWorkspacePlayhead(localPlot, true);
             HandleWorkspaceTimelineInput(localPlot, true);
             GUI.EndGroup();
@@ -211,6 +212,7 @@ namespace IdiotTape.EditorTools
                 DrawWorkspaceLoop(localPlot, false);
                 DrawWorkspaceNotes(localPlot, false, part.Id, false, selected ? 1f : 0.55f);
                 DrawWorkspaceGhostNotes(localPlot, false, part.Id);
+                DrawWorkspaceSelectionPreview(localPlot, false, part.Id);
                 DrawWorkspacePlayhead(localPlot, false);
                 HandleWorkspaceTimelineInput(localPlot, false, part.Id);
                 GUI.EndGroup();
@@ -377,7 +379,7 @@ namespace IdiotTape.EditorTools
                 ChartNoteAuthoringData data = ChartNoteAuthoringData.FromChartNote(note);
                 Color color = WorkspaceWithAlpha(GetWorkspaceCanvasPartColor(note.MusicalPartId), context ? 0.19f : opacity);
 
-                if (note.Id == selectedChartNoteId && !context)
+                if (note.Id == selectedChartNoteId && !context && GetWorkspaceSelectionCount() <= 1)
                 {
 
                     selectedData = data;
@@ -386,7 +388,7 @@ namespace IdiotTape.EditorTools
 
                 }
 
-                DrawWorkspaceNote(plotRect, data, vertical, color, false, false, context);
+                DrawWorkspaceNote(plotRect, data, vertical, color, false, !context && IsWorkspaceChartSelected(note.Id), context);
 
             }
 
@@ -406,7 +408,7 @@ namespace IdiotTape.EditorTools
 
                 Color color = WorkspaceWithAlpha(GetWorkspaceCanvasPartColor(note.musicalPartId), context ? 0.19f : opacity);
 
-                if (index == selectedRecordedNoteIndex && !context)
+                if (index == selectedRecordedNoteIndex && !context && GetWorkspaceSelectionCount() <= 1)
                 {
 
                     selectedData = data;
@@ -416,7 +418,7 @@ namespace IdiotTape.EditorTools
 
                 }
 
-                DrawWorkspaceNote(plotRect, data, vertical, color, true, false, context);
+                DrawWorkspaceNote(plotRect, data, vertical, color, true, !context && IsWorkspaceBufferSelected(index), context);
 
             }
 
@@ -940,53 +942,16 @@ namespace IdiotTape.EditorTools
         {
 
             Event currentEvent = Event.current;
+            string selectablePart = vertical ? GetWorkspaceSelectedPartId() : partId;
 
-            if (!plotRect.Contains(currentEvent.mousePosition))
-            {
-
-                return;
-
-            }
-
-            if (currentEvent.type == EventType.ScrollWheel)
+            if (currentEvent.type == EventType.ScrollWheel && plotRect.Contains(currentEvent.mousePosition))
             {
 
                 HandleTimelineScroll(currentEvent, plotRect, vertical);
                 return;
 
             }
-
-            if (currentEvent.type != EventType.MouseDown || currentEvent.button != 0)
-            {
-
-                return;
-
-            }
-
-            string selectablePart = vertical ? GetWorkspaceSelectedPartId() : partId;
-
-            if (!TrySelectWorkspaceNote(plotRect, currentEvent.mousePosition, vertical, selectablePart))
-            {
-
-                float normalized = vertical
-                    ? Mathf.InverseLerp(plotRect.y, plotRect.yMax, currentEvent.mousePosition.y)
-                    : Mathf.InverseLerp(plotRect.x, plotRect.xMax, currentEvent.mousePosition.x);
-                seekTime = ChartTempoMap.SnapSongTime(chart.TempoSections,
-                    timelineStartTime + normalized * timelineVisibleDuration, (int)quantizationGrid);
-                timelineAutoScroll = false;
-
-                if (Application.isPlaying && songPlayback != null && songPlayback.IsPrepared)
-                {
-
-                    Seek(seekTime);
-
-                }
-
-            }
-
-            GUI.FocusControl(null);
-            currentEvent.Use();
-            Repaint();
+            HandleWorkspaceMarquee(plotRect, vertical, selectablePart);
 
         }
 
@@ -1051,18 +1016,13 @@ namespace IdiotTape.EditorTools
             if (closestRecordedIndex >= 0)
             {
 
-                selectedRecordedNoteIndex = closestRecordedIndex;
-                selectedChartNoteId = string.Empty;
-                selectedAppliedNoteDataId = string.Empty;
-                selectedAppliedNoteData = null;
+                SetWorkspaceNoteSelection(null, closestRecordedIndex, Event.current != null && Event.current.shift);
 
             }
             else if (closestChartNote != null)
             {
 
-                selectedChartNoteId = closestChartNote.Id;
-                selectedRecordedNoteIndex = -1;
-                LoadSelectedAppliedNoteData(closestChartNote);
+                SetWorkspaceNoteSelection(closestChartNote.Id, -1, Event.current != null && Event.current.shift);
 
             }
             else

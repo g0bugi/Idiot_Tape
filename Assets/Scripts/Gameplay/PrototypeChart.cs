@@ -179,8 +179,15 @@ namespace IdiotTape.Gameplay
     public sealed class PrototypeChart : ScriptableObject
     {
 
-        [SerializeField] private string songEventPath = "event:/Music/Idiotape/Pluto";
-        [SerializeField] private List<FmodStemDefinition> stemParameters = new();
+        [SerializeField] private SongDefinition song;
+        [SerializeField] private string chartId;
+        [SerializeField, Min(1)] private int revision = 1;
+        [SerializeField] private string difficultyLabel;
+        // Legacy fields remain readable for unmigrated authoring fixtures and assets.
+        [SerializeField, HideInInspector] private string songEventPath = "event:/Music/Idiotape/Pluto";
+        [SerializeField, HideInInspector] private string songTitle;
+        [SerializeField, HideInInspector] private string artistName;
+        [SerializeField, HideInInspector] private List<FmodStemDefinition> stemParameters = new();
         [SerializeField] private List<ChartTempoSection> tempoSections = new();
         [SerializeField, Min(2)] private int laneCount = 8;
         [SerializeField, Min(0.1f)] private float visualLeadTime = 2.4f;
@@ -188,8 +195,14 @@ namespace IdiotTape.Gameplay
         [SerializeField] private List<MusicalPartActivationWindow> activationWindows = new();
         [SerializeField] private List<ChartNote> notes = new();
 
-        public string SongEventPath => songEventPath;
-        public IReadOnlyList<FmodStemDefinition> StemParameters => stemParameters;
+        public SongDefinition Song => song;
+        public string ChartId => chartId;
+        public int Revision => Mathf.Max(1, revision);
+        public string DifficultyLabel => string.IsNullOrWhiteSpace(difficultyLabel) ? "미지정" : difficultyLabel;
+        public string SongEventPath => song != null ? song.EventPath : songEventPath;
+        public string SongTitle => song != null ? song.Title : string.IsNullOrWhiteSpace(songTitle) ? name : songTitle;
+        public string ArtistName => song != null ? song.Artist : artistName ?? string.Empty;
+        public IReadOnlyList<FmodStemDefinition> StemParameters => song != null ? song.Stems : stemParameters;
         public IReadOnlyList<ChartTempoSection> TempoSections => tempoSections;
         public int LaneCount => laneCount;
         public float VisualLeadTime => visualLeadTime;
@@ -292,7 +305,7 @@ namespace IdiotTape.Gameplay
         public bool TryValidate(out string error)
         {
 
-            if (string.IsNullOrWhiteSpace(songEventPath))
+            if (string.IsNullOrWhiteSpace(SongEventPath))
             {
 
                 error = "An FMOD song event path is required.";
@@ -302,10 +315,10 @@ namespace IdiotTape.Gameplay
 
             HashSet<string> stemIds = new();
 
-            for (int index = 0; index < stemParameters.Count; index++)
+            for (int index = 0; index < StemParameters.Count; index++)
             {
 
-                FmodStemDefinition stem = stemParameters[index];
+                FmodStemDefinition stem = StemParameters[index];
 
                 if (stem == null || string.IsNullOrWhiteSpace(stem.StemId) || !stemIds.Add(stem.StemId))
                 {

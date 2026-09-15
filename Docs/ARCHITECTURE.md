@@ -1,11 +1,51 @@
 # Idiot_Tape — Architecture
 
 > Status: Current
-> Last reviewed: 2026-09-05
+> Last reviewed: 2026-09-15
 > Applies to: The current Unity prototype
 > Authority: Runtime ownership, dependency, and data-flow contracts
 
 ## Scope and Data Flow
+
+### Song library entry and ownership
+
+The player build starts in `SongLibrary.unity`. `SongLibraryFlow` keeps that scene alive and
+loads `Gameplay.unity` additively for one attempt. It injects a `PlayRequest` before the
+session's `Start`, so the scene's Inspector-default chart is not prepared first. There is no
+global pending-song singleton. Directly opening Gameplay remains the authoring/test entry.
+
+`SongDefinition` owns shared title, artist, cover and FMOD event/stem metadata. `PrototypeChart`
+owns chart identity/revision, difficulty label and existing musical/timing data. `SongCatalog`
+explicitly enrolls chart assets; the editor rebuilds its playable-note counts and part summaries.
+The initial catalog includes Snow and the empty Pluto chart, not the legacy generated tap fixture.
+
+`SongLibraryView` owns query, sort/filter, selected song/chart and scroll state. It retains these
+across gameplay and pools the visible rows plus two spare rows. Personal speed/count-in and
+last selected IDs use the local versioned `IdiotTape.Library.v1` preference. No best-score or
+progression store is introduced. The screen uses uGUI and a scene-owned Input System UI module.
+
+`PlayRequest` captures chart/song IDs, revision, speed and preparation choice at launch. Its
+chart reference is read-only by contract during that attempt. The session retains the request
+for retry and reuses the existing DSP/count-in/judgement path. Its back/cancel event lets the
+flow unload the gameplay scene before returning to selection. Failed/cancelled preparations
+also unload that scene; the selection scene remains usable.
+
+`SongPreviewPlayer` owns a separate `FmodSongPlayback` instance, debounces selection for 300 ms,
+and uses scheduled nonzero starts for preview ranges. Replacing selection stops its coroutine
+and releases the previous prepared event. Preview is stopped before gameplay loading. Its
+clock never drives gameplay judgement. The library owns a preview listener root with a display
+camera (solid clear, no world culling). It disables this root after gameplay has loaded and enables
+it before unloading gameplay. Overlay UI therefore has a real display camera during selection,
+without a second active menu camera during gameplay. Decorative menu curves require their own
+CanvasRenderer and do not participate in UI raycasts.
+Shared FMOD banks remain managed by FMOD integration.
+
+The first catalog loader uses direct references to local lightweight chart/song assets; it does
+not instantiate gameplay notes or prepare every audio event. `SongArtworkLoader` asynchronously
+loads cover resources for the selected song and visible rows, serializes native requests, ignores
+obsolete completions and releases covers outside that working set. Chart data itself remains
+local and resident; its loading boundary can be replaced when volume warrants it. Addressables
+and remote catalogs are not required.
 
 This document owns responsibility boundaries, not a list of classes to create. Inspect the
 current owners below before adding a system. Gameplay state flows from chart data and the
@@ -24,14 +64,15 @@ contract.
 | Timeline calculations | `SongTimelineMath` | Pure DSP-clock-to-song-time calculations, including the signed view before a future anchor |
 | Preparation planning | `GameplayStartPlan` | Pure tempo-derived bar duration, minimum first-note approach, negative beat grid, and countdown calculation |
 | Beat-click scheduling | `FmodMetronome` | FMOD DSP-scheduled click channels shared by gameplay and the Editor authoring wrapper |
-| Session orchestration | `GameplaySession` | Preparing/Ready/CountIn/Playing phase, preparation settings, active-note and timing-guide collections, scheduler indices, timestamped contact/ownership histories, per-note interaction cursors, score, combo, input-to-judgement flow |
+| Session orchestration | `GameplaySession` | Preparing/Ready/CountIn/Playing/Results phase, preparation settings, active-note and timing-guide collections, scheduler indices, timestamped contact/ownership histories, per-note interaction cursors, score, combo, input-to-judgement flow |
+| Attempt statistics | `GameplayPerformance`, `JudgementCounts`, owned by `GameplaySession` | Emitted judgement counts per part and overall, maximum observed combo; no parallel score or timeline |
 | Chart definition and validation | `PrototypeChart` | Song event path, stem mappings, tempo sections, lane count, parts, activation windows, notes |
 | Tempo navigation math | `ChartTempoMap` | Bar, beat, and song-time conversion for authoring and runtime timing guides |
 | Interaction geometry and math | `NotePathMath`, `NoteInteractionMath` | Step geometry, banana curves, transition windows, hold grace, flick motion, bonus calculations |
 | Input collection | `GameplayInputRouter` | Touch, mouse, and development keyboard events with timestamps |
 | Judgement calculation | `JudgementEvaluator` | Pure candidate selection and judgement result |
 | Playfield presentation | `PlayfieldPresenter` and focused view classes | Note and timing-guide visuals, lane feedback, hit effects, judgement-line reaction |
-| HUD presentation | `GameplayHud` | Ready/start controls, preparation choice, note speed, countdown, score, combo, judgement, instrument, progress, and pause display |
+| HUD presentation | `GameplayHud` and `.Screens` partial, `GameplayMenuCurve` | Start/results menus, safe-area layout, part selection/paging, preparation choice, shared note speed, countdown, score, combo, judgement, instrument, progress, and pause display |
 | Chart authoring | `PrototypeChartRecorderWindow` partials (`.cs`, `.Workspace.cs`, `.Canvas.cs`, `.Inspector.cs`) and Editor utilities | Workspace, recording drafts, selection/path editing, navigation, quantization, calibration, transactional apply, Undo, validation, save |
 
 ### Current Assembly Boundaries
@@ -58,7 +99,8 @@ Preparing: validate chart and prepare the chart-selected FMOD event
   -> CountIn: schedule music and beat clicks, present notes from signed TimelineTime
   -> Playing: schedule, present, and judge notes after the DSP start is reached
        <-> existing FMOD pause/resume state
-  -> continue until playback ends
+  -> Results: after the audio and all chart judgements finish, stop playback and freeze statistics
+       -> Ready (back) or CountIn (retry)
 ```
 
 Ready does not automatically play music or advance note scheduling. Start requests arrive through
@@ -86,9 +128,14 @@ progress, contact ownership, and lane-press presentation before scheduling a fre
 same flow applies to other charts without embedded song identities, BPM values, or fixed seconds
 of delay. Missing tempo data uses explicit session fallback configuration.
 
-The current implementation does not expose a distinct end-of-song or results state. The current
-prototype milestone treats that as a small missing lifecycle boundary, not as permission to invent
-final scoring, failure, reward, or progression systems.
+The results boundary uses the later of the prepared audio duration and `PrototypeChart.Duration`
+(the latest authored note end plus its existing one-second tail), with an additional guard for
+unspawned or unresolved notes. It uses the same signed FMOD timeline and does not stop at the last
+note of a short chart. Pausing cannot complete the attempt. Completion is entered once, clears
+contacts and timing guides, stops playback/clicks, and presents the existing score plus statistics.
+Results input is routed before any gameplay or speed-slider input; retry and back reuse the existing
+start flow. `GameplayPerformance` records each emitted reward/miss and observes banana combo bonuses;
+the HUD only reads these values. It neither reconstructs accuracy nor changes scoring.
 
 ### Current Failure Behavior
 

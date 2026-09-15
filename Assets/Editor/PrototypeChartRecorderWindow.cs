@@ -121,6 +121,8 @@ namespace IdiotTape.EditorTools
         private sealed class RecordedNote
         {
 
+            public string editorId;
+            public string takeId;
             public double hitTime;
             public double originalHitTime;
             public int laneIndex;
@@ -1189,7 +1191,8 @@ namespace IdiotTape.EditorTools
 
                 ScheduleSongMetronome();
 
-                if (songPlayback.SongTime >= recordingTargetTime)
+                if (songPlayback.HasReachedScheduledStart &&
+                    songPlayback.SongTime >= recordingTargetTime)
                 {
 
                     ActivateRecording();
@@ -1237,11 +1240,34 @@ namespace IdiotTape.EditorTools
         private void StartRecording(RecordingStartMode startMode)
         {
 
-            if (songPlayback == null || !songPlayback.IsPrepared || chart.MusicalParts.Count == 0)
+            if (!CanStartRecording(startMode))
+            {
+
+                return;
+
+            }
+
+            double targetTime = startMode == RecordingStartMode.Loop
+                ? loopStart
+                : startMode == RecordingStartMode.Beginning ? 0d : songPlayback.SongTime;
+
+            if (StartRecordingAt(startMode, targetTime))
+            {
+
+                BeginRecordingTake(startMode, targetTime);
+
+            }
+
+        }
+
+        private bool CanStartRecording(RecordingStartMode startMode)
+        {
+
+            if (chart == null || songPlayback == null || !songPlayback.IsPrepared || chart.MusicalParts.Count == 0)
             {
 
                 statusMessage = "FMOD 재생과 음악 파트가 하나 이상 필요합니다.";
-                return;
+                return false;
 
             }
 
@@ -1249,7 +1275,7 @@ namespace IdiotTape.EditorTools
             {
 
                 statusMessage = "구간 반복 녹화를 시작하려면 올바른 반복 시작·끝 시간을 입력하세요.";
-                return;
+                return false;
 
             }
 
@@ -1257,9 +1283,16 @@ namespace IdiotTape.EditorTools
             {
 
                 statusMessage = "카운트인과 마디 계산을 위한 템포 정보가 필요합니다.";
-                return;
+                return false;
 
             }
+
+            return true;
+
+        }
+
+        private bool StartRecordingAt(RecordingStartMode startMode, double targetTime)
+        {
 
             DisableGameplaySessionForAuthoring();
             StopTempoCalibrationPreview();
@@ -1270,31 +1303,13 @@ namespace IdiotTape.EditorTools
             isRecording = false;
             DisableRecordingInputActions();
 
-            if (startMode == RecordingStartMode.Loop)
-            {
-
-                recordingTargetTime = loopStart;
-
-            }
-            else if (startMode == RecordingStartMode.Beginning)
-            {
-
-                recordingTargetTime = 0d;
-
-            }
-            else
-            {
-
-                recordingTargetTime = songPlayback.SongTime;
-
-            }
-
+            recordingTargetTime = targetTime;
             BeginCountInOrPreRoll();
 
             if (recordingPhase == RecordingPhase.Idle)
             {
 
-                return;
+                return false;
 
             }
 
@@ -1304,6 +1319,7 @@ namespace IdiotTape.EditorTools
                 RecordingStartMode.Loop => "반복 구간 녹화를 위한 프리롤을 시작했습니다.",
                 _ => "곡 처음 녹화를 위한 카운트인을 시작했습니다."
             };
+            return true;
 
         }
 
@@ -1311,6 +1327,7 @@ namespace IdiotTape.EditorTools
         {
 
             // Lifecycle resets discard incomplete gestures without quantizing or clearing completed recordings.
+            currentRecordingTakeId = string.Empty;
             pendingInteraction = null;
             isRecording = false;
             isLoopRecording = false;
@@ -1330,6 +1347,7 @@ namespace IdiotTape.EditorTools
         private void StopRecording()
         {
 
+            currentRecordingTakeId = string.Empty;
             bool discardedPendingInteraction = pendingInteraction != null;
             pendingInteraction = null;
             isRecording = false;
@@ -1367,15 +1385,55 @@ namespace IdiotTape.EditorTools
             if (preRollStartTime > 0.000001d)
             {
 
-                recordingPhase = RecordingPhase.PreRoll;
-                songPlayback.Seek(preRollStartTime);
-                songPlayback.Play();
-                ResetSongMetronomeScheduler(preRollStartTime);
+                StartScheduledPreRoll();
                 return;
 
             }
 
             StartStandaloneCountIn();
+
+        }
+
+        private void StartScheduledPreRoll()
+        {
+
+            EnsureMetronome();
+            metronome.StopAll();
+            nextMetronomeSongTime = double.NaN;
+            songPlayback.Stop();
+
+            // A recording attempt owns a fresh clock anchor. Live audition seeking retains
+            // a separate known stale-anchor issue, so retries must use the scheduled path.
+            if (!songPlayback.SchedulePlay(0.20d, preRollStartTime,
+                out ulong preRollStartDspClock, out int sampleRate))
+            {
+
+                statusMessage = "FMOD DSP 시계에 프리롤 시작을 예약하지 못했습니다. 임시 기록은 유지했습니다.";
+                ResetRecordingSession();
+                return;
+
+            }
+
+            recordingPhase = RecordingPhase.PreRoll;
+            ResetSongMetronomeScheduler(preRollStartTime);
+            ulong firstClickClock = AddSongTimeToDspClock(preRollStartDspClock,
+                nextMetronomeSongTime - preRollStartTime + metronomeOutputOffsetMilliseconds / 1000d,
+                sampleRate);
+
+            if (!metronome.ScheduleAtDspClock(firstClickClock,
+                ChartAuthoringMetronome.IsDownbeat(chart.TempoSections, nextMetronomeSongTime),
+                metronomeVolume))
+            {
+
+                songPlayback.Stop();
+                ResetRecordingSession();
+                statusMessage = "프리롤 첫 박을 충분히 미리 예약하지 못했습니다. 임시 기록은 유지했습니다.";
+                return;
+
+            }
+
+            nextMetronomeSongTime = ChartAuthoringMetronome.GetBeatTimeAfter(
+                chart.TempoSections, nextMetronomeSongTime);
 
         }
 
@@ -1543,10 +1601,7 @@ namespace IdiotTape.EditorTools
             if (preRollStartTime > 0.000001d)
             {
 
-                recordingPhase = RecordingPhase.PreRoll;
-                songPlayback.Seek(preRollStartTime);
-                songPlayback.Play();
-                ResetSongMetronomeScheduler(preRollStartTime);
+                StartScheduledPreRoll();
 
             }
             else
@@ -1633,7 +1688,9 @@ namespace IdiotTape.EditorTools
             }
 
             EnsureMetronome();
-            double songTime = songPlayback.SongTime;
+            // Before a scheduled positive pre-roll gate, SongTime clamps to the anchor.
+            // Signed timeline time retains the scheduling lead for each following click.
+            double songTime = songPlayback.TimelineTime;
 
             if (double.IsNaN(nextMetronomeSongTime))
             {
@@ -1962,6 +2019,23 @@ namespace IdiotTape.EditorTools
 
         private void HandleUndoRedo()
         {
+
+            workspaceSelectionPreview = null;
+            if (!string.IsNullOrEmpty(currentRecordingTakeId) &&
+                (lastRecordingTake == null || currentRecordingTakeId != lastRecordingTake.id))
+            {
+
+                // Restoring a retried take cancels its scheduled replacement before further input can join it.
+                if (recordingPhase != RecordingPhase.Idle)
+                {
+
+                    songPlayback?.Stop();
+
+                }
+
+                ResetRecordingSession();
+
+            }
 
             ChartNote selectedNote = FindSelectedChartNote();
 
@@ -3110,6 +3184,8 @@ namespace IdiotTape.EditorTools
             RecordedNote recordedNote = new RecordedNote
             {
 
+                editorId = Guid.NewGuid().ToString("N"),
+                takeId = currentRecordingTakeId,
                 hitTime = data.HitTime,
                 originalHitTime = data.HitTime,
                 laneIndex = data.LaneIndex,
@@ -3123,7 +3199,7 @@ namespace IdiotTape.EditorTools
             recordedNotes.Add(recordedNote);
             bufferWasApplied = false;
             SortRecordedNotes();
-            selectedRecordedNoteIndex = recordedNotes.IndexOf(recordedNote);
+            SetWorkspaceNoteSelection(null, recordedNotes.IndexOf(recordedNote), false);
             statusMessage =
                 $"{data.HitTime:0.000}초에 {data.NoteType} 노트를 기록했습니다.";
 
@@ -3429,8 +3505,27 @@ namespace IdiotTape.EditorTools
                 if (editorEvent.keyCode == KeyCode.R && recordingPhase == RecordingPhase.Idle)
                 {
 
-                    StartRecording(RecordingStartMode.CurrentPosition);
+                    if (editorEvent.shift)
+                    {
+
+                        RetryLastTake();
+
+                    }
+                    else
+                    {
+
+                        StartRecording(workspaceRecordingStart);
+
+                    }
+
                     editorEvent.Use();
+                    return;
+
+                }
+
+                if (HandleWorkspaceEditingKeyboardEvent(editorEvent))
+                {
+
                     return;
 
                 }
@@ -3706,6 +3801,7 @@ namespace IdiotTape.EditorTools
                 EditorUtility.SetDirty(chart);
                 statusMessage = $"노트 {appliedNoteCount}개를 적용했고 차트 검사도 통과했습니다. 에셋을 저장하세요.";
                 bufferWasApplied = true;
+                MarkLastRecordingTakeApplied();
 
                 if (clearBufferAfterApply)
                 {
@@ -4099,6 +4195,9 @@ namespace IdiotTape.EditorTools
             }
 
             chart = selectedChart;
+            lastRecordingTake = null;
+            currentRecordingTakeId = string.Empty;
+            ClearWorkspaceMultiSelection();
             StopTempoCalibrationPreview();
             ClearTempoTapCapture();
             configuredEventPath = string.Empty;
